@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_form_view" model="ir.ui.view">
+        <field name="name">stock.picking.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_set_quantities_to_reservation" invisible="state not in ['waiting','confirmed', 'assigned']"
+                        string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
+                <button name="action_clear_quantities_to_zero"  invisible="state not in ['waiting','confirmed', 'assigned']"
+                        string="Clear quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
+            </xpath>
+            <xpath expr="//page[@name='operations']/button[@name='action_put_in_pack']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="after">
+                <field name="picking_code" invisible="1"/>
+                <field name="picking_status" invisible="1"/>
+                <widget name="web_ribbon" title="Not Completed" bg_color="bg-danger" invisible="(picking_status != 'not_completed' or picking_code != 'outgoing')"/>
+                <widget name="web_ribbon" title="Completed" invisible="(picking_status != 'completed' or picking_code != 'outgoing')"/>
+            </xpath>
+            <xpath expr="//field[@name='backorder_id']/.." position="inside">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" string="Attachments" type="object" name="button_open_attachments"/>
+                    <button class="btn btn-primary" string="MDM info" type="object" name="button_show_mdm_info" invisible="picking_code != 'outgoing'"/>
+                    <button name="refresh_form" class="btn btn-primary" type="object" string="Refresh Scanned Status" id="pick_refresh_window" invisible="picking_code == 'incoming'"/>
+                    <button name="pick_redirect_action"  type="object" class="d-none"/>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='button_validate'][hasclass('o_btn_validate')]" position="attributes">
+                <attribute name="class">btn btn-secondary shortcut_f1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='other_infos']" position="inside">
+                <field name="picking_code" invisible="1"/>
+                <field name="custom_pro_forma_name"/>
+                <field name="enable_ep_ref_validation" widget="boolean_toggle" invisible="picking_code != 'outgoing'"/>
+                <field name="check_tracking_ref" widget="boolean_toggle" invisible="picking_code != 'outgoing'"/>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="groups">stock.group_stock_user</attribute>
+            </xpath>
+            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='product_uom_qty']" position="after">
+                <field name="man_delivered_qty" readonly="state in ['cancel', 'done']" column_invisible="parent.picking_code != 'incoming'"/>
+                <field name="ev_delivery_date" optional="hide" column_invisible="parent.picking_code != 'incoming'"/>
+            </xpath>
+            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']" position="attributes">
+                <attribute name="widget"/>
+            </xpath>
+            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list" position="inside">
+                <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details" modifiers="{&quot;invisible&quot;: [[&quot;show_details_visible&quot;, &quot;=&quot;, false]]}"/>
+            </xpath>
+            <button name="action_assign" position="attributes">
+                <attribute name="groups">ev_security.group_show_picking_availability_btn</attribute>
+            </button>
+            <button name="action_detailed_operations" position="before">
+                <button name="action_open_moves_lot" string="Lot/Serials" type="object" class="oe_stat_button" icon="fa-ellipsis-v"/>
+                <field name="sale_id" invisible="1"/>
+                <button name="action_view_related_delivery" type="object" class="oe_stat_button" icon="fa-expand" style="color:green"
+                        invisible="((((picking_type_code == 'internal' and not sale_id) or picking_type_code == 'outgoing') or state != 'done') or dest_picking_count == 0)">
+                    <field name="dest_picking_count" style="color:green" widget="statinfo" string="Picking"/>
+                </button>
+            </button>
+            <xpath expr="//field[@name='origin']" position="attributes">
+                <attribute name="invisible">(purchase_id or origin_po)</attribute>
+            </xpath>
+
+            <!-- pylint:disable=dangerous-view-replace-wo-priority -->
+            <xpath expr="//button[@icon='fa-area-chart text-danger']" position="replace"/>
+            <xpath expr="//button[@icon='fa-area-chart']" position="replace"/>
+            <xpath expr="//page[@name='operations']/field/list/field[@name='forecast_availability']" position="replace"/>
+            <xpath expr="//page[@name='operations']/field/list/field[@name='forecast_expected_date']" position="replace"/>
+            <xpath expr="//field[@name='move_ids_without_package']/list/field[@name='product_uom_qty']" position="before">
+                <field name="is_readonly_intrastat_code" column_invisible="True"/>
+                <field name="intrastat_code_id" readonly="is_readonly_intrastat_code" column_invisible="parent.picking_type_code != 'outgoing'"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <header name="second_header">
+                    <button name="action_print_pro_forma_invoice" string="Print Proforma invoice" type="object" class="oe_stat_button btn-sm" invisible="picking_type_code != 'outgoing'"/>
+                    <button name="action_proforma_invoice" string="Generate Proforma invoice" type="object" class="oe_stat_button btn-sm" invisible="picking_type_code != 'outgoing'"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ev_mdm_pop_up_window" model="ir.ui.view">
+        <field name="name">ev.mdm.pop.up.window</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group name="org_data">
+                        <field name="full_name" readonly="1"/>
+                        <field name="dep_short_cut" readonly="1"/>
+                        <field name="dep" readonly="1"/>
+                        <field name="mdm" readonly="1"/>
+                        <field name="organisation_id_code" readonly="1"/>
+                        <field name="dep_access" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="enrolment_access" readonly="1"/>
+                        <field name="removal_access" readonly="1"/>
+                        <field name="enrolment_permission" readonly="1"/>
+                        <field name="removal_permission" readonly="1"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="picking_attachments_management_popup" model="ir.ui.view">
+        <field name="name">picking.attachments.management.popup</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <form string="Return Wizard">
+                <field name="manual_attachment_ids" nolabel="1" context="{'default_res_model': 'stock.picking', 'default_res_id': id, 'default_public': True}">
+                    <list editable="bottom">
+                       <field name="description" required="1" placeholder="Required field..."/>
+                       <field name="name" column_invisible="True"/>
+                       <field name="ev_type" required="1" placeholder="Required field..."/>
+                       <field name="datas" filename="name" widget="binary" required="1"/>
+                       <field name="res_model" column_invisible="True"/>
+                       <field name="res_id" column_invisible="True"/>
+                        <field name="public" column_invisible="True"/>
+                    </list>
+                </field>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_pcking_search" model="ir.ui.view">
+        <field name="name">stock.picking.search</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <searchpanel>
+                    <field name="picking_code" icon="fa-truck"/>
+                    <field name="state" icon="fa-tasks"/>
+                    <field name="company_id" icon="fa-building"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_type_tree" model="ir.ui.view">
+        <field name="name">stock.picking.type.operations.tree</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_tree"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <field name="show_operations" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_picking_type_form" model="ir.ui.view">
+        <field name="name">stock.picking.type.operations.form</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <field name="create_backorder" position="before">
+                <field name="merge_pick_move" invisible="code == 'internal'"/>
+            </field>
+            <xpath expr="//form" position="inside">
+                <chatter/>
+            </xpath>
+        </field>
+    </record>
+
+  <record id="view_picking_withcarrier_out_form_return" model="ir.ui.view">
+        <field name="name">delivery.stock.picking_withcarrier.form.view.return</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_delivery.view_picking_withcarrier_out_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='tracking']" position="after">
+                <field name="ret_carrier_tracking_ref" class="oe_inline"/>
+                <field name="origin_po" invisible="1"/>
+                <field name="print_at_pick" widget="boolean_toggle" invisible="origin_po or picking_type_code != 'internal'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_picking_type_search">
+        <field name="name">stock.picking.type.Search</field>
+        <field name="model">stock.picking.type</field>
+        <field name="arch" type="xml">
+            <search string="Records">
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <searchpanel>
+                    <field name="code" icon="fa-list" string="Type"/>
+                    <field name="warehouse_id" icon="fa-home" string="Warehouse"/>
+                    <field name="company_id" icon="fa-building" string="Company"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- Full replacement of the original stock.vpicktree-->
+        <record id="stock.vpicktree" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <list string="Picking list" multi_edit="1" sample="1"
+                      limit="20" js_class="stock_list_view">
+                    <header>
+                        <button name="do_unreserve" type="object" string="Unreserve"/>
+                    </header>
+                    <field name="company_id" column_invisible="True"/>
+<!--                    <field name="priority" optional="show" widget="priority" nolabel="1"/>-->
+                    <field name="name" decoration-bf="1"/>
+                    <field name="partner_ref" readonly="1" optional="show" column_invisible="1"/>
+                    <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show" readonly="state == 'done'"/>
+                    <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show" readonly="state == 'done'"/>
+
+                    <field name="origin" optional="show"/>
+                    <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ('done', 'cancel')"/>
+                    <field name="backorder_id" optional="hide"/>
+<!--                    <field name="first_prod_from_sale_order" optional="hidden"/>-->
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="carrier_tracking_ref" optional="hide"/>
+                    <field name="carrier_id" optional="hide"/>
+<!--                    <field name="weight" optional="hide"/>-->
+<!--                    <field name="shipping_weight" optional="hide"/>-->
+                    <field name="picking_type_id" optional="hide"/>
+                    <field name="state" optional="show" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+
+                    <field name="partner_id" optional="show" readonly="state in ['cancel', 'done']"/>
+                    <field name="is_signed" string="Signed" optional="hide" groups="stock.group_stock_sign_delivery"/>
+                    <field name="user_id" optional="hide" column_invisible="1" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
+                    <field name="scheduled_date" optional="show" widget="remaining_days" column_invisible="1" readonly="state in ['cancel', 'done']"/>
+                    <field name="qty_serialized" optional="show"/>
+                    <field name="picking_type_code" column_invisible="True"/>
+                    <field name="date_done" string="Effective Date" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+    <record id="ev_view_picking_withcarrier_out_form" model="ir.ui.view">
+        <field name="name">ev.delivery.stock.picking_withcarrier.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_delivery.view_picking_withcarrier_out_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='carrier_data']" position="after">
+                <group name="carrier_data" string="Shipping Information">
+                    <field name="delivery_type" invisible="1"/>
+                    <field name="origin_po" invisible="1"/>
+                    <field name="is_multi_package_transfer" invisible="1"/>
+                    <field name="is_return_picking" invisible="1"/>
+                    <field name="carrier_id" options="{'no_create': True, 'no_open': True}" readonly="state in ('done', 'cancel')" invisible="is_multi_package_transfer"/>
+                    <!-- Current package plus button -->
+                    <label for="current_package_id" invisible="is_multi_package_transfer"/>
+                    <div name="current_package_id" invisible="is_multi_package_transfer">
+                        <field name="current_package_id" domain="[('picking_id', '=', id)]" options="{'no_create': True, 'no_edit': True}"/>
+                        <button name="delete_current_package" class="oe_inline btn-primary" string="Delete Package" type="object" invisible="(state not in ['waiting', 'confirmed', 'assigned'] or not current_package_id)"/>
+                        <button name="create_next_package" class="oe_inline btn btn-primary" string="NEW PACKAGE" type="object" invisible="(state not in ['waiting', 'confirmed', 'assigned'] or current_package_id)"/>
+                    </div>
+
+                    <!-- Current package type plus CLEAR PACKAGE button -->
+                    <label for="current_package_type_id" invisible="is_multi_package_transfer"/>
+                    <div name="current_package_type_id" invisible="is_multi_package_transfer">
+                        <field name="current_package_type_id" domain="['|', ('package_carrier_type', '=', delivery_type), ('package_carrier_type', '=', False)]" class="oe_inline" readonly="state not in ['waiting', 'confirmed', 'assigned']"/>
+                    </div>
+                    <field name="pack_piece_count" readonly="1"/>
+                    <field name="delivery_type" invisible="1"/>
+                    <label for="carrier_tracking_ref" invisible="is_multi_package_transfer"/>
+                    <div name="tracking" invisible="is_multi_package_transfer">
+                        <field name="carrier_tracking_ref" class="oe_inline text-break"/>
+<!--                        <button type="object" class="fa fa-arrow-right oe_link" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel Shipment" invisible="((((not carrier_tracking_ref and not ret_carrier_tracking_ref) or delivery_type in ['fixed', 'base_on_rule']) or not delivery_type) or state not in done)"/>-->
+                    </div>
+                    <field name="ret_carrier_tracking_ref" string="Return reference" invisible="is_multi_package_transfer"/>
+                    <field name="waybill" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="print_at_pick" widget="boolean_toggle" invisible="origin_po or picking_type_code != 'internal'"/>
+                    <label for="weight" string="Weight"/>
+                    <div>
+                        <field name="weight" class="oe_inline"/>
+                        <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                    </div>
+                    <label for="shipping_weight" string="Weight for shipping"/>
+                    <div>
+                        <field name="shipping_weight" class="oe_inline"/>
+                        <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                    </div>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='carrier_data']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <button name="send_to_shipper" position="attributes">
+                <attribute name="context">{'button_sender_print_labels':1}</attribute>
+                <attribute name="invisible">((((carrier_tracking_ref and not ret_carrier_tracking_ref) or not delivery_type) or state not in ('done', 'cancel')) or picking_type_code != 'outgoing')</attribute>
+            </button>
+        </field>
+    </record>
+
+    <record id="ev_shipping_picking_form_view_packages" model="ir.ui.view">
+        <field name="name">stock.picking.packages.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="ev_stock.stock_picking_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group[1]" position="after">
+                <group style="border: 2px solid grey;" invisible="(picking_code != 'outgoing' or not is_multi_package_transfer)">
+                    <group>
+                        <field name="picking_code" invisible="1"/>
+                        <field name="items_to_scan" invisible="1"/>
+                        <!-- Current package plus button -->
+                        <label for="current_package_id"/>
+                        <div name="current_package_id">
+                            <field name="current_package_id" domain="[('picking_id', '=', id)]" readonly="1"/>
+                            <button name="create_next_package" class="oe_inline btn btn-primary" string="NEW PACKAGE" type="object"
+                                    invisible="((not is_multi_package_transfer or state not in ['waiting', 'confirmed', 'assigned']) or items_to_scan == 0)"/>
+                        </div>
+
+                        <!-- Current package type plus CLEAR PACKAGE button -->
+                        <label for="current_package_type_id"/>
+                        <div name="current_package_type_id">
+                            <field name="delivery_type" invisible="1"/>
+                            <field name="current_package_type_id" class="oe_inline" domain="['|', ('package_carrier_type', '=', delivery_type), ('package_carrier_type', '=', False)]" readonly="state not in ['waiting', 'confirmed', 'assigned']"/>
+                            <button name="delete_current_package" class="oe_inline btn-primary" string="Delete Package" type="object" invisible="((state not in ['waiting', 'confirmed', 'assigned'] or not current_package_id) or not is_multi_package_transfer)"/>
+                        </div>
+                        <field name="is_multi_package_transfer" invisible="1"/>
+                    </group>
+                    <group>
+                      <field name="is_return_picking" invisible="1"/>
+                      <field name="carrier_id" options="{'no_create': True, 'no_open': True}" readonly="state in ('done', 'cancel')"/>
+                      <field name="delivery_type" invisible="True"/>
+                      <field name="pack_piece_count" readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_search" model="ir.ui.view">
+        <field name="name">stock.picking.search</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="waybill"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
