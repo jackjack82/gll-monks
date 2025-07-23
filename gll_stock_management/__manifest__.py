@@ -4,14 +4,11 @@
     "category": "Inventory",
     "summary": "This module handle GLL stock management.",
     "license": "OPL-1",
-    "description": "Stock Workflow",
+    "description": "GLL Stock Workflow",
     "version": "18.0.1.1.1",
     "author": "Webmonks SRL",
-    "website": "http://www.webmonks.de",
+    "website": "https://github.com/OCA/partner-contact",
     "depends": [
-        "base",
-        "barcodes",
-        "stock_barcode",
         "stock_delivery",
         "stock",
     ],
@@ -21,8 +18,8 @@
     },
     "data": [
         # View files
-        "views/stock_package.xml",
-        "views/stock.xml",
+        "views/stock_picking.xml",
+        "views/res_partner.xml",
     ],
     # Technical
     "installable": True,
