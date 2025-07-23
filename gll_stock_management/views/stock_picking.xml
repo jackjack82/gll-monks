@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="gll_stock_picking_form_view" model="ir.ui.view">
+        <field name="name">gll.stock.picking.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">1</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="delivery_partner_id"/>
+            </field>
+            <field name="origin" position="after">
+                <field name="shipping_weight"/>
+                <field name="items_count"/>
+                <field name="items_volume"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="gll_view_picking_withcarrier_out_form" model="ir.ui.view">
+        <field name="name">gll.delivery.stock.picking_withcarrier.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">1</field>
+        <field name="inherit_id" ref="stock_delivery.view_picking_withcarrier_out_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='shipping_weight']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='shipping_weight']/parent::div" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="gll_view_pcking_search" model="ir.ui.view">
+        <field name="name">gll.stock.picking.search</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="delivery_partner_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="gll_stock_picking_list" model="ir.ui.view">
+        <field name="name">gll.stock.picking.list</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="delivery_partner_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

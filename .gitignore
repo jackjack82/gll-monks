@@ -1,3 +1,7 @@
+# jj customizations
+.pre-commit-config.yaml
+.pylintrc-mandatory
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
