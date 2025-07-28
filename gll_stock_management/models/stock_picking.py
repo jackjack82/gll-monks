@@ -11,7 +11,7 @@ class StockPicking(models.Model):
     items_count = fields.Integer(
         compute="compute_items_count_volume",
         store=True,
-        string="Number of items",
+        string="Number of packages",
     )
     items_volume = fields.Float(
         compute="compute_items_count_volume",
