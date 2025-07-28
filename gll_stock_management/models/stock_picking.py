@@ -21,7 +21,7 @@ class StockPicking(models.Model):
 
     @api.onchange("delivery_partner_id")
     def _onchange_delivery_partner(self):
-        if self.delivery_partner_id:
+        if self.delivery_partner_id and self.picking_type_code == "incoming":
             self.location_dest_id = self.delivery_partner_id.internal_location_id
 
     @api.depends("move_line_ids.quantity")
