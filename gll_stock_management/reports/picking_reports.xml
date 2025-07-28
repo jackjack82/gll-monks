@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- PICKING OPERATIONS reports edit -->
+
+    <!-- External layout, i.e. headers and footers-->
+
+    <template id="external_layout_standard_picking_gll" inherit_id="web.external_layout_standard">
+        <!-- remove company address in header-->
+        <xpath expr="//div[@name='company_address']" position="replace">
+            <div class="col-6" name="company_address"></div>
+        </xpath>
+   </template>
+
+
+    <!-- Changes to the main report -->
+
+    <template id="gll_report_picking_operation_note" inherit_id="stock.report_picking">
+
+        <xpath expr="//div[@name='div_outgoing_address']" position="before">
+          <div class="col-6" name="div_outgoing_address">
+            <h1>ENTRATA MERCE DEL</h1>
+          </div>
+        </xpath>
+
+    </template>
+
+</odoo>
