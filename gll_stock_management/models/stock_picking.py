@@ -11,6 +11,11 @@ class StockPicking(models.Model):
     items_count = fields.Integer(
         compute="compute_items_count_volume",
         store=True,
+        string="Number of items",
+    )
+    packages_count = fields.Integer(
+        compute="compute_items_count_volume",
+        store=True,
         string="Number of packages",
     )
     items_volume = fields.Float(
@@ -27,7 +32,16 @@ class StockPicking(models.Model):
     @api.depends("move_line_ids.quantity")
     def compute_items_count_volume(self):
         for picking in self:
+            lines = self.move_ids.move_line_ids
             picking.items_volume = sum(
-                sml.quantity * sml.product_id.volume for sml in self.move_line_ids
+                sml.quantity * sml.product_id.volume for sml in lines
             )
-            picking.items_count = len(self.move_ids.move_line_ids.result_package_id)
+            picking.items_count = sum(sml.quantity for sml in lines)
+            picking.packages_count = len(lines.result_package_id)
+
+    def button_validate(self):
+        """At validation, trigger again packages and items computation"""
+        for picking in self:
+            picking.compute_items_count_volume()
+
+        return super(StockPicking, self).button_validate()
