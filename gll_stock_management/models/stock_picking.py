@@ -90,11 +90,10 @@ class StockPicking(models.Model):
             )
 
         # Create sale orders for each package type
-        sale_orders = self.env["sale.order"]
         order_lines = []
         for package_type, count in package_type_counts.items():
             # Check if package type has products
-            if not package_type.product_ids:
+            if not package_type.sale_product_id:
                 raise UserError(
                     _("Package type '%s' has no products defined.") % package_type.name
                 )
@@ -125,7 +124,7 @@ class StockPicking(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             "view_mode": "form",
-            "res_id": sale_orders.id,
+            "res_id": sale_order.id,
         }
 
         return action
