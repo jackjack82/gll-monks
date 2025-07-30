@@ -57,8 +57,6 @@ class StockPicking(models.Model):
         """Create a SO with partner the delivery address of the picking.
         SO lines should include all the products related to the packages
         used in the transfer."""
-        self.ensure_one()
-
         # Get all packages related to the selected transfers
         packages = self.move_line_ids.mapped("result_package_id")
         if not packages:
