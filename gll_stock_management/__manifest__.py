@@ -21,6 +21,7 @@
         "views/stock_picking.xml",
         "views/stock_move_line.xml",
         "views/res_partner.xml",
+        "views/stock_package_type.xml",
     ],
     # Technical
     "installable": True,
