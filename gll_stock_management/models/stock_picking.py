@@ -53,76 +53,95 @@ class StockPicking(models.Model):
 
         return super(StockPicking, self).button_validate()
 
-    def create_sale_order_packages(self):
+    def create_sale_order_packages(self, operation_type):
         """Create a SO with partner the delivery address of the picking.
-        SO lines should include all the products related to the packages
-        used in the transfer."""
-        # Get all packages related to the selected transfers
-        packages = self.move_line_ids.mapped("result_package_id")
-        if not packages:
-            raise UserError(_("No packages found for the selected transfer."))
+        SO lines should include, depending on the TYPE:
+            1) 'receipt': all the products related to the packages
+                used in the receipts.
+            2) 'deliveries': all the products related to the packages used
+                for deliveries to
+        """
+        # selecting the proper transfer depending on the operation type
+        if operation_type == "receipts":
+            pickings = self.filtered(lambda pick: pick.picking_type_code == "incoming")
+        elif operation_type == "deliveries":
+            pickings = self.filtered(lambda pick: pick.picking_type_code == "outgoing")
+        else:
+            raise UserError(_("Operation type not defined."))
 
-        if not all([pick.state == "done" for pick in self]):
-            raise UserError(_("All transfers have to be validated for this operation."))
+        if not pickings:
+            msg_type = "Deliveries" if operation_type == "delivery" else "Receipts"
+            raise UserError(_(f"No {msg_type} found for the selected transfers."))
 
-        # Check if all transfers have the same delivery address
-        partner_id = self.mapped("partner_id")
-        if len(partner_id) != 1:
-            raise UserError(
-                _("All the transfers should have the same delivery address.")
-            )
+        # grouping by receipts or delivery partner
+        partner_ids = pickings.mapped("partner_id")
+        sale_orders = self.env["sale.order"]
 
-        # Count packages by package type
-        package_type_counts = {}
-        for package in packages:
-            package_type = package.package_type_id
-            if not package_type:
-                raise UserError(_(f"No package type found for package {package.name}."))
-            if package_type not in package_type_counts:
-                package_type_counts[package_type] = 0
-            package_type_counts[package_type] += 1
+        for partner_id in partner_ids:
+            picks = pickings.filtered(lambda p: p.partner_id == partner_id)
+            packages = picks.move_line_ids.mapped("result_package_id")
+            # if not packages: TODO: decide how to raise errors, now skip this edge case
+            #     raise UserError(_("No packages found for the selected transfer."))
 
-        if not package_type_counts:
-            raise UserError(
-                _("No package types found for the packages in the transfer.")
-            )
-
-        # Create sale orders for each package type
-        order_lines = []
-        for package_type, count in package_type_counts.items():
-            # Check if package type has products
-            if not package_type.sale_product_id:
+            if not all([pick.state == "done" for pick in picks]):
                 raise UserError(
-                    _("Package type '%s' has no products defined.") % package_type.name
+                    _("All transfers have to be validated for this operation.")
                 )
-            product = package_type.sale_product_id
-            order_lines.append(
-                (
-                    0,
-                    0,
-                    {
-                        "product_id": product.id,
-                        "product_uom_qty": count,
-                        "price_unit": product.list_price,
-                    },
-                )
-            )
 
-        sale_order = self.env["sale.order"].create(
-            {
-                "partner_id": partner_id.id,
-                "order_line": order_lines,
-                "origin": ",".join([pick.name for pick in self]),
-            }
-        )
+            # Count packages by package type
+            package_type_counts = {}
+            for package in packages:
+                package_type = package.package_type_id
+                if not package_type:
+                    raise UserError(
+                        _(f"No package type found for package {package.name}.")
+                    )
+                if package_type not in package_type_counts:
+                    package_type_counts[package_type] = 0
+                package_type_counts[package_type] += 1
+
+            if not package_type_counts:
+                raise UserError(
+                    _("No package types found for the packages in the transfer.")
+                )
+
+            # Create sale orders for each package type
+            order_lines = []
+            for package_type, count in package_type_counts.items():
+                # Check if package type has products
+                product = package_type.get_order_product_id(operation_type)
+                if not product:
+                    raise UserError(
+                        _(f"No products found for the package type {package_type.name}")
+                    )
+                order_lines.append(
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": product.id,
+                            "product_uom_qty": count,
+                            "price_unit": product.list_price,
+                        },
+                    )
+                )
+
+            sale_orders |= self.env["sale.order"].create(
+                {
+                    "partner_id": partner_id.id,
+                    "order_line": order_lines,
+                    "origin": ",".join([pick.name for pick in picks]),
+                }
+            )
 
         # Return action to view created sale orders
         action = {
             "name": _("Sale Orders"),
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            "view_mode": "form",
-            "res_id": sale_order.id,
+            "view_mode": "list,form",
+            "domain": [("id", "in", sale_orders.ids)],
+            "target": "current",
         }
 
         return action
