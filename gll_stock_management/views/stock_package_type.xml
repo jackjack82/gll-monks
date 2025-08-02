@@ -7,7 +7,8 @@
         <field name="inherit_id" ref="stock.stock_package_type_form"/>
         <field name="arch" type="xml">
             <field name="barcode" position="after">
-                 <field name="sale_product_id"/>
+                 <field name="receipts_product_id"/>
+                 <field name="deliveries_product_id"/>
              </field>
         </field>
     </record>

@@ -11,6 +11,8 @@
     "depends": [
         "stock_delivery",
         "stock",
+        "sale",
+        "purchase",
     ],
     "external_dependencies": {},
     "assets": {
