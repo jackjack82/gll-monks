@@ -3,12 +3,12 @@
 
 from unittest.mock import patch
 
-from requests.exceptions import HTTPError
-
 from odoo.tests import Form, TransactionCase, new_test_user
 from odoo.tools import mute_logger
+from requests.exceptions import HTTPError
 
-from .test_nuts_request_results import create_response_error, create_response_ok
+from .test_nuts_request_results import (create_response_error,
+                                        create_response_ok)
 
 MOCK_PATH = "odoo.addons.base_location_nuts.wizard.nuts_import.requests.get"
 
@@ -155,21 +155,23 @@ class TestBaseLocationNuts(TransactionCase):
             "'; DELETE FROM res_partner; --",
             "UNION SELECT * FROM res_users --",
         ]
-        
+
         for malicious_code in malicious_codes:
             with self.subTest(malicious_code=malicious_code):
                 # Attempt to create NUTS with malicious code
                 with self.assertRaises(Exception):
-                    self.nuts_model.create({
-                        'level': 1,
-                        'code': malicious_code,
-                        'name': 'Test',
-                        'country_id': self.country_1.id,
-                    })
-        
+                    self.nuts_model.create(
+                        {
+                            "level": 1,
+                            "code": malicious_code,
+                            "name": "Test",
+                            "country_id": self.country_1.id,
+                        }
+                    )
+
         # Test SQL injection in search operations
         for malicious_code in malicious_codes:
             with self.subTest(search_code=malicious_code):
                 # Search should return empty recordset, not execute malicious SQL
-                result = self.nuts_model.search([('code', '=', malicious_code)])
+                result = self.nuts_model.search([("code", "=", malicious_code)])
                 self.assertEqual(len(result), 0)

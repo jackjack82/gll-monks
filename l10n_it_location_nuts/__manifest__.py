@@ -6,7 +6,7 @@
     "summary": "Opzioni NUTS specifiche per l'Italia",
     "version": "18.0.1.0.0",
     "category": "Localization/Europe",
-    "website": "https://github.com/OCA/l10n-italy",
+    "website": "https://github.com/OCA/partner-contact",
     "author": "Agile Business Group, " "Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "application": False,

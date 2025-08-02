@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- list View -->
+    <record id="view_gll_pricelist_list" model="ir.ui.view">
+        <field name="name">gll.pricelist.list</field>
+        <field name="model">gll.pricelist</field>
+        <field name="arch" type="xml">
+            <list string="Pricelists" editable="top">
+                <field name="min_weight"/>
+                <field name="max_weight"/>
+                <field name="price"/>
+                <field name="max_pack_num"/>
+                <field name="rounding"/>
+                <field name="package_type_id"/>
+                <field name="state_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_gll_pricelist_form" model="ir.ui.view">
+        <field name="name">gll.pricelist.form</field>
+        <field name="model">gll.pricelist</field>
+        <field name="arch" type="xml">
+            <form string="Pricelist">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="price"/>
+                            <field name="min_weight"/>
+                            <field name="max_weight"/>
+                            <field name="max_pack_num"/>
+                        </group>
+                        <group>
+                            <field name="rounding"/>
+                            <field name="package_type_id"/>
+                            <field name="state_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_gll_pricelist_search" model="ir.ui.view">
+        <field name="name">gll.pricelist.search</field>
+        <field name="model">gll.pricelist</field>
+        <field name="arch" type="xml">
+            <search string="Pricelists">
+                <field name="package_type_id"/>
+                <field name="state_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Package Type" name="group_by_package_type" context="{'group_by': 'package_type_id'}"/>
+                    <filter string="State" name="group_by_state" context="{'group_by': 'state_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_gll_pricelist" model="ir.actions.act_window">
+        <field name="name">GLL Pricelists</field>
+        <field name="res_model">gll.pricelist</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_gll_pricelist_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new pricelist
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_gll_pricelist"
+              name="GLL Pricelists"
+              action="action_gll_pricelist"
+              parent="stock.menu_stock_config_settings"
+              sequence="20"/>
+</odoo>
