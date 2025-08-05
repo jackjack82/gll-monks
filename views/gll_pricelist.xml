@@ -10,6 +10,7 @@
                 <field name="max_weight"/>
                 <field name="price"/>
                 <field name="max_pack_num"/>
+                <field name="volume"/>
                 <field name="rounding"/>
                 <field name="package_type_id"/>
                 <field name="state_id"/>
@@ -32,6 +33,7 @@
                             <field name="max_pack_num"/>
                         </group>
                         <group>
+                            <field name="volume"/>
                             <field name="rounding"/>
                             <field name="package_type_id"/>
                             <field name="state_id"/>
@@ -62,7 +64,7 @@
     <record id="action_gll_pricelist" model="ir.actions.act_window">
         <field name="name">GLL Pricelists</field>
         <field name="res_model">gll.pricelist</field>
-        <field name="view_mode">list</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_gll_pricelist_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
