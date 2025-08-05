@@ -11,15 +11,24 @@
     "depends": [
         "stock_delivery",
         "stock",
+        "sale",
+        "purchase",
     ],
     "external_dependencies": {},
     "assets": {
         "web.assets_backend": [],
     },
     "data": [
+        # data files
+        "data/data.xml",
         # View files
         "views/stock_picking.xml",
+        "views/stock_move_line.xml",
         "views/res_partner.xml",
+        "views/stock_package_type.xml",
+        "views/gll_pricelist.xml",
+        # security
+        "security/ir.model.access.csv",
     ],
     # Technical
     "installable": True,

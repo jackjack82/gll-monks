@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="gll_product_packaging_delivery_form">
+        <field name="name">gll.product.packaging.form.delivery</field>
+        <field name="model">stock.package.type</field>
+        <field name="inherit_id" ref="stock.stock_package_type_form"/>
+        <field name="arch" type="xml">
+            <field name="barcode" position="after">
+                 <field name="receipts_product_id"/>
+                 <field name="deliveries_product_id"/>
+             </field>
+        </field>
+    </record>
+
+</odoo>
