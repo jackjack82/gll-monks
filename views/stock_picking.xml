@@ -13,7 +13,6 @@
             <field name="origin" position="after">
                 <field name="shipping_weight"/>
                 <field name="items_count"/>
-                <field name="packages_count"/>
                 <field name="items_volume"/>
             </field>
         </field>
