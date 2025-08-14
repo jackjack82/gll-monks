@@ -1,4 +1,6 @@
 # © 2025 webmonks
+
+
 {
     "name": "GLL Stock management",
     "category": "Inventory",
@@ -30,6 +32,8 @@
         "views/txt_import_wizard_views.xml",
         # security
         "security/ir.model.access.csv",
+        # reports
+        "reports/picking_reports.xml",
     ],
     # Technical
     "installable": True,

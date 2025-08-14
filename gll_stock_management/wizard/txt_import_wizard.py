@@ -11,30 +11,34 @@ class TxtImportWizard(models.Model):
     _name = "gll.txt.import.wizard"
     _description = "TXT Import Wizard"
 
-    name = fields.Char(compute='_compute_name', store=True)
+    name = fields.Char(compute="_compute_name", store=True)
     file = fields.Binary(string="File", required=True)
     filename = fields.Char(string="Filename")
     results = fields.Text(string="Result", readonly=True)
-    picking_count = fields.Integer(compute='_compute_picking_count', string="Deliveries")
+    picking_count = fields.Integer(
+        compute="_compute_picking_count", string="Deliveries"
+    )
 
-    @api.depends('filename')
+    @api.depends("filename")
     def _compute_name(self):
         for record in self:
             record.name = record.filename if record.filename else _("New Import")
 
     def _compute_picking_count(self):
         for record in self:
-            record.picking_count = self.env['stock.picking'].search_count([('import_id', '=', record.id)])
+            record.picking_count = self.env["stock.picking"].search_count(
+                [("import_id", "=", record.id)]
+            )
 
     def action_view_pickings(self):
         self.ensure_one()
-        pickings = self.env['stock.picking'].search([('import_id', '=', self.id)])
+        pickings = self.env["stock.picking"].search([("import_id", "=", self.id)])
         action = {
-            'name': _('Deliveries'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.picking',
-            'view_mode': 'list,form',
-            'domain': [('id', 'in', pickings.ids)],
+            "name": _("Deliveries"),
+            "type": "ir.actions.act_window",
+            "res_model": "stock.picking",
+            "view_mode": "list,form",
+            "domain": [("id", "in", pickings.ids)],
         }
         return action
 
@@ -65,7 +69,7 @@ class TxtImportWizard(models.Model):
             file_line = 1
 
             for line in lines:
-                if len(line) < 100: # todo file finished with '\x1a'
+                if len(line) < 100:  # todo file finished with '\x1a'
                     continue
 
                 # Extract data from the line based on positions
@@ -129,11 +133,11 @@ class TxtImportWizard(models.Model):
             if processed_pickings:
                 picking_ids = list(processed_pickings.values())
                 return {
-                    'name': _('Created Deliveries'),
-                    'type': 'ir.actions.act_window',
-                    'res_model': 'stock.picking',
-                    'view_mode': 'list,form',
-                    'domain': [('id', 'in', [p.id for p in picking_ids])],
+                    "name": _("Created Deliveries"),
+                    "type": "ir.actions.act_window",
+                    "res_model": "stock.picking",
+                    "view_mode": "list,form",
+                    "domain": [("id", "in", [p.id for p in picking_ids])],
                 }
             return True
 

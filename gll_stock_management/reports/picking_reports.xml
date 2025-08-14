@@ -15,7 +15,7 @@
                                 <div class="col-2"/>
                         </div>
                         <div class="row mt16 mb16">
-                            <div class="col-5"><h4>DOCUMENTO N. :<span t-field="o.name"/></h4></div>
+                            <div class="col-5"><h4>DOCUMENTO N. :<span t-field="o.origin"/></h4></div>
                             <div class="col-3"/>
                             <div class="col-4"><h4>DEL: <span t-field="o.date_done" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></h4></div>
                         </div><br/>
@@ -211,11 +211,20 @@
     <template id="report_entrata_merci_action">
         <t t-call="web.html_container">
             <t t-set="is_pro_forma" t-value="True"/>
-            <t t-set="docs" t-value="docs.with_context(proforma=True)"/>
             <t t-foreach="docs" t-as="doc">
                 <t t-call="gll_stock_management.report_entrata_merci" t-lang="doc.partner_id.lang"/>
             </t>
         </t>
     </template>
 
+    <record id="action_report_entrata_merci" model="ir.actions.report">
+        <field name="name">Entrata Merci</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">gll_stock_management.report_entrata_merci_action</field>
+        <field name="report_file">gll_stock_management.report_entrata_merci_action</field>
+        <field name="print_report_name">'Entrata Merci - %s - %s' % (object.partner_id.name or '', object.name)</field>
+        <field name="binding_model_id" ref="model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

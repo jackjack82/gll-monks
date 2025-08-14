@@ -56,7 +56,11 @@ class StockPicking(models.Model):
                 )
             picking.compute_items_count_volume()
 
-        return super(StockPicking, self).button_validate()
+        res = super(StockPicking, self).button_validate()
+        for picking in self:
+            if not picking.origin:
+                picking.origin = picking.name
+        return res
 
     def create_sale_order_packages(self, operation_type):
         """Create a SO with partner the delivery address of the picking.
