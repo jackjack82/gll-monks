@@ -9,7 +9,20 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field name="delivery_partner_id"/>
+                <field name="trip_id"/>
             </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </field>
+            <!-- Add partner address fields after partner_id -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <div class="o_address_format">
+                    <field name="partner_street" placeholder="Street..." class="o_address_street"/>
+                    <field name="partner_zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="partner_city" placeholder="City" class="o_address_city"/>
+                    <field name="partner_country_id" placeholder="Country" class="o_address_country"/>
+                </div>
+            </xpath>
             <field name="origin" position="after">
                 <field name="shipping_weight"/>
                 <field name="items_count"/>

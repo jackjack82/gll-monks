@@ -4,3 +4,6 @@ from . import stock_move_line
 from . import stock_package_type
 from . import gll_pricelist
 from . import stock_move
+from . import product
+from . import res_config_settings
+from . import gll_trip

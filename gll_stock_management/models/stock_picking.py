@@ -14,6 +14,36 @@ class StockPicking(models.Model):
         string="Import Reference",
         readonly=True,
     )
+    trip_id = fields.Many2one(
+        "gll.trip",
+        string="Trip",
+        tracking=True,
+    )
+    # Related partner fields
+    partner_street = fields.Char(
+        related="partner_id.street",
+        string="Street",
+        store=True,
+        readonly=False,
+    )
+    partner_zip = fields.Char(
+        related="partner_id.zip",
+        string="ZIP",
+        store=True,
+        readonly=False,
+    )
+    partner_city = fields.Char(
+        related="partner_id.city",
+        string="City",
+        store=True,
+        readonly=False,
+    )
+    partner_country_id = fields.Many2one(
+        related="partner_id.country_id",
+        string="Country",
+        store=True,
+        readonly=False,
+    )
     items_count = fields.Integer(
         compute="compute_items_count_volume",
         store=True,
@@ -61,6 +91,48 @@ class StockPicking(models.Model):
             if not picking.origin:
                 picking.origin = picking.name
         return res
+
+    def action_create_trip(self):
+        """Create a new trip from selected pickings"""
+        # Check if any pickings are selected
+        if not self:
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "title": "No Deliveries Selected",
+                    "message": "Please select at least one delivery to create a trip.",
+                    "sticky": False,
+                    "type": "warning",
+                },
+            }
+
+        # Get the common partner if possible
+        partners = self.mapped("partner_id")
+        common_partner = partners[0] if len(partners) == 1 else False
+
+        # Create a new trip
+        trip = self.env["gll.trip"].create(
+            {
+                "name": f"Trip {fields.Date.today()}",
+                "partner_id": common_partner.id
+                if common_partner
+                else self.env.company.partner_id.id,
+            }
+        )
+
+        # Associate the pickings with the trip
+        self.write({"trip_id": trip.id})
+
+        # Return an action to open the new trip
+        return {
+            "name": "New Trip",
+            "type": "ir.actions.act_window",
+            "res_model": "gll.trip",
+            "view_mode": "form",
+            "res_id": trip.id,
+            "target": "current",
+        }
 
     def create_sale_order_packages(self, operation_type):
         """Create a SO with partner the delivery address of the picking.

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_gll_trip_tree" model="ir.ui.view">
+        <field name="name">gll.trip.tree</field>
+        <field name="model">gll.trip</field>
+        <field name="arch" type="xml">
+            <tree string="Trips">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="picking_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_gll_trip_form" model="ir.ui.view">
+        <field name="name">gll.trip.form</field>
+        <field name="model">gll.trip</field>
+        <field name="arch" type="xml">
+            <form string="Trip">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pickings" type="object" class="oe_stat_button" icon="fa-truck"
+                                attrs="{'invisible': [('picking_count', '=', 0)]}">
+                            <field name="picking_count" widget="statinfo" string="Deliveries"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Trip Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="note" placeholder="Add notes here..."/>
+                        </page>
+                        <page string="Deliveries">
+                            <field name="picking_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="scheduled_date"/>
+                                    <field name="origin"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_gll_trip_search" model="ir.ui.view">
+        <field name="name">gll.trip.search</field>
+        <field name="model">gll.trip</field>
+        <field name="arch" type="xml">
+            <search string="Trips">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Partner" name="group_by_partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_gll_trip" model="ir.actions.act_window">
+        <field name="name">Trips</field>
+        <field name="res_model">gll.trip</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new trip
+            </p>
+            <p>
+                Organize your deliveries by trips.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_gll_trip"
+              name="Trips"
+              parent="stock.menu_stock_warehouse_mgmt"
+              action="action_gll_trip"
+              sequence="10"/>
+
+    <!-- Action to create trip from pickings -->
+    <record id="action_create_trip_from_pickings" model="ir.actions.server">
+        <field name="name">Create Trip</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="binding_model_id" ref="model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+action = model.action_create_trip()
+        </field>
+    </record>
+</odoo>

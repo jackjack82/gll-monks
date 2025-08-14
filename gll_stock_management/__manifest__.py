@@ -30,6 +30,9 @@
         "views/stock_package_type.xml",
         "views/gll_pricelist.xml",
         "views/txt_import_wizard_views.xml",
+        "views/product_views.xml",
+        "views/res_config_settings_views.xml",
+        "views/gll_trip_views.xml",
         # security
         "security/ir.model.access.csv",
         # reports
