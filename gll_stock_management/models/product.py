@@ -26,6 +26,13 @@ class ProductProduct(models.Model):
         if self.volume:
             self.volume = round(self.volume, 5)
 
+    def _get_description(self, picking_type_id):
+        """override completely the original to avoid using the use of
+        description fields
+        """
+        self.ensure_one()
+        return self.name
+
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
