@@ -27,6 +27,7 @@
         "views/res_partner.xml",
         "views/stock_package_type.xml",
         "views/gll_pricelist.xml",
+        "views/txt_import_wizard_views.xml",
         # security
         "security/ir.model.access.csv",
     ],

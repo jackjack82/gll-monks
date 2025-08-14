@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 gll_stock_management.access_gll_pricelist,access_gll_pricelist,gll_stock_management.model_gll_pricelist,base.group_user,1,1,1,1
+gll_stock_management.access_gll_txt_import_wizard,access_gll_txt_import_wizard,gll_stock_management.model_gll_txt_import_wizard,base.group_user,1,1,1,1

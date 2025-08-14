@@ -9,6 +9,11 @@ class StockPicking(models.Model):
         "res.partner",
         string="Delivery Partner",
     )
+    import_id = fields.Many2one(
+        "gll.txt.import.wizard",
+        string="Import Reference",
+        readonly=True,
+    )
     items_count = fields.Integer(
         compute="compute_items_count_volume",
         store=True,
