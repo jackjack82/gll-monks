@@ -11,9 +11,15 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,done,error"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pickings" type="object" class="oe_stat_button" icon="fa-truck"
+                                invisible="not picking_count">
+                            <field name="picking_count" widget="statinfo" string="Deliveries"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
-                            <field name="filename" readonly="1" invisible="not filename"/>
+                            <field name="name" readonly="1"/>
                         </h1>
                     </div>
                     <group>
@@ -22,8 +28,8 @@
                             <field name="filename" invisible="1"/>
                         </group>
                     </group>
-                    <notebook invisible="state == 'draft'" >
-                        <page string="Result">
+                    <notebook>
+                        <page string="Results">
                             <field name="results" readonly="1"/>
                         </page>
                     </notebook>
@@ -39,8 +45,9 @@
         <field name="arch" type="xml">
             <list string="TXT Imports" decoration-success="state == 'done'" decoration-danger="state == 'error'">
                 <field name="create_date"/>
-                <field name="filename"/>
+                <field name="name"/>
                 <field name="state"/>
+                <field name="picking_count"/>
             </list>
         </field>
     </record>
@@ -51,6 +58,7 @@
         <field name="model">gll.txt.import.wizard</field>
         <field name="arch" type="xml">
             <search string="TXT Imports">
+                <field name="name"/>
                 <field name="filename"/>
                 <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
                 <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
