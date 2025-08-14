@@ -18,7 +18,7 @@ class TxtImportWizard(models.Model):
         [("draft", "Draft"), ("done", "Done"), ("error", "Error")],
         string="State",
         default="draft",
-        readonly=True,
+        # readonly=True,
     )
 
     # @api.model
@@ -48,7 +48,7 @@ class TxtImportWizard(models.Model):
             file_line = 1
 
             for line in lines:
-                if not line.strip():
+                if len(line) < 100: # todo file finished with '\x1a'
                     continue
 
                 # Extract data from the line based on positions
