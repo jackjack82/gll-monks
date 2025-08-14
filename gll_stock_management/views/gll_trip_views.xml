@@ -37,9 +37,6 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Notes">
-                            <field name="note" placeholder="Add notes here..."/>
-                        </page>
                         <page string="Deliveries">
                             <field name="picking_ids" readonly="1">
                                 <list>
@@ -51,13 +48,12 @@
                                 </list>
                             </field>
                         </page>
+                        <page string="Notes">
+                            <field name="note" placeholder="Add notes here..."/>
+                        </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -107,7 +103,7 @@
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">
-action = model.action_create_trip()
+action = records.action_create_trip()
         </field>
     </record>
 </odoo>
