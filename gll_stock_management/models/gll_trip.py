@@ -39,7 +39,7 @@ class GllTrip(models.Model):
             "name": "Deliveries",
             "type": "ir.actions.act_window",
             "res_model": "stock.picking",
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "domain": [("id", "in", self.picking_ids.ids)],
         }
         return action

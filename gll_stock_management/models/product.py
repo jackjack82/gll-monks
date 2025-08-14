@@ -13,17 +13,14 @@ class ProductProduct(models.Model):
         ],
         string="Tipo Pacchetto",
     )
-    
+
     # Modify volume field to have 5 decimal precision
-    volume = fields.Float(
-        "Volume", digits=(16, 5),
-        help="The volume in cubic meters."
-    )
-    
+    volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")
+
     colli_per_strato = fields.Integer(string="Colli per strato")
     strati_per_pallet = fields.Integer(string="Strati per pallet")
-    
-    @api.onchange('volume')
+
+    @api.onchange("volume")
     def _onchange_volume(self):
         """Round volume to 5 decimal places"""
         if self.volume:
@@ -38,13 +35,10 @@ class ProductTemplate(models.Model):
         string="Tipo Pacchetto",
         readonly=False,
     )
-    
+
     # Modify volume field to have 5 decimal precision
-    volume = fields.Float(
-        "Volume", digits=(16, 5),
-        help="The volume in cubic meters."
-    )
-    
+    volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")
+
     colli_per_strato = fields.Integer(
         related="product_variant_ids.colli_per_strato",
         string="Colli per strato",
@@ -55,8 +49,8 @@ class ProductTemplate(models.Model):
         string="Strati per pallet",
         readonly=False,
     )
-    
-    @api.onchange('volume')
+
+    @api.onchange("volume")
     def _onchange_volume(self):
         """Round volume to 5 decimal places"""
         if self.volume:
