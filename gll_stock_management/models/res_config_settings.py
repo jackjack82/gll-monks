@@ -12,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
         domain=[("type", "=", "service")],
         config_parameter="gll_stock_management.service_for_box_id",
     )
-    
+
     service_for_single_id = fields.Many2one(
         "product.product",
         string="Servizio per prodotto singolo",
