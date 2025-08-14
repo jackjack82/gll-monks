@@ -11,22 +11,39 @@ class TxtImportWizard(models.Model):
     _name = "gll.txt.import.wizard"
     _description = "TXT Import Wizard"
 
+    name = fields.Char(compute='_compute_name', store=True)
     file = fields.Binary(string="File", required=True)
     filename = fields.Char(string="Filename")
     results = fields.Text(string="Result", readonly=True)
+    picking_count = fields.Integer(compute='_compute_picking_count', string="Deliveries")
+
+    @api.depends('filename')
+    def _compute_name(self):
+        for record in self:
+            record.name = record.filename if record.filename else _("New Import")
+
+    def _compute_picking_count(self):
+        for record in self:
+            record.picking_count = self.env['stock.picking'].search_count([('import_id', '=', record.id)])
+
+    def action_view_pickings(self):
+        self.ensure_one()
+        pickings = self.env['stock.picking'].search([('import_id', '=', self.id)])
+        action = {
+            'name': _('Deliveries'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', pickings.ids)],
+        }
+        return action
+
     state = fields.Selection(
         [("draft", "Draft"), ("done", "Done"), ("error", "Error")],
         string="State",
         default="draft",
-        # readonly=True,
+        readonly=True,
     )
-
-    # @api.model
-    # def create(self, vals):
-    #     """Override create to ensure new records are in draft state"""
-    #     if 'state' not in vals:
-    #         vals['state'] = 'draft'
-    #     return super(TxtImportWizard, self).create(vals)
 
     def action_import(self):
         """Import data from the uploaded TXT file"""
@@ -107,6 +124,18 @@ class TxtImportWizard(models.Model):
 
             # Update the wizard with results
             self.write({"state": "done", "results": result_message})
+
+            # Return the list of created pickings if successful
+            if processed_pickings:
+                picking_ids = list(processed_pickings.values())
+                return {
+                    'name': _('Created Deliveries'),
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'stock.picking',
+                    'view_mode': 'list,form',
+                    'domain': [('id', 'in', [p.id for p in picking_ids])],
+                }
+            return True
 
         except Exception as e:
             self.write({"state": "error", "error": str(e)})
