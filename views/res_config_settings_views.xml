@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.gll</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='stock_fleet']" position="before">
+                <setting id="service_for_box_id" string="Servizi per Pacchetti" help="GLL Servizi per Pacchetti">
+                    <field name="service_for_box_id"/>
+                </setting>
+                <setting id="service_for_single_id" string="Servizio per prodotto singolo" help="Servizio per prodotto singolo">
+                    <field name="service_for_single_id"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
