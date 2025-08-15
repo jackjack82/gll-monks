@@ -5,7 +5,7 @@
     "summary": "This module handle GLL stock management.",
     "license": "OPL-1",
     "description": "GLL Stock Workflow",
-    "version": "18.0.1.1.1",
+    "version": "18.0.1.1.2",
     "author": "Webmonks SRL",
     "website": "https://github.com/OCA/partner-contact",
     "depends": [
