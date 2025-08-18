@@ -47,18 +47,17 @@ class ProductTemplate(models.Model):
     )
 
     pick_service_type = fields.Selection(
-                [
-                        ("warehouse", "Warehouse"),
-                        ("transport", "Transport"),
-                        ("accessories", "Accessories"),
-                        ("additional", "Additional"),
-                        ("fixed", "Fixed"),
-                        ("variable", "Variable"),
-            ],
-                string = "Service Type",
-                copy=False,
-        )
-
+        [
+            ("warehouse", "Warehouse"),
+            ("transport", "Transport"),
+            ("accessories", "Accessories"),
+            ("additional", "Additional"),
+            ("fixed", "Fixed"),
+            ("variable", "Variable"),
+        ],
+        string="Service Type",
+        copy=False,
+    )
 
     # Modify volume field to have 5 decimal precision
     volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")
