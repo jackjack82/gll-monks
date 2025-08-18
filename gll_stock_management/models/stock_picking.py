@@ -9,6 +9,38 @@ class StockPicking(models.Model):
         "res.partner",
         string="Delivery Partner",
     )
+
+    service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Services",
+    )
+
+    fixed_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Fixed Services",
+        domain=[("service_type", "=", "fixed")],
+    )
+
+    variable_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Variable Services",
+        domain=[("service_type", "=", "variable")],
+    )
+
+    fixed_total = fields.Float(
+        string="Fixed Services Total",
+        compute="_compute_service_totals",
+        store=True,
+    )
+
+    variable_total = fields.Float(
+        string="Variable Services Total",
+        compute="_compute_service_totals",
+        store=True,
+    )
     import_id = fields.Many2one(
         "gll.txt.import.wizard",
         string="Import Reference",
@@ -74,6 +106,22 @@ class StockPicking(models.Model):
             )
             picking.items_count = sum(sml.quantity for sml in lines)
             picking.packages_count = len(lines.result_package_id)
+
+    @api.depends("service_ids.total", "service_ids.service_type")
+    def _compute_service_totals(self):
+        for picking in self:
+            picking.fixed_total = sum(
+                service.total
+                for service in picking.service_ids.filtered(
+                    lambda s: s.service_type == "fixed"
+                )
+            )
+            picking.variable_total = sum(
+                service.total
+                for service in picking.service_ids.filtered(
+                    lambda s: s.service_type == "variable"
+                )
+            )
 
     def button_validate(self):
         """At validation, trigger again packages and items computation"""
