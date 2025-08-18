@@ -13,18 +13,9 @@ class ProductProduct(models.Model):
         ],
         string="Tipo Pacchetto",
     )
-
-    service_type = fields.Selection(
-        [
-            ("warehouse", "Warehouse"),
-            ("transport", "Transport"),
-            ("accessories", "Accessories"),
-            ("additional", "Additional"),
-            ("fixed", "Fixed"),
-            ("variable", "Variable"),
-        ],
-        string="Service Type",
-    )
+    # pick_service_type = fields.Selection(
+    #     related="product_tmpl_id.service_type",
+    # )
 
     # Modify volume field to have 5 decimal precision
     volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")
@@ -55,11 +46,19 @@ class ProductTemplate(models.Model):
         readonly=False,
     )
 
-    service_type = fields.Selection(
-        related="product_variant_ids.service_type",
-        string="Service Type",
-        readonly=False,
-    )
+    pick_service_type = fields.Selection(
+                [
+                        ("warehouse", "Warehouse"),
+                        ("transport", "Transport"),
+                        ("accessories", "Accessories"),
+                        ("additional", "Additional"),
+                        ("fixed", "Fixed"),
+                        ("variable", "Variable"),
+            ],
+                string = "Service Type",
+                copy=False,
+        )
+
 
     # Modify volume field to have 5 decimal precision
     volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")

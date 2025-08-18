@@ -15,21 +15,13 @@ class PickingService(models.Model):
         "product.product",
         string="Product",
         required=True,
-        domain=[("service_type", "in", ["fixed", "variable"])],
     )
     quantity = fields.Float(
         string="Quantity",
         default=1.0,
-        required=True,
     )
     price = fields.Float(
         string="Price",
-        required=True,
-    )
-    service_type = fields.Selection(
-        related="product_id.service_type",
-        string="Service Type",
-        store=True,
     )
     total = fields.Float(
         string="Total",

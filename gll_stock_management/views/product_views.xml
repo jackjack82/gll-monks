@@ -13,10 +13,10 @@
                     <field name="colli_per_strato"/>
                     <field name="strati_per_pallet"/>
                 </group>
-                <group name="service_info" string="Service Information">
-                    <field name="service_type"/>
-                </group>
             </xpath>
+            <field name="categ_id" position="before">
+                <field name="pick_service_type"/>
+            </field>
         </field>
     </record>
 </odoo>
