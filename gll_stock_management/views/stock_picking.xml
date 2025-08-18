@@ -28,7 +28,53 @@
                 <field name="items_count"/>
                 <field name="packages_count"/>
                 <field name="items_volume"/>
+                <!-- Add fixed_total for outgoing pickings -->
+                <field name="fixed_total" invisible="picking_type_code != 'outgoing'"/>
             </field>
+
+            <!-- Add service tabs for incoming pickings -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Fixed Services" invisible="picking_type_code != 'incoming'">
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <div class="h5">Fixed Services Total: <field name="fixed_total" class="oe_inline"/></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="h5">Variable Services Total: <field name="variable_total" class="oe_inline"/></div>
+                        </div>
+                    </div>
+                    <field name="fixed_service_ids">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('service_type', '=', 'fixed')]"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Variable Services" invisible="picking_type_code != 'incoming'">
+                    <field name="variable_service_ids">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('service_type', '=', 'variable')]"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+
+                <!-- Add fixed services tab for outgoing pickings -->
+                <page string="Fixed Services" invisible="picking_type_code != 'outgoing'">
+                    <field name="fixed_service_ids">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('service_type', '=', 'fixed')]"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 
