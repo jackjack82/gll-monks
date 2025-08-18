@@ -10,24 +10,22 @@ class StockPicking(models.Model):
         string="Delivery Partner",
     )
 
-    service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Services",
-    )
+    # service_ids = fields.One2many(
+    #     "picking.service",
+    #     "picking_id",
+    #     string="Services",
+    # )
 
     fixed_service_ids = fields.One2many(
         "picking.service",
         "picking_id",
         string="Fixed Services",
-        domain=[("service_type", "=", "fixed")],
     )
 
     variable_service_ids = fields.One2many(
         "picking.service",
         "picking_id",
         string="Variable Services",
-        domain=[("service_type", "=", "variable")],
     )
 
     fixed_total = fields.Float(
@@ -107,20 +105,16 @@ class StockPicking(models.Model):
             picking.items_count = sum(sml.quantity for sml in lines)
             picking.packages_count = len(lines.result_package_id)
 
-    @api.depends("service_ids.total", "service_ids.service_type")
+    @api.depends("fixed_service_ids.total", "variable_service_ids.total")
     def _compute_service_totals(self):
         for picking in self:
             picking.fixed_total = sum(
                 service.total
-                for service in picking.service_ids.filtered(
-                    lambda s: s.service_type == "fixed"
-                )
+                for service in picking.fixed_service_ids
             )
             picking.variable_total = sum(
                 service.total
-                for service in picking.service_ids.filtered(
-                    lambda s: s.service_type == "variable"
-                )
+                for service in picking.variable_service_ids
             )
 
     def button_validate(self):
