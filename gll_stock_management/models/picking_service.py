@@ -18,10 +18,22 @@ class PickingService(models.Model):
     )
     quantity = fields.Float(
         string="Quantity",
-        default=1.0,
+        default=0.0,
     )
     price = fields.Float(
         string="Price",
+    )
+    pick_service_type = fields.Selection(
+        [
+            ("warehouse", "Warehouse"),
+            ("transport", "Transport"),
+            ("accessories", "Accessories"),
+            ("additional", "Additional"),
+            ("fixed", "Fixed"),
+            ("variable", "Variable"),
+        ],
+        string="Service Type",
+        copy=False,
     )
     total = fields.Float(
         string="Total",

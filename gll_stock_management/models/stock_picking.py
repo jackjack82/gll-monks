@@ -5,6 +5,49 @@ from odoo.exceptions import UserError
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
+    @api.model
+    def create(self, vals):
+        # Create the picking first
+        picking = super(StockPicking, self).create(vals)
+
+        # Only proceed for incoming and outgoing pickings
+        if picking.picking_type_code in ["incoming", "outgoing"]:
+            # Find fixed service products
+            fixed_products = self.env["product.product"].search(
+                [("product_tmpl_id.pick_service_type", "=", "fixed")]
+            )
+
+            # Create fixed services for both incoming and outgoing
+            for product in fixed_products:
+                self.env["picking.service"].create(
+                    {
+                        "picking_id": picking.id,
+                        "product_id": product.id,
+                        "pick_service_type": "fixed",
+                        "quantity": 0.0,
+                        "price": 0.0,
+                    }
+                )
+
+            # For outgoing pickings, also add variable services
+            if picking.picking_type_code == "outgoing":
+                variable_products = self.env["product.product"].search(
+                    [("product_tmpl_id.pick_service_type", "=", "variable")]
+                )
+
+                for product in variable_products:
+                    self.env["picking.service"].create(
+                        {
+                            "picking_id": picking.id,
+                            "product_id": product.id,
+                            "pick_service_type": "variable",
+                            "quantity": 0.0,
+                            "price": 0.0,
+                        }
+                    )
+
+        return picking
+
     delivery_partner_id = fields.Many2one(
         "res.partner",
         string="Delivery Partner",
@@ -20,12 +63,14 @@ class StockPicking(models.Model):
         "picking.service",
         "picking_id",
         string="Fixed Services",
+        domain=[("pick_service_type", "=", "fixed")],
     )
 
     variable_service_ids = fields.One2many(
         "picking.service",
         "picking_id",
         string="Variable Services",
+        domain=[("pick_service_type", "=", "variable")],
     )
 
     fixed_total = fields.Float(
@@ -109,12 +154,10 @@ class StockPicking(models.Model):
     def _compute_service_totals(self):
         for picking in self:
             picking.fixed_total = sum(
-                service.total
-                for service in picking.fixed_service_ids
+                service.total for service in picking.fixed_service_ids
             )
             picking.variable_total = sum(
-                service.total
-                for service in picking.variable_service_ids
+                service.total for service in picking.variable_service_ids
             )
 
     def button_validate(self):

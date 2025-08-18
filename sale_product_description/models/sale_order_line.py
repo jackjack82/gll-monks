@@ -1,9 +1,9 @@
-from odoo import api, models
 from markupsafe import Markup
+from odoo import api, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
 
     def write(self, values):
         result = super().write(values)
-        if 'product_id' in values:
+        if "product_id" in values:
             for line in self:
                 self._update_order_note_with_description(line)
         return result
@@ -24,11 +24,11 @@ class SaleOrderLine(models.Model):
             order = line.order_id
             current_note = order.note or ""
             description = line.product_id.description_pickingout
-            
+
             # Add the description to the note with a line break
             if current_note:
                 if description not in current_note:
                     new_note = Markup("%s<br/>%s") % (current_note, description)
-                    order.write({'note': new_note})
+                    order.write({"note": new_note})
             else:
-                order.write({'note': description})
+                order.write({"note": description})
