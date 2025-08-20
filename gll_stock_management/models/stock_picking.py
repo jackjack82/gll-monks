@@ -233,11 +233,13 @@ class StockPicking(models.Model):
         elif operation_type == "deliveries":
             pickings = self.filtered(lambda pick: pick.picking_type_code == "outgoing")
         else:
-            raise UserError(_("Operation type not defined."))
+            raise UserError(_("You can create Sale Orders only for receipts or deliveries."))
 
         if not pickings:
             msg_type = "Deliveries" if operation_type == "delivery" else "Receipts"
             raise UserError(_(f"No {msg_type} found for the selected transfers."))
+        if len(pickings) > 1:
+            raise UserError(_("You can create Sale Orders only for one transfer at the time."))
 
         # grouping by receipts or delivery partner
         partner_ids = pickings.mapped("partner_id")
@@ -245,7 +247,6 @@ class StockPicking(models.Model):
 
         for partner_id in partner_ids:
             picks = pickings.filtered(lambda p: p.partner_id == partner_id)
-            packages = picks.move_line_ids.mapped("result_package_id")
             # if not packages: TODO: decide how to raise errors, now skip this edge case
             #     raise UserError(_("No packages found for the selected transfer."))
 
@@ -253,33 +254,20 @@ class StockPicking(models.Model):
                 raise UserError(
                     _("All transfers have to be validated for this operation.")
                 )
+            # get config products for single and box products
+            service_for_single_id, service_for_box_id = self.get_single_box_product_services()
 
-            # Count packages by package type
-            package_type_counts = {}
-            for package in packages:
-                package_type = package.package_type_id
-                if not package_type:
-                    raise UserError(
-                        _(f"No package type found for package {package.name}.")
-                    )
-                if package_type not in package_type_counts:
-                    package_type_counts[package_type] = 0
-                package_type_counts[package_type] += 1
-
-            if not package_type_counts:
-                raise UserError(
-                    _("No package types found for the packages in the transfer.")
-                )
+            single_products = sum([line.product_uom_qty for line in picks.move_ids if line.product_id.package_type == 'single'])
+            box_products = sum([line.product_uom_qty for line in picks.move_ids if line.product_id.package_type == 'box'])
 
             # Create sale orders for each package type
+            order_line_tuples = [
+                (service_for_single_id, single_products),
+                (service_for_box_id, box_products)
+            ]
             order_lines = []
-            for package_type, count in package_type_counts.items():
-                # Check if package type has products
-                product = package_type.get_order_product_id(operation_type)
-                if not product:
-                    raise UserError(
-                        _(f"No products found for the package type {package_type.name}")
-                    )
+            for prod_id, count in order_line_tuples:
+                product = self.env["product.product"].browse(prod_id)
                 order_lines.append(
                     (
                         0,
@@ -292,6 +280,20 @@ class StockPicking(models.Model):
                     )
                 )
 
+            # add fixed and variable services for DELIVERIES
+            for line in (picks.variable_service_ids + picks.fixed_service_ids):
+                order_lines.append(
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": line.product_id.id,
+                            "product_uom_qty": line.quantity,
+                            "price_unit": line.price,
+                        },
+                    )
+                )
+
             sale_orders |= self.env["sale.order"].create(
                 {
                     "partner_id": partner_id.id,
@@ -299,6 +301,7 @@ class StockPicking(models.Model):
                     "origin": ",".join([pick.name for pick in picks]),
                 }
             )
+
 
         # Return action to view created sale orders
         action = {
@@ -311,3 +314,16 @@ class StockPicking(models.Model):
         }
 
         return action
+
+    def get_single_box_product_services(self):
+        # get products
+        icp_obj = self.env["ir.config_parameter"].sudo()
+        service_for_box_id = icp_obj.get_param("gll_stock_management.service_for_box_id")
+        if not service_for_box_id:
+            raise UserError(_("You need to specify the service you wish to use for box products."))
+
+        service_for_single_id = icp_obj.get_param("gll_stock_management.service_for_single_id")
+        if not service_for_single_id:
+            raise UserError(_("You need to specify the service you wish to use for single products."))
+
+        return int(service_for_single_id), int(service_for_box_id)
