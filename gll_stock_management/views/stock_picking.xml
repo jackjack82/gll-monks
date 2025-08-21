@@ -44,10 +44,40 @@
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </page>-->
-                <page string="Variable Services" invisible="picking_type_code != 'outgoing'">
-                    <field name="variable_service_ids">
+                <page string="Warehouse Services" invisible="picking_type_code != 'outgoing'">
+                    <field name="warehouse_service_ids">
                         <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
+                            <field name="product_id" domain="[('pick_service_type', '=', 'warehouse')]"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Transport Services" invisible="picking_type_code != 'outgoing'">
+                    <field name="transport_service_ids">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('pick_service_type', '=', 'transport')]"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Accessories Services" invisible="picking_type_code != 'outgoing'">
+                    <field name="accessories_service_ids">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('pick_service_type', '=', 'accessories')]"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Additional Services" invisible="picking_type_code != 'outgoing'">
+                    <field name="additional_service_ids">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('pick_service_type', '=', 'additional')]"/>
                             <field name="quantity"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
