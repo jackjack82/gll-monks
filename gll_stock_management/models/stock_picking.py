@@ -10,6 +10,15 @@ SERVICE_TYPE = [
     ("variable", "Variable"),
 ]
 
+SERVICE_FIELD = [
+    ("warehouse_total", "warehouse_service_ids"),
+    ("transport_total", "transport_service_ids"),
+    ("accessories_total", "accessories_service_ids"),
+    ("additional_total", "additional_service_ids"),
+    ("fixed_total", "fixed_service_ids"),
+    ("variable_total", "variable_service_ids"),
+]
+
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
@@ -23,34 +32,17 @@ class StockPicking(models.Model):
         if picking.picking_type_code in ["incoming", "outgoing"]:
             for service, _ in SERVICE_TYPE:
                 # Find fixed service products
-                fixed_products = self.env["product.product"].search(
+                products = self.env["product.product"].search(
                     [("product_tmpl_id.pick_service_type", "=", service)]
                 )
 
                 # Create fixed services for both incoming and outgoing
-                for product in fixed_products:
+                for product in products:
                     self.env["picking.service"].create(
                         {
                             "picking_id": picking.id,
                             "product_id": product.id,
                             "pick_service_type": service,
-                            "quantity": 0.0,
-                            "price": 0.0,
-                        }
-                    )
-
-            # For outgoing pickings, also add variable services
-            if picking.picking_type_code == "outgoing":
-                variable_products = self.env["product.product"].search(
-                    [("product_tmpl_id.pick_service_type", "=", "variable")]
-                )
-
-                for product in variable_products:
-                    self.env["picking.service"].create(
-                        {
-                            "picking_id": picking.id,
-                            "product_id": product.id,
-                            "pick_service_type": "variable",
                             "quantity": 0.0,
                             "price": 0.0,
                         }
@@ -195,18 +187,27 @@ class StockPicking(models.Model):
             picking.items_volume = sum(
                 sml.quantity * sml.product_id.volume for sml in lines
             )
-            picking.items_count = sum(sml.quantity for sml in lines)
-            picking.packages_count = len(lines.result_package_id)
+            picking.items_count = sum(
+                sml.quantity for sml in lines if sml.product_id.package_type == "single"
+            )
+            picking.packages_count = sum(
+                sml.quantity for sml in lines if sml.product_id.package_type == "box"
+            )
 
-    @api.depends("fixed_service_ids.total", "variable_service_ids.total")
+    @api.depends(
+        "warehouse_service_ids.total",
+        "transport_service_ids.total",
+        "accessories_service_ids.total",
+        "additional_service_ids.total",
+        "fixed_service_ids.total",
+        "variable_service_ids.total",
+    )
     def _compute_service_totals(self):
+        """For each service field, loop on the lines and compute the totals"""
         for picking in self:
-            picking.fixed_total = sum(
-                service.total for service in picking.fixed_service_ids
-            )
-            picking.variable_total = sum(
-                service.total for service in picking.variable_service_ids
-            )
+            for field, source in SERVICE_FIELD:
+                total = sum(service.total for service in getattr(picking, source))
+                setattr(picking, field, total)
 
     def button_validate(self):
         """At validation, trigger again packages and items computation"""
@@ -312,32 +313,8 @@ class StockPicking(models.Model):
             # if not packages: TODO: decide how to raise errors, now skip this edge case
             #     raise UserError(_("No packages found for the selected transfer."))
 
-            if not all([pick.state == "done" for pick in picks]):
-                raise UserError(
-                    _("All transfers have to be validated for this operation.")
-                )
             # get config products for single and box products
-            (
-                service_for_single_id,
-                service_for_box_id,
-            ) = self.get_single_box_product_services()
-
-            single_products = sum(
-                line.product_uom_qty
-                for line in picks.move_ids
-                if line.product_id.package_type == "single"
-            )
-            box_products = sum(
-                line.product_uom_qty
-                for line in picks.move_ids
-                if line.product_id.package_type == "box"
-            )
-
-            # Create sale orders for each package type
-            order_line_tuples = [
-                (service_for_single_id, single_products),
-                (service_for_box_id, box_products),
-            ]
+            order_line_tuples = self.prepare_single_box_lines(picks)
             order_lines = []
             for prod_id, count in order_line_tuples:
                 product = self.env["product.product"].browse(prod_id)
@@ -354,18 +331,8 @@ class StockPicking(models.Model):
                 )
 
             # add fixed and variable services for DELIVERIES
-            for line in picks.variable_service_ids + picks.fixed_service_ids:
-                order_lines.append(
-                    (
-                        0,
-                        0,
-                        {
-                            "product_id": line.product_id.id,
-                            "product_uom_qty": line.quantity,
-                            "price_unit": line.price,
-                        },
-                    )
-                )
+            services_lines = self.prepare_order_line_services(picks)
+            order_lines += services_lines
 
             sale_orders |= self.env["sale.order"].create(
                 {
@@ -386,6 +353,68 @@ class StockPicking(models.Model):
         }
 
         return action
+
+    def prepare_order_line_services(self, picks):
+        """Prepare order lines for additional services"""
+        order_lines = []
+        for _, field in SERVICE_FIELD:
+            lines_field = getattr(self, field).filtered(lambda line: line.quantity > 0)
+            if not lines_field:
+                continue
+            # get the field name
+            field_id = self._fields[field]
+            # add a section line
+
+            order_lines.append(
+                (
+                    0,
+                    0,
+                    {
+                        "display_type": "line_section",
+                        "name": field_id.string,
+                    },
+                )
+            )
+            for line in lines_field:
+                if not line.quantity:
+                    continue
+                order_lines.append(
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": line.product_id.id,
+                            "product_uom_qty": line.quantity,
+                            "price_unit": line.price,
+                        },
+                    )
+                )
+        return order_lines
+
+    def prepare_single_box_lines(self, picks):
+        """Return a tuple with single and box products and totals"""
+        (
+            service_for_single_id,
+            service_for_box_id,
+        ) = self.get_single_box_product_services()
+
+        single_products = sum(
+            line.product_uom_qty
+            for line in picks.move_ids
+            if line.product_id.package_type == "single"
+        )
+        box_products = sum(
+            line.product_uom_qty
+            for line in picks.move_ids
+            if line.product_id.package_type == "box"
+        )
+
+        # Create sale orders for each package type
+        order_line_tuples = [
+            (service_for_single_id, single_products),
+            (service_for_box_id, box_products),
+        ]
+        return order_line_tuples
 
     def get_single_box_product_services(self):
         # get products

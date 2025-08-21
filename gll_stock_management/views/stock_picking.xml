@@ -33,6 +33,7 @@
             </field>
 
             <!-- Add service tabs for incoming pickings -->
+
             <xpath expr="//notebook" position="inside">
 <!--                <page string="Fixed Services" invisible="picking_type_code != 'incoming'">-->
 <!--                    <div class="row mb-2">-->
@@ -44,7 +45,27 @@
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </page>-->
-                <page string="Warehouse Services" invisible="picking_type_code != 'outgoing'">
+                <page string="Fixed S." invisible="picking_type_code == 'internal'">
+                    <field name="fixed_service_ids">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('pick_service_type', '=', 'fixed')]"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Variable S." invisible="picking_type_code != 'incoming'">
+                    <field name="variable_service_ids">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Warehouse S." invisible="picking_type_code != 'incoming'">
                     <field name="warehouse_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'warehouse')]"/>
@@ -54,7 +75,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Transport Services" invisible="picking_type_code != 'outgoing'">
+                <page string="Transport S." invisible="picking_type_code != 'incoming'">
                     <field name="transport_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'transport')]"/>
@@ -64,7 +85,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Accessories Services" invisible="picking_type_code != 'outgoing'">
+                <page string="Accessories S." invisible="picking_type_code != 'incoming'">
                     <field name="accessories_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'accessories')]"/>
@@ -74,7 +95,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Additional Services" invisible="picking_type_code != 'outgoing'">
+                <page string="Additional S." invisible="picking_type_code != 'incoming'">
                     <field name="additional_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'additional')]"/>
@@ -85,17 +106,6 @@
                     </field>
                 </page>
 
-                <!-- Add fixed services tab for outgoing pickings -->
-                <page string="Fixed Services" invisible="picking_type_code == 'internal'">
-                    <field name="fixed_service_ids">
-                        <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'fixed')]"/>
-                            <field name="quantity"/>
-                            <field name="price"/>
-                            <field name="total" sum="Total"/>
-                        </list>
-                    </field>
-                </page>
             </xpath>
         </field>
     </record>
