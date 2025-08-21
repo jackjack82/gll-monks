@@ -10,6 +10,7 @@
                 <field name="max_weight"/>
                 <field name="price"/>
                 <field name="max_pack_num"/>
+                <field name="volume"/>
                 <field name="rounding"/>
                 <field name="package_type_id"/>
                 <field name="state_id"/>
@@ -32,6 +33,7 @@
                             <field name="max_pack_num"/>
                         </group>
                         <group>
+                            <field name="volume"/>
                             <field name="rounding"/>
                             <field name="package_type_id"/>
                             <field name="state_id"/>
