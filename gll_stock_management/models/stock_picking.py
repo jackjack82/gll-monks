@@ -1,33 +1,43 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+SERVICE_TYPE = [
+    ("warehouse", "Warehouse"),
+    ("transport", "Transport"),
+    ("accessories", "Accessories"),
+    ("additional", "Additional"),
+    ("fixed", "Fixed"),
+    ("variable", "Variable"),
+]
+
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         # Create the picking first
         picking = super(StockPicking, self).create(vals)
 
         # Only proceed for incoming and outgoing pickings
         if picking.picking_type_code in ["incoming", "outgoing"]:
-            # Find fixed service products
-            fixed_products = self.env["product.product"].search(
-                [("product_tmpl_id.pick_service_type", "=", "fixed")]
-            )
-
-            # Create fixed services for both incoming and outgoing
-            for product in fixed_products:
-                self.env["picking.service"].create(
-                    {
-                        "picking_id": picking.id,
-                        "product_id": product.id,
-                        "pick_service_type": "fixed",
-                        "quantity": 0.0,
-                        "price": 0.0,
-                    }
+            for service, _ in SERVICE_TYPE:
+                # Find fixed service products
+                fixed_products = self.env["product.product"].search(
+                    [("product_tmpl_id.pick_service_type", "=", service)]
                 )
+
+                # Create fixed services for both incoming and outgoing
+                for product in fixed_products:
+                    self.env["picking.service"].create(
+                        {
+                            "picking_id": picking.id,
+                            "product_id": product.id,
+                            "pick_service_type": service,
+                            "quantity": 0.0,
+                            "price": 0.0,
+                        }
+                    )
 
             # For outgoing pickings, also add variable services
             if picking.picking_type_code == "outgoing":
@@ -53,37 +63,6 @@ class StockPicking(models.Model):
         string="Delivery Partner",
     )
 
-    # service_ids = fields.One2many(
-    #     "picking.service",
-    #     "picking_id",
-    #     string="Services",
-    # )
-
-    fixed_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Fixed Services",
-        domain=[("pick_service_type", "=", "fixed")],
-    )
-
-    variable_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Variable Services",
-        domain=[("pick_service_type", "=", "variable")],
-    )
-
-    fixed_total = fields.Float(
-        string="Fixed Services Total",
-        compute="_compute_service_totals",
-        store=True,
-    )
-
-    variable_total = fields.Float(
-        string="Variable Services Total",
-        compute="_compute_service_totals",
-        store=True,
-    )
     import_id = fields.Many2one(
         "gll.txt.import.wizard",
         string="Import Reference",
@@ -133,6 +112,75 @@ class StockPicking(models.Model):
         compute="compute_items_count_volume",
         store=True,
         string="Total volume (m2)",
+    )
+
+    # all service fields plus their computed total
+    warehouse_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Warehouse Services",
+        domain=[("pick_service_type", "=", "warehouse")],
+    )
+    warehouse_total = fields.Float(
+        string="Warehouse Services Total",
+        compute="_compute_service_totals",
+        store=True,
+    )
+    transport_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Transport Services",
+        domain=[("pick_service_type", "=", "transport")],
+    )
+    transport_total = fields.Float(
+        string="Transport Services Total",
+        compute="_compute_service_totals",
+        store=True,
+    )
+    accessories_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Accessories Services",
+        domain=[("pick_service_type", "=", "accessories")],
+    )
+    accessories_total = fields.Float(
+        string="Accessories Services Total",
+        compute="_compute_service_totals",
+        store=True,
+    )
+    additional_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Additional Services",
+        domain=[("pick_service_type", "=", "additional")],
+    )
+    additional_total = fields.Float(
+        string="Additional Services Total",
+        compute="_compute_service_totals",
+        store=True,
+    )
+    fixed_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Fixed Services",
+        domain=[("pick_service_type", "=", "fixed")],
+    )
+    fixed_total = fields.Float(
+        string="Fixed Services Total",
+        compute="_compute_service_totals",
+        store=True,
+    )
+
+    variable_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Variable Services",
+        domain=[("pick_service_type", "=", "variable")],
+    )
+    variable_total = fields.Float(
+        string="Variable Services Total",
+        compute="_compute_service_totals",
+        store=True,
     )
 
     @api.onchange("delivery_partner_id")
@@ -227,26 +275,40 @@ class StockPicking(models.Model):
             2) 'deliveries': all the products related to the packages used
                 for deliveries to
         """
+        # checking the pick status and raise an error
+        unconfirmed_pick = self.filtered(lambda pick: pick.state != "done")
+        if unconfirmed_pick:
+            raise UserError(_("You can call this action only on confirmed transfers."))
         # selecting the proper transfer depending on the operation type
         if operation_type == "receipts":
-            pickings = self.filtered(lambda pick: pick.picking_type_code == "incoming")
+            self.create_sale_order_receipts()
         elif operation_type == "deliveries":
-            pickings = self.filtered(lambda pick: pick.picking_type_code == "outgoing")
+            self.create_sale_order_deliveries()
         else:
-            raise UserError(_("You can create Sale Orders only for receipts or deliveries."))
+            raise UserError(_("Invalid operation type"))
 
-        if not pickings:
-            msg_type = "Deliveries" if operation_type == "delivery" else "Receipts"
-            raise UserError(_(f"No {msg_type} found for the selected transfers."))
-        if len(pickings) > 1:
-            raise UserError(_("You can create Sale Orders only for one transfer at the time."))
+    def create_sale_order_deliveries(self):
+        """Create a SO with services related to receipt."""
+        wrong_type = self.filtered(lambda pick: pick.picking_type_code != "incoming")
+        if wrong_type:
+            raise UserError(_("You can call this feature only for incoming pickings."))
+
+    def create_sale_order_receipts(self):
+        """Create a SO"""
+        wrong_type = self.filtered(lambda pick: pick.picking_type_code != "incoming")
+        if wrong_type:
+            raise UserError(_("You can call this feature only for incoming pickings."))
+        if not self:
+            raise UserError(_(f"No deliveries found for the selected transfers."))
+        # if len(self) > 1:
+        #     raise UserError(_("You can create Sale Orders only for one transfer at the time."))
 
         # grouping by receipts or delivery partner
-        partner_ids = pickings.mapped("partner_id")
+        partner_ids = self.mapped("partner_id")
         sale_orders = self.env["sale.order"]
 
         for partner_id in partner_ids:
-            picks = pickings.filtered(lambda p: p.partner_id == partner_id)
+            picks = self.filtered(lambda p: p.partner_id == partner_id)
             # if not packages: TODO: decide how to raise errors, now skip this edge case
             #     raise UserError(_("No packages found for the selected transfer."))
 
@@ -255,15 +317,26 @@ class StockPicking(models.Model):
                     _("All transfers have to be validated for this operation.")
                 )
             # get config products for single and box products
-            service_for_single_id, service_for_box_id = self.get_single_box_product_services()
+            (
+                service_for_single_id,
+                service_for_box_id,
+            ) = self.get_single_box_product_services()
 
-            single_products = sum([line.product_uom_qty for line in picks.move_ids if line.product_id.package_type == 'single'])
-            box_products = sum([line.product_uom_qty for line in picks.move_ids if line.product_id.package_type == 'box'])
+            single_products = sum(
+                line.product_uom_qty
+                for line in picks.move_ids
+                if line.product_id.package_type == "single"
+            )
+            box_products = sum(
+                line.product_uom_qty
+                for line in picks.move_ids
+                if line.product_id.package_type == "box"
+            )
 
             # Create sale orders for each package type
             order_line_tuples = [
                 (service_for_single_id, single_products),
-                (service_for_box_id, box_products)
+                (service_for_box_id, box_products),
             ]
             order_lines = []
             for prod_id, count in order_line_tuples:
@@ -281,7 +354,7 @@ class StockPicking(models.Model):
                 )
 
             # add fixed and variable services for DELIVERIES
-            for line in (picks.variable_service_ids + picks.fixed_service_ids):
+            for line in picks.variable_service_ids + picks.fixed_service_ids:
                 order_lines.append(
                     (
                         0,
@@ -302,7 +375,6 @@ class StockPicking(models.Model):
                 }
             )
 
-
         # Return action to view created sale orders
         action = {
             "name": _("Sale Orders"),
@@ -318,12 +390,22 @@ class StockPicking(models.Model):
     def get_single_box_product_services(self):
         # get products
         icp_obj = self.env["ir.config_parameter"].sudo()
-        service_for_box_id = icp_obj.get_param("gll_stock_management.service_for_box_id")
+        service_for_box_id = icp_obj.get_param(
+            "gll_stock_management.service_for_box_id"
+        )
         if not service_for_box_id:
-            raise UserError(_("You need to specify the service you wish to use for box products."))
+            raise UserError(
+                _("You need to specify the service you wish to use for box products.")
+            )
 
-        service_for_single_id = icp_obj.get_param("gll_stock_management.service_for_single_id")
+        service_for_single_id = icp_obj.get_param(
+            "gll_stock_management.service_for_single_id"
+        )
         if not service_for_single_id:
-            raise UserError(_("You need to specify the service you wish to use for single products."))
+            raise UserError(
+                _(
+                    "You need to specify the service you wish to use for single products."
+                )
+            )
 
         return int(service_for_single_id), int(service_for_box_id)
