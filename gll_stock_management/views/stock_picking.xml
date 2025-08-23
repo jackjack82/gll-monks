@@ -32,27 +32,36 @@
                 <field name="fixed_total" invisible="picking_type_code != 'outgoing'"/>
             </field>
 
-            <!-- Add service tabs for incoming pickings -->
+            <xpath expr="//sheet/group" position="after">
+                <group string="Totals Value of Services" readonly="1" col="12">
+                    <group colspan="3">
+                        <field name="variable_total" readonly="1"/>
+                        <field name="fixed_total" readonly="1"/>
+                    </group>
+                    <group colspan="3">
+                        <field name="additional_total" readonly="1"/>
+                        <field name="accessories_total" readonly="1"/>
+                    </group>
+                    <group colspan="3">
+                        <field name="transport_total" readonly="1"/>
+                        <field name="warehouse_total" readonly="1"/>
 
+                    </group>
+                </group>
+            </xpath>
+            <!-- Add service tabs for incoming pickings -->
             <xpath expr="//notebook" position="inside">
-<!--                <page string="Fixed Services" invisible="picking_type_code != 'incoming'">-->
-<!--                    <div class="row mb-2">-->
-<!--                        <div class="col-6">-->
-<!--                            <div class="h5">Fixed Services Total: <field name="fixed_total" class="oe_inline"/></div>-->
-<!--                        </div>-->
-<!--                        <div class="col-6">-->
-<!--                            <div class="h5">Variable Services Total: <field name="variable_total" class="oe_inline"/></div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </page>-->
                 <page string="Fixed S." invisible="picking_type_code == 'internal'">
-                    <field name="fixed_service_ids">
+                    <field name="fixed_service_ids" context="{'default_pick_service_type': 'fixed', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'fixed')]"/>
                             <field name="quantity"/>
+                            <field name="pick_service_type" column_invisible="1"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
                             <field name="so_amount" sum="Ordered"/>
+                            <button name="add_line_to_sale_order" class="oe_stat_button" type="object"
+                                    icon="fa-list-ul" invisible="so_amount" help="Click here if you want to add this line to the current Sale Order"/>
                         </list>
                     </field>
                 </page>

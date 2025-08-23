@@ -114,7 +114,7 @@ class StockPicking(models.Model):
         domain=[("pick_service_type", "=", "warehouse")],
     )
     warehouse_total = fields.Float(
-        string="Warehouse Services Total",
+        string="Warehouse Serv.",
         compute="_compute_service_totals",
         store=True,
     )
@@ -125,7 +125,7 @@ class StockPicking(models.Model):
         domain=[("pick_service_type", "=", "transport")],
     )
     transport_total = fields.Float(
-        string="Transport Services Total",
+        string="Transport Serv.",
         compute="_compute_service_totals",
         store=True,
     )
@@ -136,7 +136,7 @@ class StockPicking(models.Model):
         domain=[("pick_service_type", "=", "accessories")],
     )
     accessories_total = fields.Float(
-        string="Accessories Services Total",
+        string="Accessories Serv.",
         compute="_compute_service_totals",
         store=True,
     )
@@ -147,7 +147,7 @@ class StockPicking(models.Model):
         domain=[("pick_service_type", "=", "additional")],
     )
     additional_total = fields.Float(
-        string="Additional Services Total",
+        string="Additional Serv.",
         compute="_compute_service_totals",
         store=True,
     )
@@ -158,7 +158,7 @@ class StockPicking(models.Model):
         domain=[("pick_service_type", "=", "fixed")],
     )
     fixed_total = fields.Float(
-        string="Fixed Services Total",
+        string="Fixed Serv.",
         compute="_compute_service_totals",
         store=True,
     )
@@ -170,7 +170,7 @@ class StockPicking(models.Model):
         domain=[("pick_service_type", "=", "variable")],
     )
     variable_total = fields.Float(
-        string="Variable Services Total",
+        string="Variable Serv.",
         compute="_compute_service_totals",
         store=True,
     )
@@ -321,19 +321,19 @@ class StockPicking(models.Model):
             sol_obj = self.env["sale.order.line"]
             for prod_id, count in order_line_tuples:
                 product = self.env["product.product"].browse(prod_id)
-                sol_obj.create({
-                            "order_id": sale_order.id,
-                            "product_id": product.id,
-                            "product_uom_qty": count,
-                            "price_unit": product.list_price,
-                        })
+                sol_obj.create(
+                    {
+                        "order_id": sale_order.id,
+                        "product_id": product.id,
+                        "product_uom_qty": count,
+                        "price_unit": product.list_price,
+                    }
+                )
 
             # add fixed and variable services for DELIVERIES
             self.prepare_order_line_services(picks, sale_order, sol_obj)
 
             sale_orders |= sale_order
-
-
 
         # Return action to view created sale orders
         action = {
@@ -358,23 +358,26 @@ class StockPicking(models.Model):
             field_id = self._fields[field]
             # add a section line
 
-            sol_obj.create({
-                        "display_type": "line_section",
-                        "name": field_id.string,
-                        "order_id": sale_order.id,
-                    },)
+            sol_obj.create(
+                {
+                    "display_type": "line_section",
+                    "name": field_id.string,
+                    "order_id": sale_order.id,
+                },
+            )
 
             for line in lines_field:
                 if not line.quantity:
                     continue
-                so_line_id = sol_obj.create({
-                    "product_id": line.product_id.id,
-                    "product_uom_qty": line.quantity,
-                    "price_unit": line.price,
-                    "order_id": sale_order.id,
-                }, )
+                so_line_id = sol_obj.create(
+                    {
+                        "product_id": line.product_id.id,
+                        "product_uom_qty": line.quantity,
+                        "price_unit": line.price,
+                        "order_id": sale_order.id,
+                    },
+                )
                 line.sale_line_id = so_line_id
-
 
     def prepare_single_box_lines(self, picks):
         """Return a tuple with single and box products and totals"""
