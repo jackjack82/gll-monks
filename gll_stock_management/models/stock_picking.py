@@ -105,8 +105,17 @@ class StockPicking(models.Model):
         store=True,
         string="Total volume (m2)",
     )
+    gll_so_count = fields.Integer(
+        string="Orders",
+        compute="compute_gll_so_count",
+    )
 
     # all service fields plus their computed total
+    all_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="All Services",
+    )
     warehouse_service_ids = fields.One2many(
         "picking.service",
         "picking_id",
@@ -175,6 +184,25 @@ class StockPicking(models.Model):
         store=True,
     )
 
+    def compute_gll_so_count(self):
+        for pick in self:
+            pick.gll_so_count = len(
+                pick.mapped("all_service_ids.sale_line_id.order_id")
+            )
+
+    def action_view_delivery_receipts_orders(self):
+        order_ids = self.mapped("all_service_ids.sale_line_id.order_id")
+        action = {
+            "name": _("Sale Orders"),
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "view_mode": "list,form",
+            "domain": [("id", "in", order_ids.ids)],
+            "target": "current",
+        }
+
+        return action
+
     @api.onchange("delivery_partner_id")
     def _onchange_delivery_partner(self):
         if self.delivery_partner_id and self.picking_type_code == "incoming":
@@ -183,7 +211,7 @@ class StockPicking(models.Model):
     @api.depends("move_line_ids.quantity")
     def compute_items_count_volume(self):
         for picking in self:
-            lines = self.move_ids.move_line_ids
+            lines = self.all_service_ids.move_line_ids
             picking.items_volume = sum(
                 sml.quantity * sml.product_id.volume for sml in lines
             )
@@ -282,23 +310,69 @@ class StockPicking(models.Model):
             raise UserError(_("You can call this action only on confirmed transfers."))
         # selecting the proper transfer depending on the operation type
         if operation_type == "receipts":
-            self.create_sale_order_receipts()
+            return self.create_sale_order_receipts()
         elif operation_type == "deliveries":
-            self.create_sale_order_deliveries()
+            return self.create_sale_order_deliveries()
         else:
             raise UserError(_("Invalid operation type"))
 
-    def create_sale_order_deliveries(self):
-        """Create a SO with services related to receipt."""
-        wrong_type = self.filtered(lambda pick: pick.picking_type_code != "incoming")
-        if wrong_type:
-            raise UserError(_("You can call this feature only for incoming pickings."))
-
     def create_sale_order_receipts(self):
-        """Create a SO"""
-        wrong_type = self.filtered(lambda pick: pick.picking_type_code != "incoming")
+        """Create a SO with services related to receipt."""
+
+        # TODO: TO BE UPDATED USING PRICELISTS
+        wrong_type = self.filtered(lambda pick: pick.picking_type_code != "outgoing")
         if wrong_type:
-            raise UserError(_("You can call this feature only for incoming pickings."))
+            raise UserError(_("You can call this feature only for outgoing pickings."))
+        if not self:
+            raise UserError(_(f"No deliveries found for the selected transfers."))
+        # grouping by receipts or delivery partner
+        partner_ids = self.mapped("partner_id")
+        sale_orders = self.env["sale.order"]
+
+        for partner_id in partner_ids:
+            picks = self.filtered(lambda p: p.partner_id == partner_id)
+            sale_order = self.env["sale.order"].create(
+                {
+                    "partner_id": partner_id.id,
+                    "origin": ",".join([pick.name for pick in picks]),
+                }
+            )
+            # get config products for single and box products
+            order_line_tuples = self.prepare_single_box_lines(picks)
+            sol_obj = self.env["sale.order.line"]
+            for prod_id, count in order_line_tuples:
+                product = self.env["product.product"].browse(prod_id)
+                sol_obj.create(
+                    {
+                        "order_id": sale_order.id,
+                        "product_id": product.id,
+                        "product_uom_qty": count,
+                        "price_unit": product.list_price,
+                    }
+                )
+
+            # add fixed and variable services for DELIVERIES
+            self.prepare_order_line_services(picks, sale_order, sol_obj)
+
+            sale_orders |= sale_order
+
+        # Return action to view created sale orders
+        action = {
+            "name": _("Sale Orders"),
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "view_mode": "list,form",
+            "domain": [("id", "in", sale_orders.ids)],
+            "target": "current",
+        }
+
+        return action
+
+    def create_sale_order_deliveries(self):
+        """Create a SO from deliveries."""
+        wrong_type = self.filtered(lambda pick: pick.picking_type_code != "outgoing")
+        if wrong_type:
+            raise UserError(_("You can call this feature only for outgoing pickings."))
         if not self:
             raise UserError(_(f"No deliveries found for the selected transfers."))
         # if len(self) > 1:

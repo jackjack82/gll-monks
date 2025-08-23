@@ -7,6 +7,13 @@
         <field name="priority">1</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_see_packages']" position="after">
+                <button name="action_view_delivery_receipts_orders" type="object"
+                        class="oe_stat_button" icon="fa-wrench" string="Orders"
+                        invisible="gll_so_count == 0">
+                        <field name="gll_so_count" string="Sale Orders" widget="statinfo"/>
+                </button>
+            </xpath>
             <field name="partner_id" position="after">
                 <field name="delivery_partner_id"/>
                 <field name="trip_id"/>
@@ -60,12 +67,14 @@
                             <field name="price"/>
                             <field name="total" sum="Total"/>
                             <field name="so_amount" sum="Ordered"/>
-                            <button name="add_line_to_sale_order" class="oe_stat_button" type="object"
-                                    icon="fa-list-ul" invisible="so_amount" help="Click here if you want to add this line to the current Sale Order"/>
+                            <button name="add_line_to_sale_order"
+                                    type="object" title="Add to Order"
+                                    icon="fa-list-ul" invisible="so_amount"
+                                    help="Click here if you want to add this line to the current Sale Order"/>
                         </list>
                     </field>
                 </page>
-                <page string="Variable S." invisible="picking_type_code != 'incoming'">
+                <page string="Variable S." invisible="picking_type_code == 'internal'">
                     <field name="variable_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
@@ -76,7 +85,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Warehouse S." invisible="picking_type_code != 'incoming'">
+                <page string="Warehouse S."  invisible="picking_type_code == 'internal'">
                     <field name="warehouse_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'warehouse')]"/>
@@ -87,7 +96,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Transport S." invisible="picking_type_code != 'incoming'">
+                <page string="Transport S."  invisible="picking_type_code == 'internal'">
                     <field name="transport_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'transport')]"/>
@@ -98,7 +107,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Accessories S." invisible="picking_type_code != 'incoming'">
+                <page string="Accessories S."  invisible="picking_type_code == 'internal'">
                     <field name="accessories_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'accessories')]"/>
@@ -109,7 +118,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Additional S." invisible="picking_type_code != 'incoming'">
+                <page string="Additional S."  invisible="picking_type_code == 'internal'">
                     <field name="additional_service_ids">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'additional')]"/>

@@ -49,7 +49,7 @@ class PickingService(models.Model):
     currency_id = fields.Many2one(
         related="sale_line_id.currency_id", store=True, string="Ordered"
     )
-    so_amount = fields.Monetary(related="sale_line_id.price_subtotal", stored=True)
+    so_amount = fields.Monetary(related="sale_line_id.price_subtotal", store=True)
 
     @api.depends("quantity", "price")
     def _compute_total(self):
@@ -68,7 +68,7 @@ class PickingService(models.Model):
         """Add a line to the sale order if the sale_line_id is missing."""
         # todo: the line is added at the end, no matter the section
         sol_obj = self.env["sale.order.line"]
-        order = self.picking_id.mapped("move_ids.sale_line_id.order_id")
+        order = self.picking_id.mapped("all_service_ids.sale_line_id.order_id")
         if len(order) != 1:
             raise UserError(
                 _("A related Sale Order is either missing or there are too many.")
