@@ -54,6 +54,7 @@ class ProductTemplate(models.Model):
             ("additional", "Additional"),
             ("fixed", "Fixed"),
             ("variable", "Variable"),
+            ("subscription", "Subscription"),
         ],
         string="Service Type",
         copy=False,
