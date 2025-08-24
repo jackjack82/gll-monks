@@ -335,6 +335,7 @@ class StockPicking(models.Model):
                 {
                     "partner_id": partner_id.id,
                     "origin": ",".join([pick.name for pick in picks]),
+                    "order_type": "receipts",
                 }
             )
             # get config products for single and box products
@@ -388,6 +389,7 @@ class StockPicking(models.Model):
                 {
                     "partner_id": partner_id.id,
                     "origin": ",".join([pick.name for pick in picks]),
+                    "order_type": "deliveries",
                 }
             )
             # get config products for single and box products

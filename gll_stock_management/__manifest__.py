@@ -33,6 +33,7 @@
         "views/product_views.xml",
         "views/res_config_settings_views.xml",
         "views/gll_trip_views.xml",
+        "views/sale_order.xml",
         # security
         "security/ir.model.access.csv",
         # reports
