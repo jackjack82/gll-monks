@@ -58,26 +58,7 @@
             </xpath>
             <!-- Add service tabs for incoming pickings -->
             <xpath expr="//notebook" position="inside">
-                <page string="Servizi Calcolati" invisible="picking_type_code == 'internal'">
-                    <group string="Servizi Logistici">
-                        <field name="servizi_logistici" readonly="1"/>
-                        <field name="diritto_fisso" readonly="1"/>
-                        <field name="preparazione" readonly="1"/>
-                        <field name="totale_logistico" readonly="1"/>
-                    </group>
-                    <group string="Servizi di Trasporto Italia">
-                        <field name="transport_service_total" readonly="1"/>
-                        <field name="accessories_service_total" readonly="1"/>
-                        <field name="additional_service_total" readonly="1"/>
-                        <field name="fixed_service_total" readonly="1"/>
-                        <field name="variable_service_total" readonly="1"/>
-                        <field name="totale_trasporto" readonly="1"/>
-                    </group>
-                    <group string="Altri Servizi">
-                        <field name="altri_servizi" readonly="1"/>
-                        <field name="totale_altri_servizi" readonly="1"/>
-                    </group>
-                </page>
+
                 <page string="Fixed S." invisible="picking_type_code == 'internal'">
                     <field name="fixed_service_ids" context="{'default_pick_service_type': 'fixed', 'default_picking_id': id}">
                         <list editable="bottom">
