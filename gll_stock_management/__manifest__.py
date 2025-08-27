@@ -12,6 +12,7 @@
     "website": "https://github.com/OCA/partner-contact",
     "depends": [
         "stock_delivery",
+        "accountant",
         "stock",
         "sale",
         "purchase",
@@ -24,6 +25,7 @@
         # data files
         "data/data.xml",
         # View files
+        "views/account_move.xml",
         "views/stock_picking.xml",
         "views/stock_move_line.xml",
         "views/res_partner.xml",

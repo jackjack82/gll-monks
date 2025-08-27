@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="gll_view_move_form" model="ir.ui.view">
+        <field name="name">gll.account.move.form.view</field>
+        <field name="model">account.move</field>
+        <field name="priority">1</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add service tabs for incoming pickings -->
+            <xpath expr="//page[@name='invoice_tab']/field/list/field[@name='account_id']" position="after">
+                <field name="service_type"/>
+            </xpath>
+            <xpath expr="//page[@name='invoice_tab']" position="before">
+                <page string="Servizi Calcolati">
+                    <group string="Servizi Logistici">
+                        <field name="logistics_services" readonly="1"/>
+                        <field name="fixed_fee" readonly="1"/>
+                        <field name="preparation" readonly="1"/>
+                        <field name="logistics_total" readonly="1"/>
+                    </group>
+                    <group string="Servizi di Trasporto Italia">
+                        <field name="transport_total" readonly="1"/>
+                        <field name="accessories_total" readonly="1"/>
+                        <field name="additional_total" readonly="1"/>
+                        <field name="fixed_total" readonly="1"/>
+                        <field name="variable_total" readonly="1"/>
+                        <field name="total_transport" readonly="1"/>
+                    </group>
+                    <group string="Altri Servizi">
+                        <field name="other_services" readonly="1"/>
+                        <field name="total_other_services" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -10,3 +10,4 @@ from . import gll_trip
 from . import sale_order
 from . import sale_order_line
 from . import picking_service
+from . import account_move

@@ -2,6 +2,16 @@
 
 from odoo import api, fields, models
 
+SERVICE_TYPE = [
+    ("warehouse", "Warehouse"),
+    ("transport", "Transport"),
+    ("accessories", "Accessories"),
+    ("additional", "Additional"),
+    ("fixed", "Fixed"),
+    ("variable", "Variable"),
+    ("subscription", "Subscription"),
+]
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -47,15 +57,7 @@ class ProductTemplate(models.Model):
     )
 
     pick_service_type = fields.Selection(
-        [
-            ("warehouse", "Warehouse"),
-            ("transport", "Transport"),
-            ("accessories", "Accessories"),
-            ("additional", "Additional"),
-            ("fixed", "Fixed"),
-            ("variable", "Variable"),
-            ("subscription", "Subscription"),
-        ],
+        SERVICE_TYPE,
         string="Service Type",
         copy=False,
     )
