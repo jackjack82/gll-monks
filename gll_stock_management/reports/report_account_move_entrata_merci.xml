@@ -18,6 +18,14 @@
                     </div>
                 </div>
 
+                <!-- Subtitle with period -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h5>PERIODO DAL: <span t-field="move.period_from" t-options="{'widget': 'date'}"/> AL: <span t-field="move.period_to" t-options="{'widget': 'date'}"/></h5>
+                    </div>
+                </div>
+                <br/>
+
                 <!-- Content: For each picking found, display a table -->
                 <t t-set="sale_orders" t-value="move.invoice_line_ids.mapped('sale_line_ids.order_id')"/>
                 <t t-set="sale_order_lines" t-value="move.invoice_line_ids.mapped('sale_line_ids')"/>
