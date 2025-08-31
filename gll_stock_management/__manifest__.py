@@ -42,6 +42,7 @@
         "reports/picking_reports.xml",
         "reports/logistics_services_invoicing_report.xml",
         "reports/italy_transportation_services_report.xml",
+        "reports/report_account_move_entrata_merci.xml",
     ],
     # Technical
     "installable": True,
