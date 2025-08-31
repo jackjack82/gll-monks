@@ -12,10 +12,13 @@ class AccountMoveLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals):
-        product = vals[0].get("product_id")
-        if product:
-            product = self.env["product.product"].browse(product)
-            vals[0]["service_type"] = product.pick_service_type
+        if not vals:
+            return super().create(vals)
+        for line in vals:
+            product = line.get("product_id")
+            if product:
+                product = self.env["product.product"].browse(product)
+                line["service_type"] = product.pick_service_type or product.product_tmpl_id.pick_service_type
         return super().create(vals)
 
 

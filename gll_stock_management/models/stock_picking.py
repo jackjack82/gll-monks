@@ -212,7 +212,7 @@ class StockPicking(models.Model):
     @api.depends("move_line_ids.quantity")
     def compute_items_count_volume(self):
         for picking in self:
-            lines = self.all_service_ids.move_line_ids
+            lines = self.move_line_ids
             picking.items_volume = sum(
                 sml.quantity * sml.product_id.volume for sml in lines
             )
@@ -321,11 +321,11 @@ class StockPicking(models.Model):
         """Create a SO with services related to receipt."""
 
         # TODO: TO BE UPDATED USING PRICELISTS
-        wrong_type = self.filtered(lambda pick: pick.picking_type_code != "outgoing")
+        wrong_type = self.filtered(lambda pick: pick.picking_type_code != "incoming")
         if wrong_type:
-            raise UserError(_("You can call this feature only for outgoing pickings."))
+            raise UserError(_("You can call this feature only for invoming pickings."))
         if not self:
-            raise UserError(_(f"No deliveries found for the selected transfers."))
+            raise UserError(_(f"No receipts found for the selected transfers."))
         # grouping by receipts or delivery partner
         partner_ids = self.mapped("partner_id")
         sale_orders = self.env["sale.order"]
