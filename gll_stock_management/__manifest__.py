@@ -41,6 +41,7 @@
         # reports
         "reports/picking_reports.xml",
         "reports/logistics_services_invoicing_report.xml",
+        "reports/italy_transportation_services_report.xml",
     ],
     # Technical
     "installable": True,
