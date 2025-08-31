@@ -40,6 +40,7 @@
         "security/ir.model.access.csv",
         # reports
         "reports/picking_reports.xml",
+        "reports/logistics_services_invoicing_report.xml",
     ],
     # Technical
     "installable": True,

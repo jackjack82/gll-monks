@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- QWeb template for the logistics services invoicing report -->
+    <template id="report_logistics_services_invoicing">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <!-- Customer information -->
+                <div class="row">
+                    <div class="col-12 text-start fw-bold">
+                        <t t-esc="move.partner_id.display_name"/> — <t t-if="move.partner_id.street"><t t-esc="move.partner_id.street"/>, </t><t t-if="move.partner_id.zip"><t t-esc="move.partner_id.zip"/> </t><t t-if="move.partner_id.city"><t t-esc="move.partner_id.city"/> </t><t t-if="move.partner_id.state_id">(<t t-esc="move.partner_id.state_id.code"/>), </t><t t-if="move.partner_id.country_id"><t t-esc="move.partner_id.country_id.name"/></t>
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <h2>Fatturazione Servizi Logistici</h2>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+
+                <!-- Subtitle with period -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h5>PERIODO DAL: <span t-field="move.date" t-options="{'widget': 'date'}"/> AL: <span t-field="move.date" t-options="{'widget': 'date'}"/></h5>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <!-- Amounts block -->
+                <div class="row mt-5">
+                    <div class="col-6"></div>
+                    <div class="col-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <td class="text-start">Servizi logistici</td>
+                                <td class="text-end">
+                                    <span t-field="move.logistics_services" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">Diritto Fisso</td>
+                                <td class="text-end">
+                                    <span t-field="move.fixed_fee" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">Preparazione</td>
+                                <td class="text-end">
+                                    <span t-field="move.preparation" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start fw-bold">Imponibile</td>
+                                <td class="text-end fw-bold">
+                                    <span t-field="move.logistics_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Report action template -->
+    <template id="report_logistics_services_invoicing_action">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="move">
+                <t t-call="gll_stock_management.report_logistics_services_invoicing"/>
+            </t>
+        </t>
+    </template>
+
+    <!-- Register the report in the system -->
+    <record id="action_report_logistics_services_invoicing" model="ir.actions.report">
+        <field name="name">Fatturazione Servizi Logistici</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">gll_stock_management.report_logistics_services_invoicing_action</field>
+        <field name="report_file">gll_stock_management.report_logistics_services_invoicing_action</field>
+        <field name="print_report_name">"Fatturazione_Servizi_Logistici_%(name)s"</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
