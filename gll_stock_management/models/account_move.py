@@ -18,12 +18,25 @@ class AccountMoveLine(models.Model):
             product = line.get("product_id")
             if product:
                 product = self.env["product.product"].browse(product)
-                line["service_type"] = product.pick_service_type or product.product_tmpl_id.pick_service_type
+                line["service_type"] = (
+                    product.pick_service_type
+                    or product.product_tmpl_id.pick_service_type
+                )
         return super().create(vals)
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
+
+    # Period fields
+    period_from = fields.Date(
+        string="Period From",
+        help="Start date of the period covered by this invoice",
+    )
+    period_to = fields.Date(
+        string="Period To",
+        help="End date of the period covered by this invoice",
+    )
 
     # Logistics Services fields
     logistics_services = fields.Float(

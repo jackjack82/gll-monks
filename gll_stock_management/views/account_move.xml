@@ -8,6 +8,12 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
 
+            <!-- Add period fields to the header -->
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="period_from"/>
+                <field name="period_to"/>
+            </xpath>
+
             <!-- Add service tabs for incoming pickings -->
             <xpath expr="//page[@name='invoice_tab']/field/list/field[@name='account_id']" position="after">
                 <field name="service_type"/>

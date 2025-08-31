@@ -26,7 +26,7 @@
                 <!-- Subtitle with period -->
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h5>PERIODO DAL: <span t-field="move.date" t-options="{'widget': 'date'}"/> AL: <span t-field="move.date" t-options="{'widget': 'date'}"/></h5>
+                        <h5>PERIODO DAL: <span t-field="move.period_from" t-options="{'widget': 'date'}"/> AL: <span t-field="move.period_to" t-options="{'widget': 'date'}"/></h5>
                     </div>
                 </div>
                 <br/>
