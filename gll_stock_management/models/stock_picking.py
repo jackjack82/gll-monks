@@ -24,6 +24,8 @@ SERVICE_FIELD = [
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
+    partner_id = fields.Many2one(strin="Address of Delivery")
+
     @api.model_create_multi
     def create(self, vals):
         # Create the picking first
@@ -53,7 +55,7 @@ class StockPicking(models.Model):
 
     delivery_partner_id = fields.Many2one(
         "res.partner",
-        string="Delivery Partner",
+        string="Shipper",
     )
 
     import_id = fields.Many2one(
@@ -85,9 +87,9 @@ class StockPicking(models.Model):
         store=True,
         readonly=False,
     )
-    partner_country_id = fields.Many2one(
-        related="partner_id.country_id",
-        string="Country",
+    partner_state_id = fields.Many2one(
+        related="partner_id.state_id",
+        string="State",
         store=True,
         readonly=False,
     )
