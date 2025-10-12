@@ -1,5 +1,5 @@
 - You can change the ribbon's name ("TEST") by editing the default
-  system parameter "ribbon.name" (in the menu Settings \> Technical \> Parameters \> 
+  system parameter "ribbon.name" (in the menu Settings \> Technical \> Parameters \>
   System Parameters) To hide the ribbon, set this parameter to "False"
   or delete it and refresh the page.
 - You can customize the ribbon color and background color through system
