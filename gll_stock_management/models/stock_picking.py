@@ -63,10 +63,12 @@ class StockPicking(models.Model):
         string="Import Reference",
         readonly=True,
     )
-    trip_id = fields.Many2one(
+    trip_ids = fields.Many2many(
         "gll.trip",
         string="Trip",
-        tracking=True,
+        relation="stock_picking_gll_trip_rel",
+        column1="picking_id",
+        column2="trip_id",
     )
     # Related partner fields
     partner_street = fields.Char(
@@ -279,15 +281,12 @@ class StockPicking(models.Model):
         # Create a new trip
         trip = self.env["gll.trip"].create(
             {
-                "name": f"Trip {fields.Date.today()}",
                 "partner_id": common_partner.id
                 if common_partner
                 else self.env.company.partner_id.id,
+                "picking_ids": [(6, 0, self.ids)],
             }
         )
-
-        # Associate the pickings with the trip
-        self.write({"trip_id": trip.id})
 
         # Return an action to open the new trip
         return {
