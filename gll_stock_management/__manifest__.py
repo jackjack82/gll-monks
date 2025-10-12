@@ -31,7 +31,6 @@
         "views/res_partner.xml",
         "views/stock_package_type.xml",
         "views/gll_pricelist.xml",
-        "views/txt_import_wizard_views.xml",
         "views/product_views.xml",
         "views/res_config_settings_views.xml",
         "views/gll_trip_views.xml",
@@ -43,6 +42,8 @@
         "reports/logistics_services_invoicing_report.xml",
         "reports/italy_transportation_services_report.xml",
         "reports/report_account_move_entrata_merci.xml",
+        # wizard
+        "wizard/txt_import_wizard_views.xml",
     ],
     # Technical
     "installable": True,
