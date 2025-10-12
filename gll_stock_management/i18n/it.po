@@ -1,0 +1,1520 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* gll_stock_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-12 10:31+0000\n"
+"PO-Revision-Date: 2025-10-12 10:31+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: gll_stock_management
+#: model:ir.actions.report,print_report_name:gll_stock_management.action_report_account_move_entrata_merci
+msgid "\"Consuntivo_entrata_merci_%(name)s\""
+msgstr "\"Consuntivo_entrata_merci_%(name)s\""
+
+#. module: gll_stock_management
+#: model:ir.actions.report,print_report_name:gll_stock_management.action_report_logistics_services_invoicing
+msgid "\"Fatturazione_Servizi_Logistici_%(name)s\""
+msgstr "\"Fatturazione_Servizi_Logistici_%(name)s\""
+
+#. module: gll_stock_management
+#: model:ir.actions.report,print_report_name:gll_stock_management.italy_transportation_services_report_action
+msgid "\"Fatturazione_Servizi_Trasporto_Italia_%(name)s\""
+msgstr "\"Fatturazione_Servizi_Trasporto_Italia_%(name)s\""
+
+#. module: gll_stock_management
+#: model:ir.actions.report,print_report_name:gll_stock_management.action_report_entrata_merci
+msgid ""
+"'Entrata Merci - %s - %s' % (object.partner_id.name or '', object.name)"
+msgstr ""
+"'Entrata Merci - %s - %s' % (object.partner_id.name or '', object.name)"
+
+#. module: gll_stock_management
+#: model:ir.actions.report,print_report_name:gll_stock_management.gll_receipts_report
+msgid "'Entrata Merci'"
+msgstr "'Entrata Merci'"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "(package barcode)"
+msgstr "(codice a barre del pacco)"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "(product barcode)"
+msgstr "(codice a barre del prodotto)"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "(serial barcode)"
+msgstr "(codice a barre seriale)"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "3.00"
+msgstr "3.00"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_logistics_services_invoicing
+msgid "31.05"
+msgstr "31.05"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Non è stato possibile riservare tutti i prodotti. Clicca sul pulsante \"Controlla Disponibilità\" per provare a riservare i prodotti."
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong><u>DESTINATARIO:</u></strong>"
+msgstr "<strong><u>DESTINATARIO:</u></strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong><u>MITTENTE:</u></strong>"
+msgstr "<strong><u>MITTENTE:</u></strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Basi: </strong>"
+msgstr "<strong>Basi: </strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Codice</strong>"
+msgstr "<strong>Codice</strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Colli:   </strong>"
+msgstr "<strong>Colli:   </strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>From</strong>"
+msgstr "<strong>Da</strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr "<strong>Numero Lotto/Seriale</strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Pallet: </strong>"
+msgstr "<strong>Pallet: </strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Peso: </strong>"
+msgstr "<strong>Peso: </strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Product Barcode</strong>"
+msgstr "<strong>Codice a Barre Prodotto</strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Product</strong>"
+msgstr "<strong>Prodotto</strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Quantity</strong>"
+msgstr "<strong>Quantità</strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>To</strong>"
+msgstr "<strong>A</strong>"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "<strong>Volume: </strong>"
+msgstr "<strong>Volume: </strong>"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/picking_service.py:0
+msgid "A related Sale Order is either missing or there are too many."
+msgstr "Un Ordine di Vendita correlato è mancante o ce ne sono troppi."
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_logistics_services_invoicing
+msgid "AL:"
+msgstr "AL:"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__accessories_total
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__accessories_total
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__accessories
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__accessories
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__accessories
+msgid "Accessories"
+msgstr "Accessori"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Accessories Ser."
+msgstr "Ser. Accessor"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__accessories_total
+msgid "Accessories Serv."
+msgstr "Ser. Accessori"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__accessories_service_ids
+msgid "Accessories Services"
+msgstr "Servizi Accessori"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_ids
+msgid "Activities"
+msgstr "Attività"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decorazione Eccezione Attività"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_state
+msgid "Activity State"
+msgstr "Stato Attività"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icona Tipo Attività"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_form
+msgid "Add notes here..."
+msgstr "Aggiungi note qui..."
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Add to Order"
+msgstr "Aggiungi all'Ordine"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__additional_total
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__additional_total
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__additional
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__additional
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__additional
+msgid "Additional"
+msgstr "Aggiuntivi"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Additional Ser."
+msgstr "Ser. Aggiuntivi"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__additional_total
+msgid "Additional Serv."
+msgstr "Ser. Agggiuntivi"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__additional_service_ids
+msgid "Additional Services"
+msgstr "Servizi Aggiuntivi"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__partner_id
+msgid "Address of Delivery"
+msgstr "Destinatario"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__all_service_ids
+msgid "All Services"
+msgstr "Tutti i Servizi"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_view_move_form
+msgid "Altri Servizi"
+msgstr "Altri Servizi"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "Annullamento"
+msgstr "Annullamento"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__rounding
+msgid "Arrotondamento"
+msgstr "Arrotondamento"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_attachment_count
+msgid "Attachment Count"
+msgstr "Numero allegati"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__partner_city
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "City"
+msgstr "Città"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Click here if you want to add this line to the current Sale Order"
+msgstr "Clicca qui se vuoi aggiungere questa riga all'Ordine di Vendita corrente"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_product__colli_per_strato
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_template__colli_per_strato
+msgid "Colli per strato"
+msgstr "Colli per strato"
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_res_config_settings
+msgid "Config Settings"
+msgstr "Parametri Configurazione"
+
+#. module: gll_stock_management
+#: model:ir.actions.report,name:gll_stock_management.action_report_account_move_entrata_merci
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "Consuntivo entrata merci"
+msgstr "Consuntivo entrata merci"
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_res_partner
+msgid "Contact"
+msgstr "Contatto"
+
+#. module: gll_stock_management
+#: model:ir.actions.server,name:gll_stock_management.action_create_so_from_receipts
+msgid "Crea Ordini di Vendita (Ricezioni)"
+msgstr "Crea Ordini di Vendita (Ricezioni)"
+
+#. module: gll_stock_management
+#: model:ir.actions.server,name:gll_stock_management.action_create_so_from_deliveries
+msgid "Crea Ordini di Vendita (Spedizioni)"
+msgstr "Crea Ordini di Vendita (Spedizioni)"
+
+#. module: gll_stock_management
+#: model:ir.actions.server,name:gll_stock_management.action_create_trip_from_pickings
+msgid "Create Trip"
+msgstr "Crea Viaggio"
+
+#. module: gll_stock_management
+#: model_terms:ir.actions.act_window,help:gll_stock_management.action_txt_import_wizard
+msgid "Create a new TXT import"
+msgstr "Crea un nuovo import TXT"
+
+#. module: gll_stock_management
+#: model_terms:ir.actions.act_window,help:gll_stock_management.action_gll_pricelist
+msgid "Create a new pricelist"
+msgstr "Crea un nuovo listino prezzi"
+
+#. module: gll_stock_management
+#: model_terms:ir.actions.act_window,help:gll_stock_management.action_gll_trip
+msgid "Create a new trip"
+msgstr "Crea un nuovo viaggio"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/wizard/txt_import_wizard.py:0
+msgid "Created Deliveries"
+msgstr "Spedizioni create"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__create_uid
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__create_uid
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__create_uid
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__create_date
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__create_date
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__create_date
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__create_date
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "DEL:"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "DOCUMENTO N. :"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__date_load
+msgid "Date Load"
+msgstr "Data carico"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__date_shipment
+msgid "Date Shipment"
+msgstr "Data Uscita"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/wizard/txt_import_wizard.py:0
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__picking_ids
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__picking_count
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__sale_order__order_type__deliveries
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_form
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_form
+msgid "Deliveries"
+msgstr "Spedizioni"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_package_type__deliveries_product_id
+msgid "Deliveries Package Product"
+msgstr "Prodotto pacco spedizioni"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__picking_count
+msgid "Delivery Count"
+msgstr "NUmero spedizioni"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__fixed_fee
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__fixed_fee
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_logistics_services_invoicing
+msgid "Diritto Fisso"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__display_name
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__display_name
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__display_name
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__display_name
+msgid "Display Name"
+msgstr "Nome completo"
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__gll_trip__trip_type__distribution
+msgid "Distribution"
+msgstr "Distribuzione"
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__gll_txt_import_wizard__state__done
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
+msgid "Done"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__gll_txt_import_wizard__state__draft
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
+msgid "Draft"
+msgstr "Bozza"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__partner_id
+msgid "Driver"
+msgstr "Autista"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "ENTRATA MERCE DEL"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__period_to
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__period_to
+msgid "End date of the period covered by this invoice"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.actions.report,name:gll_stock_management.action_report_entrata_merci
+#: model:ir.actions.report,name:gll_stock_management.gll_receipts_report
+msgid "Entrata Merci"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__gll_txt_import_wizard__state__error
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
+msgid "Error"
+msgstr "Errore"
+
+#. module: gll_stock_management
+#: model:ir.actions.report,name:gll_stock_management.action_report_logistics_services_invoicing
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_logistics_services_invoicing
+msgid "Fatturazione Servizi Logistici"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.actions.report,name:gll_stock_management.italy_transportation_services_report_action
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
+msgid "Fatturazione Servizi Trasporto Italia"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "Fermo deposito"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__file
+msgid "File"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__filename
+msgid "Filename"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__fixed_total
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__fixed_total
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__fixed
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__fixed
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__fixed
+msgid "Fixed"
+msgstr "Fissi"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Fixed Ser."
+msgstr "Ser. Fissi"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__fixed_total
+msgid "Fixed Serv."
+msgstr "Ser. Fissi"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__fixed_service_ids
+msgid "Fixed Services"
+msgstr "Servizi Fissi"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "From"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.actions.act_window,name:gll_stock_management.action_gll_pricelist
+#: model:ir.ui.menu,name:gll_stock_management.menu_gll_pricelist
+msgid "GLL Pricelists"
+msgstr "Listini GLL"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.res_config_settings_view_form_inherit
+msgid "GLL Servizi per Pacchetti"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_gll_pricelist
+msgid "Gll Price List"
+msgstr "Listino GLL"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_pricelist_search
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_search
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
+msgid "Group By"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__id
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__id
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__id
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__id
+msgid "ID"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__message_has_error
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_logistics_services_invoicing
+msgid "Imponibile"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_form
+msgid "Import"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
+msgid "Import Date"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__import_id
+msgid "Import Reference"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.actions.act_window,name:gll_stock_management.action_txt_import_wizard
+#: model:ir.ui.menu,name:gll_stock_management.menu_txt_import_wizard
+msgid "Import Spedizioni"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.actions.act_window,help:gll_stock_management.action_txt_import_wizard
+msgid "Import stock pickings from TXT files."
+msgstr "Importa entrate merci da file TXT"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_res_partner__internal_location_id
+#: model:ir.model.fields,field_description:gll_stock_management.field_res_users__internal_location_id
+msgid "Internal Location"
+msgstr "Ubicazione interna"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "Invalid operation type"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "Isole minori"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__write_uid
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__write_uid
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__write_uid
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__write_date
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__write_date
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__write_date
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__max_weight
+msgid "Max Kg"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__max_pack_num
+msgid "Max colli"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__min_weight
+msgid "Min Kg"
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/gll_pricelist.py:0
+msgid "Multiple pricelists found for the packages in the transfer."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__name
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/wizard/txt_import_wizard.py:0
+msgid "New Import"
+msgstr "Nuovo Import"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "No deliveries found for the selected transfers."
+msgstr "Nessuna spedizione trovata tra quelli selezionai"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/wizard/txt_import_wizard.py:0
+msgid "No file uploaded."
+msgstr "Nessun file caricato"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "No incoming transfers found for this invoice."
+msgstr "Nessuna entrata merce trovata per questa fattura"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/wizard/txt_import_wizard.py:0
+msgid "No outgoing picking type found."
+msgstr "Nessuna tipo di operazione trovato"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/gll_pricelist.py:0
+msgid "No pricelists found for the packages in the transfer."
+msgstr "Nessun listino trovato per questo trasferimento."
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "No receipts found for the selected transfers."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__note
+msgid "Notes"
+msgstr "Note"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__items_count
+msgid "Number of items"
+msgstr "Numero di prodotti"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__packages_count
+msgid "Number of packages"
+msgstr "Numero di pacchi"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/wizard/txt_import_wizard.py:0
+msgid "Only .txt files are supported."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_sale_order__order_type
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_sale_import_inherit_search_view
+msgid "Order Type"
+msgstr "Tipo di ordine"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__currency_id
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Ordered"
+msgstr "Ordinati"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__gll_so_count
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Orders"
+msgstr "Ordini"
+
+#. module: gll_stock_management
+#: model_terms:ir.actions.act_window,help:gll_stock_management.action_gll_trip
+msgid "Organize your deliveries by trips."
+msgstr "Organizza le tue spedizioni in viaggi"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__other_services
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__other_services
+msgid "Other Services"
+msgstr "Altri servizi"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_logistics_services_invoicing
+msgid "PERIODO DAL:"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "Package"
+msgstr "Pacco"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "Package A"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "Package B"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_move_line__package_type_id
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_pricelist_search
+msgid "Package Type"
+msgstr "Tipo pacco"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.product_template_form_view_inherit
+msgid "Packaging Information"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__package_type_id
+msgid "Pallet"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_search
+msgid "Partner"
+msgstr "Autista"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/wizard/txt_import_wizard.py:0
+msgid "Partner name is required."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__period_from
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__period_from
+msgid "Period From"
+msgstr "DAl"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__period_to
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__period_to
+msgid "Period To"
+msgstr "Al"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__phone
+msgid "Phone"
+msgstr "Telefono"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__picking_id
+msgid "Picking"
+msgstr "Trasferimento"
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_picking_service
+msgid "Picking Service"
+msgstr "Servizio trasferimento"
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "Please set a package type for all packages before validation."
+msgstr "Selezionare un tipo di pacco prima di convalidare i pacchi."
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__preparation
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__preparation
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_logistics_services_invoicing
+msgid "Preparazione"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__price
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__price
+msgid "Price"
+msgstr "Prezzo"
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__price
+msgid "Price (Eur)"
+msgstr "Prezzo (Eur)"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_pricelist_form
+msgid "Pricelist"
+msgstr "Listino prezzi"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_pricelist_list
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_pricelist_search
+msgid "Pricelists"
+msgstr "Listini prezzi"
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_product_template
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__product_id
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_product_product
+msgid "Product Variant"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Products details"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__quantity
+msgid "Quantity"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_move__product_uom_qty
+msgid "Quantity "
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__sale_order__order_type__receipts
+msgid "Receipts"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_package_type__receipts_product_id
+msgid "Receipts Package Product"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__results
+msgid "Result"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_form
+msgid "Results"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__sale_line_id
+msgid "SO line"
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Sale Orders"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_product__package_type__box
+msgid "Scatola"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move_line__service_type
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__pick_service_type
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_product__pick_service_type
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_template__pick_service_type
+msgid "Service Type"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_view_move_form
+msgid "Servizi Calcolati"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__logistics_services
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__logistics_services
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_view_move_form
+msgid "Servizi Logistici"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__transport_total
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__transport_total
+msgid "Servizi Trasporto"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
+msgid "Servizi aggiuntivi e tariffazioni particolari"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_view_move_form
+msgid "Servizi di Trasporto Italia"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_logistics_services_invoicing
+msgid "Servizi logistici"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.res_config_settings_view_form_inherit
+msgid "Servizi per Pacchetti"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_res_config_settings__service_for_single_id
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.res_config_settings_view_form_inherit
+msgid "Servizio per prodotto singolo"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_res_config_settings__service_for_box_id
+msgid "Servizio per scatola"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__delivery_partner_id
+msgid "Shipper"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_product__package_type__single
+msgid "Singolo"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
+msgid "Spese Accessorie"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__period_from
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__period_from
+msgid "Start date of the period covered by this invoice"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__state_id
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_txt_import_wizard__state
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__partner_state_id
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_pricelist_search
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
+msgid "State"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_sale_import_inherit_search_view
+msgid "Status"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_stock_package_type
+msgid "Stock package type"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_product__strati_per_pallet
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_template__strati_per_pallet
+msgid "Strati per pallet"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__partner_street
+msgid "Street"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Street..."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__subscription
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__subscription
+msgid "Subscription"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__so_amount
+msgid "Subtotal"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__total_transport
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__total_transport
+msgid "Sum of all calculated values in this group"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__other_services
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__other_services
+msgid "Sum of all move lines not included in the previous groups"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__preparation
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__preparation
+msgid ""
+"Sum of all move lines with products linked to the configuration parameters"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__fixed_fee
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__fixed_fee
+msgid "Sum of all move lines with products of type subscription"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__logistics_services
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__logistics_services
+msgid "Sum of all move lines with products of type warehouse"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__logistics_total
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__logistics_total
+msgid "Sum of the three fields: Logistics Services + Fixed Fee + Preparation"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__total_other_services
+#: model:ir.model.fields,help:gll_stock_management.field_account_move__total_other_services
+msgid "Sum of these lines"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_gll_txt_import_wizard
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_form
+msgid "TXT Import Wizard"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_tree
+msgid "TXT Imports"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
+msgid "Tariffa trasporto"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_product_product__volume
+#: model:ir.model.fields,help:gll_stock_management.field_product_template__volume
+msgid "The volume in cubic meters."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_stock_move__product_uom_qty
+msgid ""
+"This is the quantity of product that is planned to be moved.Lowering this "
+"quantity does not generate a backorder.Changing this quantity on assigned "
+"moves affects the product reservation, and should be done with care."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_product__package_type
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_template__package_type
+msgid "Tipo Pacchetto"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "To"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__total
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Total"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__total_other_services
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__total_other_services
+msgid "Total Other Services"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__total_transport
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__total_transport
+msgid "Total Transport"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__items_volume
+msgid "Total volume (m2)"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__logistics_total
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__logistics_total
+msgid "Totale Logistico"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Totals Value of Services"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__tour
+msgid "Tour (Eur)"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__transport
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__transport
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__transport
+msgid "Transport"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Transport Ser."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__transport_total
+msgid "Transport Serv."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__transport_service_ids
+msgid "Transport Services"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model,name:gll_stock_management.model_gll_trip
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__trip_ids
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_form
+msgid "Trip"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_form
+msgid "Trip Name"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__trip_type
+msgid "Trip Type"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.actions.act_window,name:gll_stock_management.action_gll_trip
+#: model:ir.ui.menu,name:gll_stock_management.menu_gll_trip
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_search
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_tree
+msgid "Trips"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__variable_total
+#: model:ir.model.fields,field_description:gll_stock_management.field_account_move__variable_total
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__variable
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__variable
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__variable
+msgid "Variable"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Variable Ser."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__variable_total
+msgid "Variable Serv."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__variable_service_ids
+msgid "Variable Services"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__vehicle_plate
+msgid "Vehicle"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__volume
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_product__volume
+#: model:ir.model.fields,field_description:gll_stock_management.field_product_template__volume
+msgid "Volume"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "Volume:"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "WH/Outgoing"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "WH/Stock"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__warehouse
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__warehouse
+#: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__warehouse
+msgid "Warehouse"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Warehouse Ser."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__warehouse_total
+msgid "Warehouse Serv."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__warehouse_service_ids
+msgid "Warehouse Services"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,help:gll_stock_management.field_gll_trip__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "You can call this action only on confirmed transfers."
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "You can call this feature only for invoming pickings."
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "You can call this feature only for outgoing pickings."
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/picking_service.py:0
+msgid "You can not add a line to the sale order if it is not draft."
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "You need to specify the service you wish to use for box products."
+msgstr ""
+
+#. module: gll_stock_management
+#. odoo-python
+#: code:addons/gll_stock_management/models/stock_picking.py:0
+msgid "You need to specify the service you wish to use for single products."
+msgstr ""
+
+#. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__partner_zip
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "ZIP"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "accessories_total"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "additional_total"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "fixed_total"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "transport_total"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
+msgid "units"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "variable_total"
+msgstr ""
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "warehouse_total"
+msgstr ""
