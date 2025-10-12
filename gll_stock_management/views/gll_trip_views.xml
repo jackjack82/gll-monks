@@ -56,7 +56,7 @@
                     </group>
                     <notebook>
                         <page string="Deliveries">
-                            <field name="picking_ids">
+                            <field name="picking_ids" domain="[('trip_ids', '=', False), ('state', '=', 'done')]">
                                 <list>
                                     <field name="name"/>
                                     <field name="partner_id"/>
