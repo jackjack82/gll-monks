@@ -361,12 +361,12 @@ msgstr "Creato il"
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
 msgid "DEL:"
-msgstr ""
+msgstr "CONS:"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
 msgid "DOCUMENTO N. :"
-msgstr ""
+msgstr "DOCUMENTO N. :"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__date_load
@@ -1022,12 +1022,12 @@ msgstr ""
 #: code:addons/gll_stock_management/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
 msgid "Sale Orders"
-msgstr ""
+msgstr "Ordini vendita"
 
 #. module: gll_stock_management
 #: model:ir.model,name:gll_stock_management.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Ordine vendita"
 
 #. module: gll_stock_management
 #: model:ir.model,name:gll_stock_management.model_sale_order_line
@@ -1045,7 +1045,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gll_stock_management.field_product_product__pick_service_type
 #: model:ir.model.fields,field_description:gll_stock_management.field_product_template__pick_service_type
 msgid "Service Type"
-msgstr ""
+msgstr "Tipo Servizio"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_view_move_form
@@ -1099,7 +1099,7 @@ msgstr ""
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__delivery_partner_id
 msgid "Shipper"
-msgstr ""
+msgstr "Mittente"
 
 #. module: gll_stock_management
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__product_product__package_type__single
@@ -1115,7 +1115,7 @@ msgstr ""
 #: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__period_from
 #: model:ir.model.fields,help:gll_stock_management.field_account_move__period_from
 msgid "Start date of the period covered by this invoice"
-msgstr ""
+msgstr "Data di inizio del periodo coperto da questa fattura"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__state_id
@@ -1125,12 +1125,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_pricelist_search
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
 msgid "State"
-msgstr ""
+msgstr "Provincia"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_sale_import_inherit_search_view
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_gll_trip__activity_state
@@ -1140,55 +1140,59 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stato basato sulle attività\n"
+"In ritardo: La data di scadenza è già passata\n"
+"Oggi: La data dell'attività è oggi\n"
+"Pianificato: Attività future."
 
 #. module: gll_stock_management
 #: model:ir.model,name:gll_stock_management.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Movimento di Magazzino"
 
 #. module: gll_stock_management
 #: model:ir.model,name:gll_stock_management.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Tipo di pacco di magazzino"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_product_product__strati_per_pallet
 #: model:ir.model.fields,field_description:gll_stock_management.field_product_template__strati_per_pallet
 msgid "Strati per pallet"
-msgstr ""
+msgstr "Strati per pallet"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__partner_street
 msgid "Street"
-msgstr ""
+msgstr "Via"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
 msgid "Street..."
-msgstr ""
+msgstr "Via..."
 
 #. module: gll_stock_management
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__subscription
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__subscription
 msgid "Subscription"
-msgstr ""
+msgstr "Abbonamento"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__so_amount
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotale"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__total_transport
 #: model:ir.model.fields,help:gll_stock_management.field_account_move__total_transport
 msgid "Sum of all calculated values in this group"
-msgstr ""
+msgstr "Somma di tutti i valori calcolati in questo gruppo"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__other_services
 #: model:ir.model.fields,help:gll_stock_management.field_account_move__other_services
 msgid "Sum of all move lines not included in the previous groups"
-msgstr ""
+msgstr "Somma di tutte le righe di movimento non incluse nei gruppi precedenti"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__preparation
@@ -1196,53 +1200,54 @@ msgstr ""
 msgid ""
 "Sum of all move lines with products linked to the configuration parameters"
 msgstr ""
+"Somma di tutte le righe di movimento con prodotti collegati ai parametri di configurazione"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__fixed_fee
 #: model:ir.model.fields,help:gll_stock_management.field_account_move__fixed_fee
 msgid "Sum of all move lines with products of type subscription"
-msgstr ""
+msgstr "Somma di tutte le righe di movimento con prodotti di tipo abbonamento"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__logistics_services
 #: model:ir.model.fields,help:gll_stock_management.field_account_move__logistics_services
 msgid "Sum of all move lines with products of type warehouse"
-msgstr ""
+msgstr "Somma di tutte le righe di movimento con prodotti di tipo magazzino"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__logistics_total
 #: model:ir.model.fields,help:gll_stock_management.field_account_move__logistics_total
 msgid "Sum of the three fields: Logistics Services + Fixed Fee + Preparation"
-msgstr ""
+msgstr "Somma dei tre campi: Servizi Logistici + Diritto Fisso + Preparazione"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_account_bank_statement_line__total_other_services
 #: model:ir.model.fields,help:gll_stock_management.field_account_move__total_other_services
 msgid "Sum of these lines"
-msgstr ""
+msgstr "Somma di queste righe"
 
 #. module: gll_stock_management
 #: model:ir.model,name:gll_stock_management.model_gll_txt_import_wizard
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_form
 msgid "TXT Import Wizard"
-msgstr ""
+msgstr "Procedura guidata importazione TXT"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_search
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_txt_import_wizard_tree
 msgid "TXT Imports"
-msgstr ""
+msgstr "Importazioni TXT"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.italy_transportation_services_full_report
 msgid "Tariffa trasporto"
-msgstr ""
+msgstr "Tariffa trasporto"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_product_product__volume
 #: model:ir.model.fields,help:gll_stock_management.field_product_template__volume
 msgid "The volume in cubic meters."
-msgstr ""
+msgstr "Il volume in metri cubi."
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_stock_move__product_uom_qty
@@ -1251,100 +1256,103 @@ msgid ""
 "quantity does not generate a backorder.Changing this quantity on assigned "
 "moves affects the product reservation, and should be done with care."
 msgstr ""
+"Questa è la quantità di prodotto che si prevede di spostare. Ridurre questa "
+"quantità non genera un ordine arretrato. Modificare questa quantità su movimenti "
+"assegnati influisce sulla prenotazione del prodotto e deve essere fatto con attenzione."
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_product_product__package_type
 #: model:ir.model.fields,field_description:gll_stock_management.field_product_template__package_type
 msgid "Tipo Pacchetto"
-msgstr ""
+msgstr "Tipo Pacchetto"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
 msgid "To"
-msgstr ""
+msgstr "A"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_picking_service__total
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
 msgid "Total"
-msgstr ""
+msgstr "Totale"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__total_other_services
 #: model:ir.model.fields,field_description:gll_stock_management.field_account_move__total_other_services
 msgid "Total Other Services"
-msgstr ""
+msgstr "Totale Altri Servizi"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__total_transport
 #: model:ir.model.fields,field_description:gll_stock_management.field_account_move__total_transport
 msgid "Total Transport"
-msgstr ""
+msgstr "Totale Trasporto"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__items_volume
 msgid "Total volume (m2)"
-msgstr ""
+msgstr "Volume totale (m2)"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_account_bank_statement_line__logistics_total
 #: model:ir.model.fields,field_description:gll_stock_management.field_account_move__logistics_total
 msgid "Totale Logistico"
-msgstr ""
+msgstr "Totale Logistico"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
 msgid "Totals Value of Services"
-msgstr ""
+msgstr "Valore Totale dei Servizi"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__tour
 msgid "Tour (Eur)"
-msgstr ""
+msgstr "Tour (Eur)"
 
 #. module: gll_stock_management
 #: model:ir.model,name:gll_stock_management.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Trasferimento"
 
 #. module: gll_stock_management
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__account_move_line__service_type__transport
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__transport
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__transport
 msgid "Transport"
-msgstr ""
+msgstr "Trasporto"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
 msgid "Transport Ser."
-msgstr ""
+msgstr "Ser. Trasporto"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__transport_total
 msgid "Transport Serv."
-msgstr ""
+msgstr "Serv. Trasporto"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__transport_service_ids
 msgid "Transport Services"
-msgstr ""
+msgstr "Servizi Trasporto"
 
 #. module: gll_stock_management
 #: model:ir.model,name:gll_stock_management.model_gll_trip
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__trip_ids
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_form
 msgid "Trip"
-msgstr ""
+msgstr "Viaggio"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_form
 msgid "Trip Name"
-msgstr ""
+msgstr "Nome Viaggio"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__trip_type
 msgid "Trip Type"
-msgstr ""
+msgstr "Tipo Viaggio"
 
 #. module: gll_stock_management
 #: model:ir.actions.act_window,name:gll_stock_management.action_gll_trip
@@ -1352,7 +1360,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_search
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.view_gll_trip_tree
 msgid "Trips"
-msgstr ""
+msgstr "Viaggi"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,help:gll_stock_management.field_gll_trip__activity_exception_decoration
@@ -1366,34 +1374,34 @@ msgstr ""
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__variable
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__variable
 msgid "Variable"
-msgstr ""
+msgstr "Variabili"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
 msgid "Variable Ser."
-msgstr ""
+msgstr "Ser. Variabili"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__variable_total
 msgid "Variable Serv."
-msgstr ""
+msgstr "Ser. Variabili"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__variable_service_ids
 msgid "Variable Services"
-msgstr ""
+msgstr "Servizi Variabili"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__vehicle_plate
 msgid "Vehicle"
-msgstr ""
+msgstr "Veicolo"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_gll_pricelist__volume
 #: model:ir.model.fields,field_description:gll_stock_management.field_product_product__volume
 #: model:ir.model.fields,field_description:gll_stock_management.field_product_template__volume
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
@@ -1415,22 +1423,22 @@ msgstr ""
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__picking_service__pick_service_type__warehouse
 #: model:ir.model.fields.selection,name:gll_stock_management.selection__product_template__pick_service_type__warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Magazzino"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
 msgid "Warehouse Ser."
-msgstr ""
+msgstr "Ser. Magazzino"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__warehouse_total
 msgid "Warehouse Serv."
-msgstr ""
+msgstr "Ser. Magazzino"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__warehouse_service_ids
 msgid "Warehouse Services"
-msgstr ""
+msgstr "Servizi Magazzino"
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__website_message_ids
@@ -1446,37 +1454,37 @@ msgstr ""
 #. odoo-python
 #: code:addons/gll_stock_management/models/stock_picking.py:0
 msgid "You can call this action only on confirmed transfers."
-msgstr ""
+msgstr "Puoi eseguire questa operazione sono su trasferimenti confermati."
 
 #. module: gll_stock_management
 #. odoo-python
 #: code:addons/gll_stock_management/models/stock_picking.py:0
 msgid "You can call this feature only for invoming pickings."
-msgstr ""
+msgstr "Puoi eseguire questa operazione solo su trasferimenti in ingresso."
 
 #. module: gll_stock_management
 #. odoo-python
 #: code:addons/gll_stock_management/models/stock_picking.py:0
 msgid "You can call this feature only for outgoing pickings."
-msgstr ""
+msgstr "Puoi eseguire questa operazione solo su trasferimenti in uscita."
 
 #. module: gll_stock_management
 #. odoo-python
 #: code:addons/gll_stock_management/models/picking_service.py:0
 msgid "You can not add a line to the sale order if it is not draft."
-msgstr ""
+msgstr "Puoi aggiungere una riga solo se l'ordine è in bozza."
 
 #. module: gll_stock_management
 #. odoo-python
 #: code:addons/gll_stock_management/models/stock_picking.py:0
 msgid "You need to specify the service you wish to use for box products."
-msgstr ""
+msgstr "Devi specificare il servizio che vuoi usare per prodotti in pacchi."
 
 #. module: gll_stock_management
 #. odoo-python
 #: code:addons/gll_stock_management/models/stock_picking.py:0
 msgid "You need to specify the service you wish to use for single products."
-msgstr ""
+msgstr "Devi specificare il servizio che vuoi usare per prodotti singoli."
 
 #. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__partner_zip
@@ -1487,34 +1495,39 @@ msgstr ""
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
 msgid "accessories_total"
-msgstr ""
+msgstr "Totale Accessori"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
 msgid "additional_total"
-msgstr ""
+msgstr "Totale Aggiuntivi"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
 msgid "fixed_total"
-msgstr ""
+msgstr "Totale Fissi"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
 msgid "transport_total"
-msgstr ""
+msgstr "Totale Trasporto"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_entrata_merci
 msgid "units"
-msgstr ""
+msgstr "Unità"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
 msgid "variable_total"
-msgstr ""
+msgstr "Totale Variabili"
 
 #. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
 msgid "warehouse_total"
-msgstr ""
+msgstr "Totale Magazzino"
+
+#. module: gll_stock_management
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
+msgid "Receiver"
+msgstr "Destinatario"
