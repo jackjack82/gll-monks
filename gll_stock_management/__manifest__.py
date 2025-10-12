@@ -14,6 +14,7 @@
         "stock_delivery",
         "accountant",
         "stock",
+        "stock_delivery",
         "sale",
         "purchase",
     ],

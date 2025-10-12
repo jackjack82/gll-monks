@@ -8,6 +8,13 @@
             <list string="Trips">
                 <field name="name"/>
                 <field name="partner_id"/>
+                <field name="phone"/>
+                <field name="vehicle_plate"/>
+                <field name="date_shipment"/>
+                <field name="tour"/>
+                <field name="date_load"/>
+                <field name="price"/>
+                <field name="trip_type"/>
                 <field name="picking_count"/>
             </list>
         </field>
@@ -33,12 +40,24 @@
                     </div>
                     <group>
                         <group>
+                            <field name="name"/>
                             <field name="partner_id"/>
+                            <field name="phone"/>
+                            <field name="vehicle_plate"/>
+                            <field name="date_shipment"/>
+                            <field name="tour"/>
+                        </group>
+                        <group>
+                            <field name="date_load"/>
+                            <field name="price"/>
+                            <field name="trip_type"/>
+                            <field name="picking_count"/>
+                            <field name="note" placeholder="Add notes here..."/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Deliveries">
-                            <field name="picking_ids" readonly="1">
+                            <field name="picking_ids">
                                 <list>
                                     <field name="name"/>
                                     <field name="partner_id"/>
@@ -47,9 +66,6 @@
                                     <field name="state"/>
                                 </list>
                             </field>
-                        </page>
-                        <page string="Notes">
-                            <field name="note" placeholder="Add notes here..."/>
                         </page>
                     </notebook>
                 </sheet>
