@@ -26,7 +26,6 @@
                 </div>
                 </div>
                 <field name="delivery_partner_id"/>
-                <field name="trip_id"/>
             </field>
             <!-- Move the notes to a smaller field below the locations-->
             <page name="note" position="attributes">
@@ -35,6 +34,9 @@
             <xpath expr="//field[@name='picking_type_id']/parent::group" position="inside">
                 <field name="note"/>
             </xpath>
+            <page name="operations" position="attributes">
+                <attribute name="string">Products details</attribute>
+            </page>
             <field name="origin" position="after">
                 <field name="shipping_weight"/>
                 <field name="items_count"/>
@@ -64,7 +66,7 @@
             <!-- Add service tabs for incoming pickings -->
             <xpath expr="//notebook" position="inside">
 
-                <page string="Fixed S." invisible="picking_type_code == 'internal'">
+                <page string="Fixed Ser." invisible="picking_type_code == 'internal'">
                     <field name="fixed_service_ids" context="{'default_pick_service_type': 'fixed', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'fixed')]"/>
@@ -80,7 +82,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Variable S." invisible="picking_type_code == 'internal'">
+                <page string="Variable Ser." invisible="picking_type_code == 'internal'">
                     <field name="variable_service_ids" context="{'default_pick_service_type': 'variable', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
@@ -91,7 +93,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Warehouse S."  invisible="picking_type_code == 'internal'">
+                <page string="Warehouse Ser."  invisible="picking_type_code == 'internal'">
                     <field name="warehouse_service_ids" context="{'default_pick_service_type': 'warehouse', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'warehouse')]"/>
@@ -102,7 +104,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Transport S."  invisible="picking_type_code == 'internal'">
+                <page string="Transport Ser."  invisible="picking_type_code == 'internal'">
                     <field name="transport_service_ids" context="{'default_pick_service_type': 'transport', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'transport')]"/>
@@ -113,7 +115,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Accessories S."  invisible="picking_type_code == 'internal'">
+                <page string="Accessories Ser."  invisible="picking_type_code == 'internal'">
                     <field name="accessories_service_ids" context="{'default_pick_service_type': 'accessories', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'accessories')]"/>
@@ -124,7 +126,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Additional S."  invisible="picking_type_code == 'internal'">
+                <page string="Additional Ser."  invisible="picking_type_code == 'internal'">
                     <field name="additional_service_ids" context="{'default_pick_service_type': 'additional', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'additional')]"/>
@@ -152,6 +154,18 @@
             <xpath expr="//field[@name='shipping_weight']/parent::div" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+        </field>
+    </record>
+
+
+    <record id="gll_view_picking_withcarrier_out_form" model="ir.ui.view">
+        <field name="name">gll.stock.picking.withcarrier.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_delivery.view_picking_withcarrier_out_form"/>
+        <field name="arch" type="xml">
+            <field name="carrier_id" position="before">
+                <field name="trip_id"/>
+            </field>
         </field>
     </record>
 
