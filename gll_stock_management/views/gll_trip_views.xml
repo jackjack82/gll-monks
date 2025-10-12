@@ -40,7 +40,6 @@
                     </div>
                     <group>
                         <group>
-                            <field name="name"/>
                             <field name="partner_id"/>
                             <field name="phone"/>
                             <field name="vehicle_plate"/>
