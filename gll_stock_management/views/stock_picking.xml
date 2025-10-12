@@ -164,7 +164,7 @@
         <field name="inherit_id" ref="stock_delivery.view_picking_withcarrier_out_form"/>
         <field name="arch" type="xml">
             <field name="carrier_id" position="before">
-                <field name="trip_id"/>
+                <field name="trip_ids" readonly="1" widget="many2many_tags"/>
             </field>
         </field>
     </record>
