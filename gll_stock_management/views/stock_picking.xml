@@ -7,6 +7,14 @@
         <field name="priority">1</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_td_label')]" position="replace">
+            <div class="o_td_label">
+                <label for="partner_id" string="Receiver" style="font-weight:bold;" invisible="picking_type_code != 'outgoing'"/>
+                <label for="partner_id" string="Receive From" style="font-weight:bold;" invisible="picking_type_code != 'incoming'"/>
+                <label for="partner_id" string="Contact" style="font-weight:bold;" invisible="picking_type_code in ['incoming', 'outgoing']"/>
+            </div>
+            </xpath>
+
             <xpath expr="//button[@name='action_see_packages']" position="after">
                 <button name="action_view_delivery_receipts_orders" type="object"
                         class="oe_stat_button" icon="fa-wrench" string="Orders"

@@ -304,7 +304,7 @@ msgstr "Consuntivo entrata merci"
 #. module: gll_stock_management
 #: model:ir.model,name:gll_stock_management.model_res_partner
 msgid "Contact"
-msgstr "Contatto"
+msgstr "Destinatario"
 
 #. module: gll_stock_management
 #: model:ir.actions.server,name:gll_stock_management.action_create_so_from_receipts
@@ -1498,6 +1498,12 @@ msgid "accessories_total"
 msgstr "Totale Accessori"
 
 #. module: gll_stock_management
+#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__partner_id
+#: model_terms:ir.ui.view,arch_db:gll_stock_management.gll_stock_picking_form_view
+msgid "Receiver"
+msgstr "Destinatario"
+
+#. module: gll_stock_management
 #: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
 msgid "additional_total"
 msgstr "Totale Aggiuntivi"
@@ -1527,7 +1533,3 @@ msgstr "Totale Variabili"
 msgid "warehouse_total"
 msgstr "Totale Magazzino"
 
-#. module: gll_stock_management
-#: model_terms:ir.ui.view,arch_db:gll_stock_management.report_account_move_entrata_merci
-msgid "Receiver"
-msgstr "Destinatario"
