@@ -7,8 +7,12 @@ class GllTrip(models.Model):
     _name = "gll.trip"
     _description = "Trip"
     _inherit = ["mail.thread", "mail.activity.mixin"]
+    _rec_name = "name"
+    _sequence = "gll.trip.sequence"
 
-    name = fields.Char(string="Name", required=True, tracking=True)
+    name = fields.Char(
+        string="Name", required=True, tracking=True, copy=False, default="/"
+    )
     partner_id = fields.Many2one(
         "res.partner",
         string="Driver",
@@ -54,3 +58,11 @@ class GllTrip(models.Model):
             "domain": [("id", "in", self.picking_ids.ids)],
         }
         return action
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override create method to generate sequence for name field"""
+        for vals in vals_list:
+            if vals.get("name", "/") == "/":
+                vals["name"] = self.env["ir.sequence"].next_by_code("gll.trip.sequence")
+        return super().create(vals_list)
