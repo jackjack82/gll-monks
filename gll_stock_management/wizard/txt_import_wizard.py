@@ -275,7 +275,7 @@ class TxtImportWizard(models.Model):
             result_message += (
                 f"Warning: Product with reference {product_ref} not found, skipping"
             )
-            return
+            return # TODO: what to do if product is missing?
 
         # Create stock move
         move_vals = {
