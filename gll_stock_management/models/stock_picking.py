@@ -34,6 +34,9 @@ class StockPicking(models.Model):
         # Only proceed for incoming and outgoing pickings
         if picking.picking_type_code in ["incoming", "outgoing"]:
             for service, _ in SERVICE_TYPE:
+                # skip variable services
+                if service == "variable":
+                    continue
                 # Find fixed service products
                 products = self.env["product.product"].search(
                     [("product_tmpl_id.pick_service_type", "=", service)]
