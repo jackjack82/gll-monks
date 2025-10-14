@@ -8,7 +8,7 @@
             <form string="TXT Import Wizard">
                 <header>
                     <button name="action_import" string="Import" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,done,error"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done,error" options="{'clickable': 1}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
