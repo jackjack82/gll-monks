@@ -23,6 +23,7 @@ SERVICE_FIELD = [
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
+    _order = "id desc"
 
     partner_id = fields.Many2one(string="Receiver")
 
