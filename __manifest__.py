@@ -7,12 +7,14 @@
     "summary": "This module handle GLL stock management.",
     "license": "OPL-1",
     "description": "GLL Stock Workflow",
-    "version": "18.0.1.1.2",
+    "version": "18.0.1.1.1",
     "author": "Webmonks SRL",
     "website": "https://github.com/OCA/partner-contact",
     "depends": [
         "stock_delivery",
+        "accountant",
         "stock",
+        "stock_delivery",
         "sale",
         "purchase",
     ],
@@ -24,19 +26,25 @@
         # data files
         "data/data.xml",
         # View files
+        "views/account_move.xml",
         "views/stock_picking.xml",
         "views/stock_move_line.xml",
         "views/res_partner.xml",
         "views/stock_package_type.xml",
         "views/gll_pricelist.xml",
-        "views/txt_import_wizard_views.xml",
         "views/product_views.xml",
         "views/res_config_settings_views.xml",
         "views/gll_trip_views.xml",
+        "views/sale_order.xml",
         # security
         "security/ir.model.access.csv",
         # reports
         "reports/picking_reports.xml",
+        "reports/logistics_services_invoicing_report.xml",
+        "reports/italy_transportation_services_report.xml",
+        "reports/report_account_move_entrata_merci.xml",
+        # wizard
+        "wizard/txt_import_wizard_views.xml",
     ],
     # Technical
     "installable": True,

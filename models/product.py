@@ -2,6 +2,16 @@
 
 from odoo import api, fields, models
 
+SERVICE_TYPE = [
+    ("warehouse", "Warehouse"),
+    ("transport", "Transport"),
+    ("accessories", "Accessories"),
+    ("additional", "Additional"),
+    ("fixed", "Fixed"),
+    ("variable", "Variable"),
+    ("subscription", "Subscription"),
+]
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -13,6 +23,9 @@ class ProductProduct(models.Model):
         ],
         string="Tipo Pacchetto",
     )
+    # pick_service_type = fields.Selection(
+    #     related="product_tmpl_id.service_type",
+    # )
 
     # Modify volume field to have 5 decimal precision
     volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")
@@ -41,6 +54,12 @@ class ProductTemplate(models.Model):
         related="product_variant_ids.package_type",
         string="Tipo Pacchetto",
         readonly=False,
+    )
+
+    pick_service_type = fields.Selection(
+        SERVICE_TYPE,
+        string="Service Type",
+        copy=False,
     )
 
     # Modify volume field to have 5 decimal precision

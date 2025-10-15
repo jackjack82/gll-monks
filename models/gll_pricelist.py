@@ -9,11 +9,11 @@ class GllPricelist(models.Model):
     price = fields.Float("Price")
     min_weight = fields.Float("Min Kg")
     max_weight = fields.Float("Max Kg")
+    volume = fields.Float("Volume", digits=(16, 4))
     max_pack_num = fields.Integer("Max colli")
     rounding = fields.Float("Arrotondamento")
     package_type_id = fields.Many2one("stock.package.type", "Pallet")
     state_id = fields.Many2one("res.country.state", string="State")
-    volume = fields.Float("Volume")
 
     def select_gll_pricelist(self, weight, pack_num, volume, package_type_id):
         """Given some input parameters, select the pricelist

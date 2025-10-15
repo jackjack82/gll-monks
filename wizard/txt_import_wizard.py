@@ -46,7 +46,6 @@ class TxtImportWizard(models.Model):
         [("draft", "Draft"), ("done", "Done"), ("error", "Error")],
         string="State",
         default="draft",
-        readonly=True,
     )
 
     def action_import(self):
@@ -124,6 +123,7 @@ class TxtImportWizard(models.Model):
                     )
 
                 except Exception as e:
+                    # TODO: better try/except management (avoid empty/broken pick)
                     result_message += f"\nError processing line: {str(e)}"
 
             # Update the wizard with results
@@ -221,7 +221,7 @@ class TxtImportWizard(models.Model):
             )
 
         # Add the product to the picking
-        self._add_product_to_picking(picking, product_ref, result_message)
+        self._add_product_to_picking(picking, product_ref, result_message, product_name)
 
         return picking
 
@@ -260,7 +260,9 @@ class TxtImportWizard(models.Model):
 
         return partner
 
-    def _add_product_to_picking(self, picking, product_ref, result_message):
+    def _add_product_to_picking(
+        self, picking, product_ref, result_message, product_name=None
+    ):
         """Add a product to the picking"""
         if not product_ref:
             result_message += "Warning: Empty product reference, skipping"
@@ -272,10 +274,24 @@ class TxtImportWizard(models.Model):
         )
 
         if not product:
-            result_message += (
-                f"Warning: Product with reference {product_ref} not found, skipping"
-            )
-            return
+            if product_name:
+                # Create a new product (storable with no tracking)
+                product_vals = {
+                    "name": product_name,
+                    "default_code": product_ref,
+                    "type": "consu",  # 'product' type means storable product
+                    "is_storable": True,  # 'product' type means storable product
+                    "tracking": "none",  # No tracking
+                }
+                product = self.env["product.product"].create(product_vals)
+                result_message += (
+                    f"Created new product {product_name} with reference {product_ref}"
+                )
+            else:
+                result_message += (
+                    f"Warning: Product with reference {product_ref} not found, skipping"
+                )
+                return
 
         # Create stock move
         move_vals = {
