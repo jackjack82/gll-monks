@@ -43,6 +43,7 @@
         "reports/logistics_services_invoicing_report.xml",
         "reports/italy_transportation_services_report.xml",
         "reports/report_account_move_entrata_merci.xml",
+        "reports/transportation_from_invoice_report.xml",
         # wizard
         "wizard/txt_import_wizard_views.xml",
     ],
