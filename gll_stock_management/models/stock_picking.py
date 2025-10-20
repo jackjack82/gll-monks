@@ -125,6 +125,18 @@ class StockPicking(models.Model):
         "picking_id",
         string="All Services",
     )
+    variable_service_ids = fields.One2many(
+        "picking.service",
+        "picking_id",
+        string="Variable Services",
+        domain=[("pick_service_type", "=", "variable")],
+    )
+    variable_total = fields.Float(
+        string="Variable Serv.",
+        compute="_compute_service_totals",
+        store=True,
+    )
+
     warehouse_service_ids = fields.One2many(
         "picking.service",
         "picking_id",
@@ -177,18 +189,6 @@ class StockPicking(models.Model):
     )
     fixed_total = fields.Float(
         string="Fixed Serv.",
-        compute="_compute_service_totals",
-        store=True,
-    )
-
-    variable_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Variable Services",
-        domain=[("pick_service_type", "=", "variable")],
-    )
-    variable_total = fields.Float(
-        string="Variable Serv.",
         compute="_compute_service_totals",
         store=True,
     )

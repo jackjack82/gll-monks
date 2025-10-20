@@ -1,6 +1,7 @@
 # © 2025 webmonks
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 SERVICE_TYPE = [
     ("warehouse", "Warehouse"),
@@ -23,15 +24,16 @@ class ProductProduct(models.Model):
         ],
         string="Tipo Pacchetto",
     )
-    # pick_service_type = fields.Selection(
-    #     related="product_tmpl_id.service_type",
-    # )
 
-    # Modify volume field to have 5 decimal precision
     volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")
 
     colli_per_strato = fields.Integer(string="Colli per strato")
     strati_per_pallet = fields.Integer(string="Strati per pallet")
+
+    @api.onchange("pick_service_type")
+    def onchange_service_type(self):
+        if self.pick_service_type and self.type != "service":
+            raise UserError(_("Only services can have this type of configuration."))
 
     @api.onchange("volume")
     def _onchange_volume(self):
@@ -81,3 +83,8 @@ class ProductTemplate(models.Model):
         """Round volume to 5 decimal places"""
         if self.volume:
             self.volume = round(self.volume, 5)
+
+    @api.onchange("pick_service_type")
+    def onchange_service_type(self):
+        if self.pick_service_type and self.type != "service":
+            raise UserError(_("Only services can have this type of configuration."))

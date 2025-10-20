@@ -89,6 +89,7 @@ class TxtImportWizard(models.Model):
                     delivery_note = line[309:426].strip()
                     product_ref = line[412:427].strip()
                     product_name = line[427:462].strip()
+                    product_qty = self.convert_to_int(line[464:473])
 
                     # Convert date format
                     shipment_date = False
@@ -110,7 +111,7 @@ class TxtImportWizard(models.Model):
                         customer_zip,
                         customer_state_code,
                         customer_city,
-                        recipient_name,
+                        recipient_name or False,
                         recipient_street,
                         recipient_zip,
                         recipient_state_code,
@@ -120,6 +121,7 @@ class TxtImportWizard(models.Model):
                         result_message,
                         delivery_note,
                         product_name,
+                        product_qty,
                     )
 
                 except Exception as e:
@@ -164,6 +166,7 @@ class TxtImportWizard(models.Model):
         result_message,
         delivery_note,
         product_name,
+        product_qty,
     ):
         """Process a single line from the imported file"""
 
@@ -221,7 +224,9 @@ class TxtImportWizard(models.Model):
             )
 
         # Add the product to the picking
-        self._add_product_to_picking(picking, product_ref, result_message, product_name)
+        self._add_product_to_picking(
+            picking, product_ref, result_message, product_name, product_qty
+        )
 
         return picking
 
@@ -261,7 +266,7 @@ class TxtImportWizard(models.Model):
         return partner
 
     def _add_product_to_picking(
-        self, picking, product_ref, result_message, product_name=None
+        self, picking, product_ref, result_message, product_name, product_qty
     ):
         """Add a product to the picking"""
         if not product_ref:
@@ -298,7 +303,7 @@ class TxtImportWizard(models.Model):
             "name": product.name,
             "product_id": product.id,
             "product_uom": product.uom_id.id,
-            "product_uom_qty": 1.0,  # Default quantity as per requirements
+            "product_uom_qty": product_qty,
             "picking_id": picking.id,
             "location_id": picking.location_id.id,
             "location_dest_id": picking.location_dest_id.id,
@@ -306,3 +311,9 @@ class TxtImportWizard(models.Model):
 
         self.env["stock.move"].create(move_vals)
         result_message += f"Added product {product_ref} to picking {picking.name}"
+
+    def convert_to_int(self, str_value):
+        try:
+            return int(str_value)
+        except ValueError:
+            return 0

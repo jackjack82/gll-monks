@@ -73,13 +73,26 @@
             </xpath>
             <!-- Add service tabs for incoming pickings -->
             <xpath expr="//notebook" position="inside">
-
+                <page string="Variable Ser." invisible="picking_type_code == 'internal'">
+                    <field name="variable_service_ids"
+                           context="{'default_pick_service_type': 'variable', 'default_picking_id': id}">
+                        <list editable="bottom">
+                            <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
+                            <field name="pick_service_type" column_invisible="1"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total" sum="Total"/>
+                            <field name="so_amount" sum="Ordered"/>
+                        </list>
+                    </field>
+                </page>
                 <page string="Fixed Ser." invisible="picking_type_code == 'internal'">
-                    <field name="fixed_service_ids" context="{'default_pick_service_type': 'fixed', 'default_picking_id': id}">
+                    <field name="fixed_service_ids"
+                           context="{'default_pick_service_type': 'fixed', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'fixed')]"/>
-                            <field name="quantity"/>
                             <field name="pick_service_type" column_invisible="1"/>
+                            <field name="quantity"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
                             <field name="so_amount" sum="Ordered"/>
@@ -90,21 +103,12 @@
                         </list>
                     </field>
                 </page>
-                <page string="Variable Ser." invisible="picking_type_code == 'internal'">
-                    <field name="variable_service_ids" context="{'default_pick_service_type': 'variable', 'default_picking_id': id}">
-                        <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
-                            <field name="quantity"/>
-                            <field name="price"/>
-                            <field name="total" sum="Total"/>
-                            <field name="so_amount" sum="Ordered"/>
-                        </list>
-                    </field>
-                </page>
                 <page string="Warehouse Ser."  invisible="picking_type_code == 'internal'">
-                    <field name="warehouse_service_ids" context="{'default_pick_service_type': 'warehouse', 'default_picking_id': id}">
+                    <field name="warehouse_service_ids"
+                           context="{'default_pick_service_type': 'warehouse', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'warehouse')]"/>
+                            <field name="pick_service_type" column_invisible="1"/>
                             <field name="quantity"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
@@ -113,9 +117,11 @@
                     </field>
                 </page>
                 <page string="Transport Ser."  invisible="picking_type_code == 'internal'">
-                    <field name="transport_service_ids" context="{'default_pick_service_type': 'transport', 'default_picking_id': id}">
+                    <field name="transport_service_ids"
+                           context="{'default_pick_service_type': 'transport', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'transport')]"/>
+                            <field name="pick_service_type" column_invisible="1"/>
                             <field name="quantity"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
@@ -124,9 +130,11 @@
                     </field>
                 </page>
                 <page string="Accessories Ser."  invisible="picking_type_code == 'internal'">
-                    <field name="accessories_service_ids" context="{'default_pick_service_type': 'accessories', 'default_picking_id': id}">
+                    <field name="accessories_service_ids"
+                           context="{'default_pick_service_type': 'accessories', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'accessories')]"/>
+                            <field name="pick_service_type" column_invisible="1"/>
                             <field name="quantity"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
@@ -135,9 +143,11 @@
                     </field>
                 </page>
                 <page string="Additional Ser."  invisible="picking_type_code == 'internal'">
-                    <field name="additional_service_ids" context="{'default_pick_service_type': 'additional', 'default_picking_id': id}">
+                    <field name="additional_service_ids"
+                           context="{'default_pick_service_type': 'additional', 'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'additional')]"/>
+                            <field name="pick_service_type" column_invisible="1"/>
                             <field name="quantity"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
