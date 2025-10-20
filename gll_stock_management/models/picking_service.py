@@ -1,6 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from .stock_picking import SERVICE_TYPE
+
 
 class PickingService(models.Model):
     _name = "picking.service"
@@ -10,7 +12,6 @@ class PickingService(models.Model):
         "stock.picking",
         string="Picking",
         required=True,
-        ondelete="cascade",
     )
     product_id = fields.Many2one(
         "product.product",
@@ -25,14 +26,7 @@ class PickingService(models.Model):
         string="Price",
     )
     pick_service_type = fields.Selection(
-        [
-            ("warehouse", "Warehouse"),
-            ("transport", "Transport"),
-            ("accessories", "Accessories"),
-            ("additional", "Additional"),
-            ("fixed", "Fixed"),
-            ("variable", "Variable"),
-        ],
+        SERVICE_TYPE,
         string="Service Type",
         copy=False,
         required=True,
