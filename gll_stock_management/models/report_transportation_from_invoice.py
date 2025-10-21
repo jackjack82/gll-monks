@@ -51,7 +51,7 @@ class ReportItalyTransportationServicesFromInvoice(models.AbstractModel):
                 picking_data.append(
                     {
                         "picking": picking,
-                        "name": picking.name,
+                        "name": picking.origin,
                         "date_done": picking.date_done,
                         "partner_id": picking.partner_id,
                         "packages_count": picking.packages_count,
