@@ -73,6 +73,7 @@ class StockPicking(models.Model):
         relation="stock_picking_gll_trip_rel",
         column1="picking_id",
         column2="trip_id",
+        copy=False,
     )
     # Related partner fields
     partner_street = fields.Char(
@@ -124,12 +125,14 @@ class StockPicking(models.Model):
         "picking.service",
         "picking_id",
         string="All Services",
+        copy=False,
     )
     variable_service_ids = fields.One2many(
         "picking.service",
         "picking_id",
         string="Variable Services",
         domain=[("pick_service_type", "=", "variable")],
+        copy=False,
     )
     variable_total = fields.Float(
         string="Variable Serv.",
@@ -142,6 +145,7 @@ class StockPicking(models.Model):
         "picking_id",
         string="Warehouse Services",
         domain=[("pick_service_type", "=", "warehouse")],
+        copy=False,
     )
     warehouse_total = fields.Float(
         string="Warehouse Serv.",
@@ -153,6 +157,7 @@ class StockPicking(models.Model):
         "picking_id",
         string="Transport Services",
         domain=[("pick_service_type", "=", "transport")],
+        copy=False,
     )
     transport_total = fields.Float(
         string="Transport Serv.",
@@ -164,6 +169,7 @@ class StockPicking(models.Model):
         "picking_id",
         string="Accessories Services",
         domain=[("pick_service_type", "=", "accessories")],
+        copy=False,
     )
     accessories_total = fields.Float(
         string="Accessories Serv.",
@@ -175,6 +181,7 @@ class StockPicking(models.Model):
         "picking_id",
         string="Additional Services",
         domain=[("pick_service_type", "=", "additional")],
+        copy=False,
     )
     additional_total = fields.Float(
         string="Additional Serv.",
@@ -186,6 +193,7 @@ class StockPicking(models.Model):
         "picking_id",
         string="Fixed Services",
         domain=[("pick_service_type", "=", "fixed")],
+        copy=False,
     )
     fixed_total = fields.Float(
         string="Fixed Serv.",
@@ -386,11 +394,11 @@ class StockPicking(models.Model):
         #     raise UserError(_("You can create Sale Orders only for one transfer at the time."))
 
         # grouping by receipts or delivery partner
-        partner_ids = self.mapped("partner_id")
+        partner_ids = self.mapped("delivery_partner_id")
         sale_orders = self.env["sale.order"]
 
         for partner_id in partner_ids:
-            picks = self.filtered(lambda p: p.partner_id == partner_id)
+            picks = self.filtered(lambda p: p.delivery_partner_id == partner_id)
             sale_order = self.env["sale.order"].create(
                 {
                     "partner_id": partner_id.id,

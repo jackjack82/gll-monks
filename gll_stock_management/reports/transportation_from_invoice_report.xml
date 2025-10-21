@@ -66,17 +66,19 @@
                         <tr>
                             <td colspan="6"/>
                             <td>
-                                <strong>Diritto Fisso: </strong>
-                                <strong>Preparazione: </strong>
-                                <strong>Servizi Logistici: </strong>
+                                <br/>
+                                <strong>Diritto Fisso</strong><br/><br/>
+                                <strong>Preparazione</strong><br/><br/>
+                                <strong>Servizi Logistici</strong><br/><br/>
                             </td>
                             <td>
-                                <span t-eval="fixed_total"/><br/>
-                                <span t-eval="preparation_total"/><br/>
-                                <span t-eval="logistics_total"/><br/>
+                                <br/>
+                                <span t-esc="fixed_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>
+                                <span t-esc="preparation_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>
+                                <span t-esc="logistics_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>
                             </td>
                         </tr>
-                    <
+                    </tfoot>
                 </table>
             </div>
         </t>
