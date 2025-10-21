@@ -16,6 +16,7 @@
             </xpath>
             <field name="categ_id" position="before">
                 <field name="pick_service_type"/>
+                <field name="warehouse_type" invisible="pick_service_type != 'warehouse'" required="pick_service_type == 'warehouse'"/>
             </field>
         </field>
     </record>
@@ -27,6 +28,7 @@
         <field name="arch" type="xml">
            <field name="default_code" position="after">
                <field name="pick_service_type"/>
+               <field name="warehouse_type"/>
            </field>
         </field>
     </record>

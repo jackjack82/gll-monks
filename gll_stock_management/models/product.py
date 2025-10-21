@@ -25,6 +25,15 @@ class ProductProduct(models.Model):
         string="Tipo Pacchetto",
     )
 
+    warehouse_type = fields.Selection(
+        [
+            ("fix", "Diritto Fisso"),
+            ("preparation", "Preparazione"),
+            ("logistic", "Servizi logistici"),
+        ],
+        string="Warehouse Type",
+    )
+
     volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")
 
     colli_per_strato = fields.Integer(string="Colli per strato")
@@ -34,6 +43,10 @@ class ProductProduct(models.Model):
     def onchange_service_type(self):
         if self.pick_service_type and self.type != "service":
             raise UserError(_("Only services can have this type of configuration."))
+
+        # Clear warehouse_type if pick_service_type is not warehouse
+        if self.pick_service_type != "warehouse":
+            self.warehouse_type = False
 
     @api.onchange("volume")
     def _onchange_volume(self):
@@ -55,6 +68,12 @@ class ProductTemplate(models.Model):
     package_type = fields.Selection(
         related="product_variant_ids.package_type",
         string="Tipo Pacchetto",
+        readonly=False,
+    )
+
+    warehouse_type = fields.Selection(
+        related="product_variant_ids.warehouse_type",
+        string="Warehouse Type",
         readonly=False,
     )
 
@@ -88,3 +107,7 @@ class ProductTemplate(models.Model):
     def onchange_service_type(self):
         if self.pick_service_type and self.type != "service":
             raise UserError(_("Only services can have this type of configuration."))
+
+        # Clear warehouse_type if pick_service_type is not warehouse
+        if self.pick_service_type != "warehouse":
+            self.warehouse_type = False
