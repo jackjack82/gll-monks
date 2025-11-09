@@ -80,8 +80,3 @@ class PickingService(models.Model):
             },
         )
         self.sale_line_id = so_line_id
-
-    # def create(self, vals_list):
-    #     """getting the intrastat codes from product"""
-    #     res = super(PickingService, self).create(vals_list)
-    #     return res

@@ -164,6 +164,7 @@ class StockPicking(models.Model):
         compute="_compute_service_totals",
         store=True,
     )
+
     accessories_service_ids = fields.One2many(
         "picking.service",
         "picking_id",
@@ -516,3 +517,13 @@ class StockPicking(models.Model):
             )
 
         return int(service_for_single_id), int(service_for_box_id)
+
+    def unlink(self):
+        """At picking deletion, delete all service lines first"""
+        if self.all_service_ids:
+            self.all_service_ids.unlink()
+        res = super().unlink()
+        return res
+
+    def _valid_field_parameter(self, field, name):
+        return name == "ondelete" or super()._valid_field_parameter(field, name)
