@@ -197,7 +197,7 @@ class TxtImportWizard(models.Model):
         return picking
 
     def _find_or_create_partner(
-        self, name, street, zip_code, state_code, city, result_message
+        self, name, street, zip, state_code, city, result_message
     ):
         """Find or create a partner based on the provided information"""
         if not name:
@@ -205,31 +205,43 @@ class TxtImportWizard(models.Model):
 
         # Search for existing partner by name
         partner = self.env["res.partner"].search([("name", "=", name)], limit=1)
-
         if not partner:
-            # Find state based on code
-            state = False
-            if state_code:
-                state = self.env["res.country.state"].search(
-                    [("code", "=", state_code)], limit=1
-                )
-
-            # Create new partner
-            vals = {
-                "name": name,
-                "street": street,
-                "zip": zip_code,
-                "city": city,
-            }
-
-            if state:
-                vals["state_id"] = state.id
-                vals["country_id"] = state.country_id.id
-
-            partner = self.env["res.partner"].create(vals)
+            # create the main contact as a company
+            partner = self.env["res.partner"].create(
+                {"name": name, "company_type": "company"}
+            )
             result_message += f"Created new partner: {name}"
+        # manage the address as contact of the partner
+        contact = partner.child_ids.filtered(
+            lambda c: c.street == street and c.zip == zip
+        )
+        if contact:
+            return contact
+        # Find state based on code
+        state = False
+        if state_code:
+            state = self.env["res.country.state"].search(
+                [("code", "=", state_code)], limit=1
+            )
 
-        return partner
+        # Create new contact
+        vals = {
+            "company_type": "person",
+            "type": "delivery",
+            "parent_id": partner.id,
+            "street": street,
+            "zip": zip,
+            "city": city,
+        }
+
+        if state:
+            vals["state_id"] = state.id
+            vals["country_id"] = state.country_id.id
+
+        contact = self.env["res.partner"].create(vals)
+        result_message += f"Created new contact for: {name}"
+
+        return contact
 
     def _add_product_to_picking(self, picking, result_message, vals):
         """Add a product to the picking"""
