@@ -80,3 +80,12 @@ class PickingService(models.Model):
             },
         )
         self.sale_line_id = so_line_id
+
+    def increment_quantity(self):
+        """Increment the quantity by 1."""
+        self.quantity += 1
+
+    def decrement_quantity(self):
+        """Decrement the quantity by 1, but not below 0."""
+        if self.quantity > 0:
+            self.quantity -= 1
