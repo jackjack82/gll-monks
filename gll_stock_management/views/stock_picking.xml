@@ -79,7 +79,9 @@
                         <list editable="bottom">
                             <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
                             <field name="pick_service_type"/>
+                            <field name="id" string=" " width="1px"/>
                             <button name="decrement_quantity" type="object" icon="fa-minus" title="Decrease quantity"/>
+                            <button name="increment_quantity" type="object" icon="fa-plus" title="Increase quantity"/>
                             <field name="quantity"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
