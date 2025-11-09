@@ -33,6 +33,7 @@ class ProductProduct(models.Model):
         ],
         string="Warehouse Type",
     )
+    default_service = fields.Boolean(default=False)
 
     volume = fields.Float("Volume", digits=(16, 5), help="The volume in cubic meters.")
 
@@ -74,6 +75,10 @@ class ProductTemplate(models.Model):
     warehouse_type = fields.Selection(
         related="product_variant_ids.warehouse_type",
         string="Warehouse Type",
+        readonly=False,
+    )
+    default_service = fields.Boolean(
+        related="product_variant_ids.default_service",
         readonly=False,
     )
 

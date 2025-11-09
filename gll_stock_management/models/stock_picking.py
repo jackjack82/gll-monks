@@ -12,12 +12,12 @@ SERVICE_TYPE = [
 ]
 
 SERVICE_FIELD = [
-    ("warehouse_total", "warehouse_service_ids"),
-    ("transport_total", "transport_service_ids"),
-    ("accessories_total", "accessories_service_ids"),
-    ("additional_total", "additional_service_ids"),
-    ("fixed_total", "fixed_service_ids"),
-    ("variable_total", "variable_service_ids"),
+    ("warehouse_total", "warehouse"),
+    ("transport_total", "transport"),
+    ("accessories_total", "accessories"),
+    ("additional_total", "additional"),
+    ("fixed_total", "fixed"),
+    ("variable_total", "variable"),
 ]
 
 
@@ -40,7 +40,10 @@ class StockPicking(models.Model):
                     continue
                 # Find fixed service products
                 products = self.env["product.product"].search(
-                    [("product_tmpl_id.pick_service_type", "=", service)]
+                    [
+                        ("product_tmpl_id.pick_service_type", "=", service),
+                        ("default_service", "=", True),
+                    ]
                 )
 
                 # Create fixed services for both incoming and outgoing
@@ -127,74 +130,30 @@ class StockPicking(models.Model):
         string="All Services",
         copy=False,
     )
-    variable_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Variable Services",
-        domain=[("pick_service_type", "=", "variable")],
-        copy=False,
-    )
     variable_total = fields.Float(
         string="Variable Serv.",
         compute="_compute_service_totals",
         store=True,
-    )
-
-    warehouse_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Warehouse Services",
-        domain=[("pick_service_type", "=", "warehouse")],
-        copy=False,
     )
     warehouse_total = fields.Float(
         string="Warehouse Serv.",
         compute="_compute_service_totals",
         store=True,
     )
-    transport_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Transport Services",
-        domain=[("pick_service_type", "=", "transport")],
-        copy=False,
-    )
     transport_total = fields.Float(
         string="Transport Serv.",
         compute="_compute_service_totals",
         store=True,
-    )
-
-    accessories_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Accessories Services",
-        domain=[("pick_service_type", "=", "accessories")],
-        copy=False,
     )
     accessories_total = fields.Float(
         string="Accessories Serv.",
         compute="_compute_service_totals",
         store=True,
     )
-    additional_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Additional Services",
-        domain=[("pick_service_type", "=", "additional")],
-        copy=False,
-    )
     additional_total = fields.Float(
         string="Additional Serv.",
         compute="_compute_service_totals",
         store=True,
-    )
-    fixed_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Fixed Services",
-        domain=[("pick_service_type", "=", "fixed")],
-        copy=False,
     )
     fixed_total = fields.Float(
         string="Fixed Serv.",
@@ -240,19 +199,17 @@ class StockPicking(models.Model):
                 sml.quantity for sml in lines if sml.product_id.package_type == "box"
             )
 
-    @api.depends(
-        "warehouse_service_ids.total",
-        "transport_service_ids.total",
-        "accessories_service_ids.total",
-        "additional_service_ids.total",
-        "fixed_service_ids.total",
-        "variable_service_ids.total",
-    )
+    @api.depends("all_service_ids.total")
     def _compute_service_totals(self):
         """For each service field, loop on the lines and compute the totals"""
         for picking in self:
-            for field, source in SERVICE_FIELD:
-                total = sum(service.total for service in getattr(picking, source))
+            for field, kind in SERVICE_FIELD:
+                total = sum(
+                    l.total
+                    for l in picking.all_service_ids.filtered(
+                        lambda l: l.pick_service_type == kind
+                    )
+                )
                 setattr(picking, field, total)
 
     def button_validate(self):
