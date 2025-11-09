@@ -78,7 +78,7 @@ class TxtImportWizard(models.Model):
                     line_vals = {
                         "shipment_id": line[0:14].strip(),
                         "shipment_date_str": line[19:27].strip(),
-                        "origin_doc": line[7:15].strip(),
+                        "origin_doc": line[6:15].strip(),
                         "customer_name": line[86:120].strip(),
                         "customer_street": line[121:150].strip(),
                         "customer_zip": line[151:156].strip(),
@@ -105,14 +105,16 @@ class TxtImportWizard(models.Model):
                             ).date()
                             line_vals["shipment_date"] = shipment_date
                         except ValueError:
-                            result_message += f"\nWarning: Invalid date format for shipment {shipment_id}: {shipment_date_str}"
+                            result_message += f"\nWarning: Invalid date format for shipment {line_vals['shipment_id']}: {shipment_date_str}"
 
                     # Process the data
                     self._process_line(line_vals, processed_pickings, result_message)
 
                 except Exception as e:
-                    # TODO: better try/except management (avoid empty/broken pick)
-                    result_message += f"\nError processing line: {str(e)}"
+                    raise UserError(
+                        "Import suspended for the following reason: " + str(e)
+                    )
+                    # result_message += f"\nError processing line: {str(e)}"
 
             # Update the wizard with results
             self.write({"state": "done", "results": result_message})
@@ -130,7 +132,10 @@ class TxtImportWizard(models.Model):
             return True
 
         except Exception as e:
-            self.write({"state": "error", "error": str(e)})
+            # if there is any kind of error, rollback
+            # self.env.cr.rollback()
+            self.write({"state": "error"})
+            raise UserError(_("Import failed for the following reason: " + str(e)))
 
     def _process_line(self, vals, processed_pickings, result_message):
         """Process a single line from the imported file"""
@@ -168,7 +173,7 @@ class TxtImportWizard(models.Model):
             if not picking_type:
                 raise UserError(_("No outgoing picking type found."))
 
-            vals = {
+            pick_vals = {
                 "partner_id": recipient.id,
                 "delivery_partner_id": customer.id,
                 "picking_type_id": picking_type.id,
@@ -180,7 +185,7 @@ class TxtImportWizard(models.Model):
                 "note": vals["delivery_note"],
             }
 
-            picking = self.env["stock.picking"].create(vals)
+            picking = self.env["stock.picking"].create(pick_vals)
             processed_pickings[shipment_id] = picking
             result_message += (
                 f"Created new picking {picking.name} for shipment {shipment_id}"
@@ -254,7 +259,9 @@ class TxtImportWizard(models.Model):
                             f"\nFound UoM with import code {product_uom_code}"
                         )
                     else:
-                        result_message += f"\nWarning: UoM with import code {product_uom_code} not found, using default"
+                        raise UserError(
+                            f"\nWarning: UoM with import code {product_uom_code} not found."
+                        )
 
                 # Create a new product (storable with no tracking)
                 product_vals = {
