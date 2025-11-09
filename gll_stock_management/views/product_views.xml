@@ -17,6 +17,7 @@
             <field name="categ_id" position="before">
                 <field name="pick_service_type"/>
                 <field name="warehouse_type" invisible="pick_service_type != 'warehouse'" required="pick_service_type == 'warehouse'"/>
+                <field name="default_service" widget="boolean_toggle"/>
             </field>
         </field>
     </record>
@@ -29,6 +30,7 @@
            <field name="default_code" position="after">
                <field name="pick_service_type"/>
                <field name="warehouse_type"/>
+                <field name="default_service" widget="boolean_toggle"/>
            </field>
         </field>
     </record>
