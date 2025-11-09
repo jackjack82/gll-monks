@@ -75,7 +75,7 @@ class TxtImportWizard(models.Model):
                 try:
                     shipment_id = line[0:14].strip()
                     shipment_date_str = line[19:27].strip()
-                    origin_doc = line[28:77].strip()  # todo: togliere zeri?
+                    origin_doc = line[7:15].strip()  # todo: check
                     customer_name = line[86:120].strip()
                     customer_street = line[121:150].strip()  # TODO: è 124R ?
                     customer_zip = line[151:156].strip()
@@ -89,6 +89,7 @@ class TxtImportWizard(models.Model):
                     delivery_note = line[309:426].strip()
                     product_ref = line[412:427].strip()
                     product_name = line[427:462].strip()
+                    product_uom_code = line[462:464].strip()
                     product_qty = self.convert_to_int(line[464:473])
 
                     # Convert date format
@@ -122,6 +123,7 @@ class TxtImportWizard(models.Model):
                         delivery_note,
                         product_name,
                         product_qty,
+                        product_uom_code,
                     )
 
                 except Exception as e:
@@ -167,6 +169,7 @@ class TxtImportWizard(models.Model):
         delivery_note,
         product_name,
         product_qty,
+        product_uom_code,
     ):
         """Process a single line from the imported file"""
 
@@ -225,7 +228,7 @@ class TxtImportWizard(models.Model):
 
         # Add the product to the picking
         self._add_product_to_picking(
-            picking, product_ref, result_message, product_name, product_qty
+            picking, product_ref, result_message, product_name, product_qty, product_uom_code
         )
 
         return picking
@@ -266,7 +269,7 @@ class TxtImportWizard(models.Model):
         return partner
 
     def _add_product_to_picking(
-        self, picking, product_ref, result_message, product_name, product_qty
+        self, picking, product_ref, result_message, product_name, product_qty, product_uom_code
     ):
         """Add a product to the picking"""
         if not product_ref:
@@ -280,6 +283,16 @@ class TxtImportWizard(models.Model):
 
         if not product:
             if product_name:
+                # Find UoM by import code if provided
+                uom_id = False
+                if product_uom_code:
+                    uom = self.env["uom.uom"].search([("import_code", "=", product_uom_code)], limit=1)
+                    if uom:
+                        uom_id = uom.id
+                        result_message += f"\nFound UoM with import code {product_uom_code}"
+                    else:
+                        result_message += f"\nWarning: UoM with import code {product_uom_code} not found, using default"
+
                 # Create a new product (storable with no tracking)
                 product_vals = {
                     "name": product_name,
@@ -288,6 +301,12 @@ class TxtImportWizard(models.Model):
                     "is_storable": True,  # 'product' type means storable product
                     "tracking": "none",  # No tracking
                 }
+
+                # Set UoM if found
+                if uom_id:
+                    product_vals["uom_id"] = uom_id
+                    product_vals["uom_po_id"] = uom_id
+
                 product = self.env["product.product"].create(product_vals)
                 result_message += (
                     f"Created new product {product_name} with reference {product_ref}"
