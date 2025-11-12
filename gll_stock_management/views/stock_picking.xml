@@ -25,14 +25,21 @@
             <field name="partner_id" position="replace">
                 <!-- Add partner address fields after partner_id -->
                 <div style="border: 1pt solid grey; border-radius: 10px; padding:2;">
-                    <field name="partner_id" options="{'no_create': True}"/>
+                    <field name="partner_id"/>
                 <field name="partner_street" placeholder="Street..." class="o_address_street"/>
                 <div class="o_row">
                     <field name="partner_zip" placeholder="ZIP" class="oe_inline"/>
                     <field name="partner_city" placeholder="City" class="oe_inline"/>
                     <field name="partner_state_id" placeholder="State" class="oe_inline"/>
                 </div>
+                <field name="carrier_city"/>
                 </div>
+                <!-- Warning for inconvenient destination -->
+                <div invisible="not is_inconvenient_destination"
+                     style="background-color: #daedf7; color: #31708f; padding: 10px; margin-top: 10px; margin-bottom: 10px; border-radius: 4px;">
+                    <strong>Warning:</strong> This destination is marked as an inconvenient place for the selected carrier.
+                </div>
+                <field name="is_inconvenient_destination" invisible="1"/>
                 <field name="delivery_partner_id"/>
             </field>
             <!-- Move the notes to a smaller field below the locations-->

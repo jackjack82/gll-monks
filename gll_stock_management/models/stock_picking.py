@@ -136,6 +136,114 @@ class StockPicking(models.Model):
     )
     transport_tariff = fields.Float("Transport tariff")
 
+    carrier_city = fields.Many2one(
+        "res.city",
+        string="Destination City",
+        store=True,
+        help="City found based on ZIP and city name",
+    )
+
+    is_inconvenient_destination = fields.Boolean(
+        string="Inconvenient Destination",
+        compute="_compute_is_inconvenient_destination",
+        store=True,
+        help="True if the destination city is marked as inconvenient for the selected carrier",
+    )
+
+    @api.onchange("partner_zip", "partner_city")
+    def _compute_carrier_city(self):
+        """Find a city based on partner_zip and partner_city"""
+        for picking in self:
+            city = False
+            if picking.partner_zip and picking.partner_city:
+                # Search for a city with matching name and zip
+                city = self.env["res.city"].search(
+                    [
+                        ("name", "=ilike", picking.partner_city),
+                        ("zipcode", "=", picking.partner_zip),
+                    ],
+                    limit=1,
+                )
+
+                # If not found, try with just the city name
+                if not city:
+                    city = self.env["res.city"].search(
+                        [("name", "=ilike", picking.partner_city)], limit=1
+                    )
+
+            picking.carrier_city = city
+
+    @api.depends("carrier_city", "carrier_id")
+    def _compute_is_inconvenient_destination(self):
+        """Check if the destination city is inconvenient for the selected carrier"""
+        for picking in self:
+            is_inconvenient = False
+            if picking.carrier_city and picking.carrier_id:
+                is_inconvenient = (
+                    picking.carrier_id.id
+                    in picking.carrier_city.inconvenient_place_ids.ids
+                )
+
+            picking.is_inconvenient_destination = is_inconvenient
+
+    @api.onchange(
+        "is_inconvenient_destination", "carrier_id", "partner_zip", "partner_city"
+    )
+    def _onchange_inconvenient_destination(self):
+        """When inconvenient destination status changes, update service lines"""
+        for picking in self:
+            picking._update_inconvenient_city_service_lines()
+
+    def _update_inconvenient_city_service_lines(self):
+        """Add or remove inconvenient city service lines based on is_inconvenient_destination"""
+        self.ensure_one()
+
+        # Find products marked as inconvenient city services
+        inconvenient_products = self.env["product.product"].search(
+            [
+                ("inconvenient_city_service", "=", True),
+            ]
+        )
+
+        if not inconvenient_products:
+            return
+
+        # Find existing inconvenient city service lines
+        existing_lines = self.all_service_ids.filtered(
+            lambda l: l.product_id.id in inconvenient_products.ids
+        )
+
+        # If destination is inconvenient, add service lines
+        if self.is_inconvenient_destination:
+            # Add service lines for products not already added
+            for product in inconvenient_products:
+                if not existing_lines.filtered(lambda l: l.product_id.id == product.id):
+                    # Create new service line
+                    self.update(
+                        {
+                            "all_service_ids": [
+                                (
+                                    0,
+                                    0,
+                                    {
+                                        # 'picking_id': self._origin.id,
+                                        "product_id": product.id,
+                                        "price": product._get_product_price(
+                                            self.transport_tariff
+                                        ),
+                                        "pick_service_type": product.pick_service_type
+                                        or "additional",
+                                        "quantity": 1.0,
+                                    },
+                                )
+                            ]
+                        }
+                    )
+        # If destination is not inconvenient, remove service lines
+        else:
+            if existing_lines:
+                existing_lines.unlink()
+
     @api.onchange("transport_tariff")
     def _onchange_transport_tariff(self):
         """When transport_tariff changes, update the price of all transport service lines"""
