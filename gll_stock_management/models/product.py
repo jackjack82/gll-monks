@@ -33,6 +33,13 @@ class ProductTemplate(models.Model):
         readonly=False,
     )
 
+    inconvenient_city_service = fields.Boolean(
+        related="product_variant_ids.inconvenient_city_service",
+        string="Inconvenient City Service",
+        readonly=False,
+        help="If checked, this product will be added as a service line when a picking is sent to an inconvenient city",
+    )
+
     # Fields for transport tariff calculation
     tariff_percentage = fields.Float(
         related="product_variant_ids.tariff_percentage",
@@ -117,6 +124,11 @@ class ProductProduct(models.Model):
         string="Warehouse Type",
     )
     default_service = fields.Boolean(default=False)
+    inconvenient_city_service = fields.Boolean(
+        string="Inconvenient City Service",
+        default=False,
+        help="If checked, this product will be added as a service line when a picking is sent to an inconvenient city",
+    )
 
     # Fields for transport tariff calculation
     tariff_percentage = fields.Float(
