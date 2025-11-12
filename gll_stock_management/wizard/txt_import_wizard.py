@@ -89,7 +89,7 @@ class TxtImportWizard(models.Model):
                         "recipient_zip": line[268:275].strip(),
                         "recipient_state_code": line[276:278].strip(),
                         "recipient_city": line[278:308].strip(),
-                        "delivery_note": line[309:426].strip(),
+                        "delivery_note": line[309:411].strip(),
                         "product_ref": line[412:427].strip(),
                         "product_name": line[427:462].strip(),
                         "product_uom_code": line[462:464].strip(),
@@ -204,7 +204,13 @@ class TxtImportWizard(models.Model):
             raise UserError(_("Partner name is required."))
 
         # Search for existing partner by name
-        partner = self.env["res.partner"].search([("name", "=", name)], limit=1)
+        partner = self.env["res.partner"].search(
+            [
+                ("name", "=", name),
+                ("parent_id", "=", False),
+            ],
+            limit=1,
+        )
         if not partner:
             # create the main contact as a company
             partner = self.env["res.partner"].create(
@@ -226,6 +232,7 @@ class TxtImportWizard(models.Model):
 
         # Create new contact
         vals = {
+            "name": "street",
             "company_type": "person",
             "type": "delivery",
             "parent_id": partner.id,

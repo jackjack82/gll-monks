@@ -118,6 +118,8 @@ class StockPicking(models.Model):
         store=True,
         string="Total volume (m2)",
     )
+    transport_tariff = fields.Float("Transport tariff")
+
     gll_so_count = fields.Integer(
         string="Orders",
         compute="compute_gll_so_count",
