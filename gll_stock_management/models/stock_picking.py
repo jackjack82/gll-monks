@@ -48,15 +48,31 @@ class StockPicking(models.Model):
 
                 # Create fixed services for both incoming and outgoing
                 for product in products:
-                    self.env["picking.service"].create(
+                    # Create the service with initial values
+                    service_line = self.env["picking.service"].create(
                         {
                             "picking_id": picking.id,
                             "product_id": product.id,
-                            "price": product.list_price,
+                            "price": product._get_product_price(self.transport_tariff),
                             "pick_service_type": service,
                             "quantity": 0.0,
                         }
                     )
+
+                    # For transport services, compute the price based on transport_tariff if available
+                    if service == "transport" and picking.transport_tariff:
+                        percentage = product.tariff_percentage / 100.0
+                        min_price = product.tariff_min
+                        max_price = product.tariff_max
+
+                        calculated_price = picking.transport_tariff * percentage
+
+                        if min_price and calculated_price < min_price:
+                            calculated_price = min_price
+                        if max_price and calculated_price > max_price:
+                            calculated_price = max_price
+
+                        service_line.price = calculated_price
 
         return picking
 
@@ -119,6 +135,15 @@ class StockPicking(models.Model):
         string="Total volume (m2)",
     )
     transport_tariff = fields.Float("Transport tariff")
+
+    @api.onchange("transport_tariff")
+    def _onchange_transport_tariff(self):
+        """When transport_tariff changes, update the price of all transport service lines"""
+        for picking in self:
+            for service in picking.all_service_ids:
+                service.price = service.product_id._get_product_price(
+                    picking.transport_tariff
+                )
 
     gll_so_count = fields.Integer(
         string="Orders",
