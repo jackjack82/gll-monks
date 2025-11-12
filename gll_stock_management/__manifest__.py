@@ -17,8 +17,11 @@
         "stock_delivery",
         "sale",
         "purchase",
+        "base_address_extended",
     ],
-    "external_dependencies": {},
+    "external_dependencies": {
+        "python": ["xlrd"],
+    },
     "assets": {
         "web.assets_backend": [],
     },
@@ -47,6 +50,7 @@
         "reports/transportation_from_invoice_report.xml",
         # wizard
         "wizard/txt_import_wizard_views.xml",
+        "wizard/inconvenient_city_import_wizard.xml",
     ],
     # Technical
     "installable": True,
