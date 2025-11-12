@@ -50,6 +50,22 @@ class PickingService(models.Model):
         for service in self:
             service.total = service.quantity * service.price
 
+    @api.onchange("product_id", "picking_id.transport_tariff")
+    def _onchange_product_transport_tariff(self):
+        """Compute price based on transport_tariff and product settings when:
+        1. Product changes
+        2. Transport tariff changes
+        """
+        for service in self:
+            if (
+                service.product_id
+                and service.picking_id
+                and service.picking_id.transport_tariff
+            ):
+                service.price = service.product_id._get_product_price(
+                    service.picking_id.transport_tariff
+                )
+
     def unlink(self):
         """Delete also the sale order line related to this service.
         If this is not possible, you will get an error"""
