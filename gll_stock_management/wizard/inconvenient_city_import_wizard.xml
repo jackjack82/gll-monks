@@ -19,11 +19,11 @@
                     <div>
                         Wizzard per l'importazione delle Città Disagiate. Selezionare il Corriere e la Nazione.<br/>
                         I campi obbligatori per il file di excel di import sono (tra <br/>
-                        parentesi il nome della colonna del file excel):
-                        1) Nome località (name)
-                        2) Codice provincia, ad esepio RM, MI, TO (state)
-                        3) CAP (zip)
-
+                        parentesi il nome della colonna del file excel):<br/>
+                        1) Nome località (name)<br/>
+                        2) Codice provincia, ad esepio RM, MI, TO (state)<br/>
+                        3) CAP (zip)<br/>
+                    <br/><br/>
                     </div>
                     <group>
                         <group>
