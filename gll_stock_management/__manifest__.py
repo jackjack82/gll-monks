@@ -40,6 +40,7 @@
         "views/gll_trip_views.xml",
         "views/sale_order.xml",
         "views/uom_views.xml",
+        "views/res_city.xml",
         # security
         "security/ir.model.access.csv",
         # reports

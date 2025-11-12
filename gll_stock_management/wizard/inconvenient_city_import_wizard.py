@@ -1,8 +1,9 @@
 # © 2025 webmonks
 
 import base64
-import xlrd
+import re
 
+import xlrd
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -21,7 +22,7 @@ class ExcelImportInconvenientWizard(models.Model):
         help="Delivery carrier to associate with the inconvenient places",
     )
     results = fields.Text(string="Result", readonly=True)
-    country_id = fields.Many2one('res.country', "Country", required=True)
+    country_id = fields.Many2one("res.country", "Country", required=True)
     state = fields.Selection(
         [("draft", "Draft"), ("done", "Done"), ("error", "Error")],
         string="State",
@@ -35,117 +36,136 @@ class ExcelImportInconvenientWizard(models.Model):
 
     def action_import(self):
         """Import data from the uploaded Excel file"""
+
         self.ensure_one()
-        
+
         if not self.file:
             raise UserError(_("No file uploaded."))
-        
+
         if not self.filename or not self.filename.lower().endswith((".xlsx", ".xls")):
             raise UserError(_("Only Excel files (.xlsx, .xls) are supported."))
-        
+
         try:
             # Decode the file content
             file_content = base64.b64decode(self.file)
-            
+
             # Process the Excel file
             result_message = ""
-            affected_cities = []
-            
+
             # Open the workbook
             book = xlrd.open_workbook(file_contents=file_content)
             sheet = book.sheet_by_index(0)
-            
+
             # Validate header row (first row)
             if sheet.nrows < 2:  # At least header + 1 data row
-                raise UserError(_("The Excel file must contain at least a header row and one data row."))
-            
+                raise UserError(
+                    _(
+                        "The Excel file must contain at least a header row and one data row."
+                    )
+                )
+
             # Check column headers (must be in this order)
             expected_headers = ["name", "zip", "state"]
-            actual_headers = [str(sheet.cell_value(0, i)).lower().strip() for i in range(min(4, sheet.ncols))]
-            
+            actual_headers = [
+                str(sheet.cell_value(0, i)).lower().strip()
+                for i in range(min(4, sheet.ncols))
+            ]
+            if set(expected_headers) & set(actual_headers) != set(expected_headers):
+                raise UserError(
+                    _("Some expected header (name, zip, state) are missing")
+                )
+
             if len(actual_headers) < 3:
-                raise UserError(_("The Excel file must contain at least 4 columns: nome, zip, provincia."))
+                raise UserError(
+                    _(
+                        "The Excel file must contain at least 4 columns: nome, zip, provincia."
+                    )
+                )
 
             # Process data rows
+            states_dict = {}
             for row_idx in range(1, sheet.nrows):
                 try:
                     # Extract data from the row
-                    name = str(sheet.cell_value(row_idx, 0)).strip()
-                    zipcode = str(sheet.cell_value(row_idx, 1)).strip()
-                    country_code = str(sheet.cell_value(row_idx, 2)).strip()
-                    state_code = str(sheet.cell_value(row_idx, 3)).strip()
-                    
-                    # Validate required fields
-                    if not name or not zipcode:
-                        result_message += _("\nWarning: Row {} has empty name or zip, skipping.").format(row_idx + 1)
-                        continue
-                    
-                    # Find country by code or name
-                    country = self.env["res.country"].search([
-                        "|",
-                        ("code", "=ilike", country_code),
-                        ("name", "=ilike", country_code)
-                    ], limit=1)
-                    
-                    if not country:
-                        raise UserError(_("Country '{}' not found in row {}.").format(country_code, row_idx + 1))
-                    
-                    # Find state by code or name, ensuring it belongs to the country
-                    state = self.env["res.country.state"].search([
-                        "|",
-                        ("code", "=ilike", state_code),
-                        ("name", "=ilike", state_code),
-                        ("country_id", "=", country.id)
-                    ], limit=1)
-                    
-                    if not state:
-                        raise UserError(_("State '{}' not found for country '{}' in row {}.").format(
-                            state_code, country.name, row_idx + 1))
-                    
+                    row_dict = self._get_dict_from_row(sheet, row_idx, actual_headers)
+                    state_id, states_dict = self._get_state_from_code(
+                        row_dict["state"], states_dict
+                    )
                     # Find or create city
-                    city = self.env["res.city"].search([
-                        ("name", "=ilike", name),
-                        ("zipcode", "=", zipcode),
-                        ("country_id", "=", country.id),
-                        ("state_id", "=", state.id)
-                    ], limit=1)
-                    
-                    if city:
-                        result_message += _("\nUpdated existing city {} {} ({}-{})").format(
-                            city.name, city.zipcode, country.code, state.code)
-                    else:
-                        city = self.env["res.city"].create({
-                            "name": name,
-                            "zipcode": zipcode,
-                            "country_id": country.id,
-                            "state_id": state.id
-                        })
-                        result_message += _("\nCreated city {} {} ({}-{})").format(
-                            city.name, city.zipcode, country.code, state.code)
-                    
+                    city = self.env["res.city"].search(
+                        [
+                            ("name", "=", row_dict["name"]),
+                            ("zipcode", "=", row_dict["zip"]),
+                            # ("country_id", "=", self.country_id.id),
+                            # ("state_id", "=", state_id.id)
+                        ],
+                        limit=1,
+                    )
+
+                    if not city:
+                        city = self.env["res.city"].create(
+                            {
+                                "name": row_dict["name"],
+                                "zipcode": row_dict["zip"],
+                                "country_id": self.country_id.id,
+                                "state_id": state_id.id,
+                            }
+                        )
+
                     # Add carrier to the city's inconvenient_place_ids
-                    if self.carrier_id.id not in city.inconvenient_place_ids.ids:
-                        city.write({
-                            "inconvenient_place_ids": [(4, self.carrier_id.id)]
-                        })
-                        result_message += _("\nAssociated carrier {} to city {} {}").format(
-                            self.carrier_id.name, city.name, city.zipcode)
-                    
-                    affected_cities.append(city.id)
-                
+                    city.write({"inconvenient_place_ids": [(4, self.carrier_id.id)]})
+
                 except Exception as e:
-                    result_message += _("\nError processing row {}: {}").format(row_idx + 1, str(e))
-            
+                    raise UserError(
+                        "Error processing row {}: {}".format(row_idx + 1, str(e))
+                    )
+
             # Update the wizard with results
-            self.write({
-                "state": "done",
-                "results": result_message,
-                # Store affected city IDs for later reference
-                # We could store this in a Many2many field if needed
-            })
-            
+            self.write(
+                {
+                    "state": "done",
+                    "results": result_message,
+                    # Store affected city IDs for later reference
+                    # We could store this in a Many2many field if needed
+                }
+            )
+
             return True
-        
+
         except Exception as e:
             self.write({"state": "error"})
-            raise UserError(_("Import failed for the following reason: {}").format(str(e)))
+            raise UserError(
+                _("Import failed for the following reason: {}").format(str(e))
+            )
+
+    def _get_dict_from_row(self, sheet, row_idx, actual_headers):
+        row_dict = {}
+        for num, header in enumerate(actual_headers):
+            value = str(sheet.cell_value(row_idx, num)).strip()
+            if header == "zip":
+                match = re.search(r"\b(\d{5})\b", value)
+                value = str(match.group(1)) if match else False
+            # check required fields, else raise an error
+            if not value and header in ["name", "zip", "state"]:
+                raise UserError(
+                    _(
+                        "The Excel file must contain at least 3 columns: name, zip, state"
+                    )
+                )
+            row_dict[header] = value
+        return row_dict
+
+    def _get_state_from_code(self, code, states_dict):
+        state_id = states_dict.get(code)
+        if state_id:
+            return state_id, states_dict
+        state_id = self.env["res.country.state"].search(
+            [
+                ("code", "=", code),
+            ],
+            limit=1,
+        )
+        if not state_id:
+            raise UserError(_("State '{}' not found.").format(code))
+        states_dict[code] = state_id
+        return state_id, states_dict
