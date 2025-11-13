@@ -1397,11 +1397,6 @@ msgid "Variable Serv."
 msgstr "Ser. Variabili"
 
 #. module: gll_stock_management
-#: model:ir.model.fields,field_description:gll_stock_management.field_stock_picking__variable_service_ids
-msgid "Variable Services"
-msgstr "Servizi Variabili"
-
-#. module: gll_stock_management
 #: model:ir.model.fields,field_description:gll_stock_management.field_gll_trip__vehicle_plate
 msgid "Vehicle"
 msgstr "Veicolo"

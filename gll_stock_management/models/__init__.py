@@ -12,3 +12,5 @@ from . import sale_order_line
 from . import picking_service
 from . import account_move
 from . import report_transportation_from_invoice
+from . import uom
+from . import res_city

@@ -12,12 +12,12 @@ SERVICE_TYPE = [
 ]
 
 SERVICE_FIELD = [
-    ("warehouse_total", "warehouse_service_ids"),
-    ("transport_total", "transport_service_ids"),
-    ("accessories_total", "accessories_service_ids"),
-    ("additional_total", "additional_service_ids"),
-    ("fixed_total", "fixed_service_ids"),
-    ("variable_total", "variable_service_ids"),
+    ("warehouse_total", "warehouse"),
+    ("transport_total", "transport"),
+    ("accessories_total", "accessories"),
+    ("additional_total", "additional"),
+    ("fixed_total", "fixed"),
+    ("variable_total", "variable"),
 ]
 
 
@@ -40,20 +40,39 @@ class StockPicking(models.Model):
                     continue
                 # Find fixed service products
                 products = self.env["product.product"].search(
-                    [("product_tmpl_id.pick_service_type", "=", service)]
+                    [
+                        ("product_tmpl_id.pick_service_type", "=", service),
+                        ("default_service", "=", True),
+                    ]
                 )
 
                 # Create fixed services for both incoming and outgoing
                 for product in products:
-                    self.env["picking.service"].create(
+                    # Create the service with initial values
+                    service_line = self.env["picking.service"].create(
                         {
                             "picking_id": picking.id,
                             "product_id": product.id,
-                            "price": product.list_price,
+                            "price": product._get_product_price(self.transport_tariff),
                             "pick_service_type": service,
                             "quantity": 0.0,
                         }
                     )
+
+                    # For transport services, compute the price based on transport_tariff if available
+                    if service == "transport" and picking.transport_tariff:
+                        percentage = product.tariff_percentage / 100.0
+                        min_price = product.tariff_min
+                        max_price = product.tariff_max
+
+                        calculated_price = picking.transport_tariff * percentage
+
+                        if min_price and calculated_price < min_price:
+                            calculated_price = min_price
+                        if max_price and calculated_price > max_price:
+                            calculated_price = max_price
+
+                        service_line.price = calculated_price
 
         return picking
 
@@ -115,6 +134,125 @@ class StockPicking(models.Model):
         store=True,
         string="Total volume (m2)",
     )
+    transport_tariff = fields.Float("Transport tariff")
+
+    carrier_city = fields.Many2one(
+        "res.city",
+        string="Destination City",
+        store=True,
+        help="City found based on ZIP and city name",
+    )
+
+    is_inconvenient_destination = fields.Boolean(
+        string="Inconvenient Destination",
+        compute="_compute_is_inconvenient_destination",
+        store=True,
+        help="True if the destination city is marked as inconvenient for the selected carrier",
+    )
+
+    @api.onchange("partner_zip", "partner_city")
+    def _compute_carrier_city(self):
+        """Find a city based on partner_zip and partner_city"""
+        for picking in self:
+            city = False
+            if picking.partner_zip and picking.partner_city:
+                # Search for a city with matching name and zip
+                city = self.env["res.city"].search(
+                    [
+                        ("name", "=ilike", picking.partner_city),
+                        ("zipcode", "=", picking.partner_zip),
+                    ],
+                    limit=1,
+                )
+
+                # If not found, try with just the city name
+                if not city:
+                    city = self.env["res.city"].search(
+                        [("name", "=ilike", picking.partner_city)], limit=1
+                    )
+
+            picking.carrier_city = city
+
+    @api.depends("carrier_city", "carrier_id")
+    def _compute_is_inconvenient_destination(self):
+        """Check if the destination city is inconvenient for the selected carrier"""
+        for picking in self:
+            is_inconvenient = False
+            if picking.carrier_city and picking.carrier_id:
+                is_inconvenient = (
+                    picking.carrier_id.id
+                    in picking.carrier_city.inconvenient_place_ids.ids
+                )
+
+            picking.is_inconvenient_destination = is_inconvenient
+
+    @api.onchange(
+        "is_inconvenient_destination", "carrier_id", "partner_zip", "partner_city"
+    )
+    def _onchange_inconvenient_destination(self):
+        """When inconvenient destination status changes, update service lines"""
+        for picking in self:
+            picking._update_inconvenient_city_service_lines()
+
+    def _update_inconvenient_city_service_lines(self):
+        """Add or remove inconvenient city service lines based on is_inconvenient_destination"""
+        self.ensure_one()
+
+        # Find products marked as inconvenient city services
+        inconvenient_products = self.env["product.product"].search(
+            [
+                ("inconvenient_city_service", "=", True),
+            ]
+        )
+
+        if not inconvenient_products:
+            return
+
+        # Find existing inconvenient city service lines
+        existing_lines = self.all_service_ids.filtered(
+            lambda l: l.product_id.id in inconvenient_products.ids
+        )
+
+        # If destination is inconvenient, add service lines
+        if self.is_inconvenient_destination:
+            # Add service lines for products not already added
+            for product in inconvenient_products:
+                if not existing_lines.filtered(lambda l: l.product_id.id == product.id):
+                    # Create new service line
+                    self.update(
+                        {
+                            "all_service_ids": [
+                                (
+                                    0,
+                                    0,
+                                    {
+                                        # 'picking_id': self._origin.id,
+                                        "product_id": product.id,
+                                        "price": product._get_product_price(
+                                            self.transport_tariff
+                                        ),
+                                        "pick_service_type": product.pick_service_type
+                                        or "additional",
+                                        "quantity": 1.0,
+                                    },
+                                )
+                            ]
+                        }
+                    )
+        # If destination is not inconvenient, remove service lines
+        else:
+            if existing_lines:
+                existing_lines.unlink()
+
+    @api.onchange("transport_tariff")
+    def _onchange_transport_tariff(self):
+        """When transport_tariff changes, update the price of all transport service lines"""
+        for picking in self:
+            for service in picking.all_service_ids:
+                service.price = service.product_id._get_product_price(
+                    picking.transport_tariff
+                )
+
     gll_so_count = fields.Integer(
         string="Orders",
         compute="compute_gll_so_count",
@@ -127,73 +265,30 @@ class StockPicking(models.Model):
         string="All Services",
         copy=False,
     )
-    variable_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Variable Services",
-        domain=[("pick_service_type", "=", "variable")],
-        copy=False,
-    )
     variable_total = fields.Float(
         string="Variable Serv.",
         compute="_compute_service_totals",
         store=True,
-    )
-
-    warehouse_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Warehouse Services",
-        domain=[("pick_service_type", "=", "warehouse")],
-        copy=False,
     )
     warehouse_total = fields.Float(
         string="Warehouse Serv.",
         compute="_compute_service_totals",
         store=True,
     )
-    transport_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Transport Services",
-        domain=[("pick_service_type", "=", "transport")],
-        copy=False,
-    )
     transport_total = fields.Float(
         string="Transport Serv.",
         compute="_compute_service_totals",
         store=True,
-    )
-    accessories_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Accessories Services",
-        domain=[("pick_service_type", "=", "accessories")],
-        copy=False,
     )
     accessories_total = fields.Float(
         string="Accessories Serv.",
         compute="_compute_service_totals",
         store=True,
     )
-    additional_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Additional Services",
-        domain=[("pick_service_type", "=", "additional")],
-        copy=False,
-    )
     additional_total = fields.Float(
         string="Additional Serv.",
         compute="_compute_service_totals",
         store=True,
-    )
-    fixed_service_ids = fields.One2many(
-        "picking.service",
-        "picking_id",
-        string="Fixed Services",
-        domain=[("pick_service_type", "=", "fixed")],
-        copy=False,
     )
     fixed_total = fields.Float(
         string="Fixed Serv.",
@@ -239,19 +334,17 @@ class StockPicking(models.Model):
                 sml.quantity for sml in lines if sml.product_id.package_type == "box"
             )
 
-    @api.depends(
-        "warehouse_service_ids.total",
-        "transport_service_ids.total",
-        "accessories_service_ids.total",
-        "additional_service_ids.total",
-        "fixed_service_ids.total",
-        "variable_service_ids.total",
-    )
+    @api.depends("all_service_ids.total")
     def _compute_service_totals(self):
         """For each service field, loop on the lines and compute the totals"""
         for picking in self:
-            for field, source in SERVICE_FIELD:
-                total = sum(service.total for service in getattr(picking, source))
+            for field, kind in SERVICE_FIELD:
+                total = sum(
+                    l.total
+                    for l in picking.all_service_ids.filtered(
+                        lambda l: l.pick_service_type == kind
+                    )
+                )
                 setattr(picking, field, total)
 
     def button_validate(self):
@@ -516,3 +609,13 @@ class StockPicking(models.Model):
             )
 
         return int(service_for_single_id), int(service_for_box_id)
+
+    def unlink(self):
+        """At picking deletion, delete all service lines first"""
+        if self.all_service_ids:
+            self.all_service_ids.unlink()
+        res = super().unlink()
+        return res
+
+    def _valid_field_parameter(self, field, name):
+        return name == "ondelete" or super()._valid_field_parameter(field, name)

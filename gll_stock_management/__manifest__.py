@@ -17,8 +17,11 @@
         "stock_delivery",
         "sale",
         "purchase",
+        "base_address_extended",
     ],
-    "external_dependencies": {},
+    "external_dependencies": {
+        "python": ["xlrd"],
+    },
     "assets": {
         "web.assets_backend": [],
     },
@@ -36,6 +39,8 @@
         "views/res_config_settings_views.xml",
         "views/gll_trip_views.xml",
         "views/sale_order.xml",
+        "views/uom_views.xml",
+        "views/res_city.xml",
         # security
         "security/ir.model.access.csv",
         # reports
@@ -46,6 +51,7 @@
         "reports/transportation_from_invoice_report.xml",
         # wizard
         "wizard/txt_import_wizard_views.xml",
+        "wizard/inconvenient_city_import_wizard.xml",
     ],
     # Technical
     "installable": True,

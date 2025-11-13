@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend UoM Tree View -->
+    <record id="gll_view_city_tree" model="ir.ui.view">
+        <field name="name">gll.res.city.list</field>
+        <field name="model">res.city</field>
+        <field name="inherit_id" ref="base_address_extended.view_city_tree"/>
+        <field name="arch" type="xml">
+            <field name="state_id" position="after">
+                <field name="inconvenient_place_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
