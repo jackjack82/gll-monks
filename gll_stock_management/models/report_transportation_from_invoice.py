@@ -77,49 +77,6 @@ class ReportItalyTransportationServicesFromInvoice(models.AbstractModel):
             "logistics_total": logistics_total,
         }
 
-    def _get_sale_orders_from_invoice(self, invoice):
-        """
-        Get the relevant sale orders from an invoice.
-
-        Args:
-            invoice: The invoice record.
-
-        Returns:
-            recordset: The relevant sale orders.
-        """
-        # Get sale orders linked to the invoice through its lines
-        sale_line_ids = invoice.invoice_line_ids.mapped("sale_line_ids")
-        sale_orders = sale_line_ids.mapped("order_id")
-
-        # Filter by order_type and state
-        return sale_orders.filtered(
-            lambda o: o.order_type == "deliveries" and o.state in ["sale", "done"]
-        )
-
-    def _get_pickings_from_sale_orders(self, sale_orders):
-        """
-        Get the relevant pickings from sale orders.
-
-        Args:
-            sale_orders: The sale order records.
-
-        Returns:
-            recordset: The relevant pickings.
-        """
-        # Get all sale order lines
-        sale_lines = sale_orders.mapped("order_line")
-
-        # Get pickings that have services linked to these sale order lines
-        pickings = self.env["stock.picking"].search(
-            [
-                ("picking_type_code", "=", "outgoing"),
-                ("state", "in", ["done"]),
-                ("all_service_ids.sale_line_id", "in", sale_lines.ids),
-            ]
-        )
-
-        return pickings
-
     def _get_preparation_amount(self, picking):
         """
         Calculate the preparation amount for a picking.
