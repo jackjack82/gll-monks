@@ -120,17 +120,17 @@ class StockPicking(models.Model):
         readonly=False,
     )
     items_count = fields.Integer(
-        compute="compute_items_count_volume",
+        compute="_compute_items_count_volume",
         store=True,
         string="Number of items",
     )
     packages_count = fields.Integer(
-        compute="compute_items_count_volume",
+        compute="_compute_items_count_volume",
         store=True,
         string="Number of packages",
     )
     items_volume = fields.Float(
-        compute="compute_items_count_volume",
+        compute="_compute_items_count_volume",
         store=True,
         string="Total volume (m2)",
     )
@@ -255,7 +255,7 @@ class StockPicking(models.Model):
 
     gll_so_count = fields.Integer(
         string="Orders",
-        compute="compute_gll_so_count",
+        compute="_compute_gll_so_count",
     )
 
     # all service fields plus their computed total
@@ -296,7 +296,7 @@ class StockPicking(models.Model):
         store=True,
     )
 
-    def compute_gll_so_count(self):
+    def _compute_gll_so_count(self):
         for pick in self:
             pick.gll_so_count = len(
                 pick.mapped("all_service_ids.sale_line_id.order_id")
@@ -321,7 +321,7 @@ class StockPicking(models.Model):
             self.location_dest_id = self.delivery_partner_id.internal_location_id
 
     @api.depends("move_line_ids.quantity")
-    def compute_items_count_volume(self):
+    def _compute_items_count_volume(self):
         for picking in self:
             lines = self.move_line_ids
             picking.items_volume = sum(
@@ -533,34 +533,47 @@ class StockPicking(models.Model):
     def prepare_order_line_services(self, picks, sale_order, sol_obj):
         """Prepare order lines for additional services"""
         order_lines = []
-        for _, field in SERVICE_FIELD:
-            lines_field = getattr(picks, field).filtered(lambda line: line.quantity > 0)
-            if not lines_field:
-                continue
-            # get the field name
-            field_id = self._fields[field]
+        grouped_lines_dict = self.group_pick_service_lines(picks)
+        for _, field_type in SERVICE_FIELD:
             # add a section line
-
+            field_name = f"{field_type} total"
             sol_obj.create(
                 {
                     "display_type": "line_section",
-                    "name": field_id.string,
+                    "name": field_name,
                     "order_id": sale_order.id,
                 },
             )
 
-            for line in lines_field:
-                if not line.quantity:
-                    continue
-                so_line_id = sol_obj.create(
-                    {
-                        "product_id": line.product_id.id,
-                        "product_uom_qty": line.quantity,
-                        "price_unit": line.price,
-                        "order_id": sale_order.id,
-                    },
-                )
-                line.sale_line_id = so_line_id
+            for key, lines in grouped_lines_dict.items():
+                if key[0] == field_type:
+                    total = sum(line.total for line in lines)
+                    if not total:
+                        continue
+                    product_id = key[1]
+                    so_line_id = sol_obj.create(
+                        {
+                            "product_id": product_id.id,
+                            "product_uom_qty": 1,
+                            "price_unit": total,
+                            "order_id": sale_order.id,
+                        },
+                    )
+                    lines.update({"sale_line_id": so_line_id.id})
+
+    def group_pick_service_lines(self, picks):
+        """Group pick service lines"""
+        grouped_lines_dict = {}
+        for line in picks.all_service_ids:
+            if not line.quantity or not line.price:
+                continue
+            key = (line.pick_service_type, line.product_id)
+            if grouped_lines_dict.get(key):
+                grouped_lines_dict[key] |= line
+            else:
+                grouped_lines_dict[key] = line
+
+        return grouped_lines_dict
 
     def prepare_single_box_lines(self, picks):
         """Return a tuple with single and box products and totals"""

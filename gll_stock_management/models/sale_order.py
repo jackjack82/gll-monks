@@ -24,8 +24,8 @@ class SaleOrder(models.Model):
             invoice.period_to = invoice.date
 
         # Generate and attach the three reports for each invoice
-        for invoice in invoices:
-            self._generate_and_attach_reports(invoice)
+        # for invoice in invoices:
+        #     self._generate_and_attach_reports(invoice)
 
         return invoices
 
