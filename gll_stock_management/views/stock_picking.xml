@@ -58,8 +58,6 @@
                 <field name="packages_count"/>
                 <field name="items_volume"/>
                 <field name="transport_tariff"/>
-                <!-- Add fixed_total for outgoing pickings -->
-                <field name="fixed_total" invisible="picking_type_code != 'outgoing'"/>
             </field>
 
             <xpath expr="//sheet/group" position="after">

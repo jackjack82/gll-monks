@@ -199,3 +199,49 @@ class AccountMove(models.Model):
 
             # Totale altri servizi: sum of these lines
             move.total_other_services = move.other_services
+
+    def get_logistic_services_report_data(self):
+        """Picking data collection method for 'Servizi logistici'
+        report."""
+        # Get relevant sale orders
+        sale_orders = self._get_sale_orders_from_invoice()
+        pickings = self._get_pickings_from_sale_orders(sale_orders)
+
+        # # Prepare data for each picking
+        # for picking in pickings:
+        #     preparation_amount = self._get_preparation_amount(picking)
+        #     fixed_amount = self._get_fixed_amount(picking)
+        #     logistics_amount = self._get_logistics_amount(picking)
+        #
+        #     preparation_total += preparation_amount
+        #     fixed_total += fixed_amount
+        #     logistics_total += logistics_amount
+
+        return pickings
+
+    def _get_sale_orders_from_invoice(self):
+        """Get the relevant sale orders from an invoice."""
+        # Get sale orders linked to the invoice through its lines
+        sale_line_ids = self.invoice_line_ids.mapped("sale_line_ids")
+        sale_orders = sale_line_ids.mapped("order_id")
+
+        # Filter by order_type and state
+        return sale_orders.filtered(
+            lambda o: o.order_type == "deliveries" and o.state in ["sale", "done"]
+        )
+
+    def _get_pickings_from_sale_orders(self, sale_orders):
+        """Get the relevant pickings from sale orders."""
+        # Get all sale order lines
+        sale_lines = sale_orders.mapped("order_line")
+
+        # Get pickings that have services linked to these sale order lines
+        pickings = self.env["stock.picking"].search(
+            [
+                ("picking_type_code", "=", "outgoing"),
+                ("state", "in", ["done"]),
+                ("all_service_ids.sale_line_id", "in", sale_lines.ids),
+            ]
+        )
+
+        return pickings
