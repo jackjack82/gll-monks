@@ -112,7 +112,7 @@ class TxtImportWizard(models.Model):
 
                 except Exception as e:
                     raise UserError(
-                        "Import suspended for the following reason: " + str(e)
+                        _("Import suspended for the following reason: " + str(e))
                     )
                     # result_message += f"\nError processing line: {str(e)}"
 
@@ -279,7 +279,9 @@ class TxtImportWizard(models.Model):
                         )
                     else:
                         raise UserError(
-                            f"\nWarning: UoM with import code {product_uom_code} not found."
+                            _(
+                                f"\nWarning: UoM with import code {product_uom_code} not found."
+                            )
                         )
 
                 # Create a new product (storable with no tracking)

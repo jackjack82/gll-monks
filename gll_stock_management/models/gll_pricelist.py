@@ -31,7 +31,7 @@ class GllPricelist(models.Model):
             )
         return pricelists
 
-    def compute_delivery_price(
+    def _compute_delivery_price(
         self,
         weight,
     ):

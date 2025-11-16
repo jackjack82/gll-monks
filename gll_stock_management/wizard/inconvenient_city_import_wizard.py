@@ -117,7 +117,7 @@ class ExcelImportInconvenientWizard(models.Model):
 
                 except Exception as e:
                     raise UserError(
-                        "Error processing row {}: {}".format(row_idx + 1, str(e))
+                        _("Error processing row {}: {}".format(row_idx + 1, str(e)))
                     )
 
             # Update the wizard with results
