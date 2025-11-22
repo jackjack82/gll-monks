@@ -31,18 +31,18 @@ class ReportItalyTransportationServicesFromInvoice(models.AbstractModel):
 
         for invoice in invoices:
             # Get relevant sale orders
-            sale_orders = self._get_sale_orders_from_invoice(invoice)
+            sale_orders = invoice._get_sale_orders_from_invoice()
 
             # Get relevant pickings
-            pickings = self._get_pickings_from_sale_orders(sale_orders)
+            pickings = invoice._get_pickings_from_sale_orders(sale_orders)
 
             # Prepare data for each picking
             picking_data = []
 
             for picking in pickings:
-                preparation_amount = self._get_preparation_amount(picking)
-                fixed_amount = self._get_fixed_amount(picking)
-                logistics_amount = self._get_logistics_amount(picking)
+                preparation_amount = picking._get_preparation_amount()
+                fixed_amount = picking._get_fixed_amount()
+                logistics_amount = picking._get_logistics_amount()
 
                 preparation_total += preparation_amount
                 fixed_total += fixed_amount
@@ -76,33 +76,3 @@ class ReportItalyTransportationServicesFromInvoice(models.AbstractModel):
             "fixed_total": fixed_total,
             "logistics_total": logistics_total,
         }
-
-    def _get_preparation_amount(self, picking):
-        """
-        Calculate the preparation amount for a picking.
-        Sum the total of all warehouse services with warehouse_type = 'preparation'.
-        """
-        preparation_services = picking.warehouse_service_ids.filtered(
-            lambda s: s.product_id.warehouse_type == "preparation" and s.quantity
-        )
-        return sum(service.total for service in preparation_services)
-
-    def _get_fixed_amount(self, picking):
-        """
-        Calculate the fixed amount for a picking.
-        Sum the total of all warehouse services with warehouse_type = 'fix'.
-        """
-        fixed_services = picking.warehouse_service_ids.filtered(
-            lambda s: s.product_id.warehouse_type == "fix" and s.quantity
-        )
-        return sum(service.total for service in fixed_services)
-
-    def _get_logistics_amount(self, picking):
-        """
-        Calculate the logistics amount for a picking.
-        Sum the total of all warehouse services with warehouse_type = 'logistic'.
-        """
-        logistics_services = picking.warehouse_service_ids.filtered(
-            lambda s: s.product_id.warehouse_type == "logistic" and s.quantity
-        )
-        return sum(service.total for service in logistics_services)
