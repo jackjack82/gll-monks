@@ -208,7 +208,6 @@ class AccountMove(models.Model):
         pickings = self._get_pickings_from_sale_orders(sale_orders)
 
         # # Prepare data for each picking
-        report_vals = []
         picking_data = []
         preparation_total = 0.0
         fixed_total = 0.0
@@ -236,15 +235,9 @@ class AccountMove(models.Model):
                     "logistics_amount": logistics_amount,
                 }
             )
-        report_vals.append(
-            {
-                "invoice": self,
-                "pickings": picking_data,
-            }
-        )
         return {
             "docs": self,
-            "data": report_vals,
+            "data": picking_data,
             "preparation_total": preparation_total,
             "fixed_total": fixed_total,
             "logistics_total": logistics_total,
