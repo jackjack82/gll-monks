@@ -74,45 +74,38 @@
                         </table>
                     </div>
                 </div>
-            </div>
-            <div class="page">
-            NEW PG
-
-
+            <p style="page-break-after:always;"></p>
+            NEW PAGE
                 <!--######################-->
                 <!--    ALL PICKINGS      -->
                 <!--######################-->
                 <div class="row mt-5">
                 <!-- Pickings table -->
-                    <table class="table table-sm table-bordered" style="thead { display: table-header-group; }">
+                    <table class="table table-sm table-bordered">
                         <thead>
-<!--                            <tr>-->
-<!--                                <th class="text-center">Spedizione</th>-->
-<!--                                <th class="text-center">Data</th>-->
-<!--                                <th class="text-center">Destinatario</th>-->
-<!--                                <th class="text-center">C.t.</th>-->
-<!--                                <th class="text-center">Kg</th>-->
-<!--                                <th class="text-center">Preparazione</th>-->
-<!--                                <th class="text-center">Diritto Fisso</th>-->
-<!--                                <th class="text-center">Servizi logistici</th>-->
-<!--                            </tr>-->
+                            <tr>
+                                <th class="text-center">Spedizione</th>
+                                <th class="text-center">Data</th>
+                                <th class="text-center">Destinatario</th>
+                                <th class="text-center">C.t.</th>
+                                <th class="text-center">Kg</th>
+                                <th class="text-center">Preparazione</th>
+                                <th class="text-center">Diritto Fisso</th>
+                                <th class="text-center">Servizi logistici</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <t t-set="pickings_data" t-value="move.get_logistic_services_report_data()"/>
-                            <t t-foreach="data" t-as="invoice_data">
-                                <t t-if="invoice_data['invoice'].id == doc.id">
-                                    <t t-foreach="invoice_data['pickings']" t-as="pick" >
-                                        <tr style="page-break-inside: avoid;">
-                                            <td class="text-center"><span t-field="pick.origing"/></td>
-                                            <td class="text-center"><span t-field="pick.date_done" t-options="{'widget': 'date'}"/></td>
-                                            <td class="text-center"><span t-field="pick.partner_id.display_name"/></td>
-                                            <td class="text-center"><span t-field="pick.packages_count"/></td>
-                                            <td class="text-center"><span t-field="pick.weight"/></td>
-                                            <td class="text-center"><span t-field="pick.logistic_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                            <td class="text-center"><span t-field="pick.preparation_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                            <td class="text-center"><span t-field="pick.fix_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td></tr>
-                                    </t>
-                                </t>
+                            <t t-foreach="data" t-as="pick">
+                                <tr>
+                                    <td class="text-center"><span t-field="pick.origing"/></td>
+                                    <td class="text-center"><span t-field="pick.date_done" t-options="{'widget': 'date'}"/></td>
+                                    <td class="text-center"><span t-field="pick.partner_id.display_name"/></td>
+                                    <td class="text-center"><span t-field="pick.packages_count"/></td>
+                                    <td class="text-center"><span t-field="pick.weight"/></td>
+                                    <td class="text-center"><span t-field="pick.logistic_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
+                                    <td class="text-center"><span t-field="pick.preparation_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
+                                    <td class="text-center"><span t-field="pick.fix_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td></tr>
                             </t>
                         </tbody>
 <!--                        <tfoot style="display: table-footer-group;">-->
