@@ -632,3 +632,26 @@ class StockPicking(models.Model):
 
     def _valid_field_parameter(self, field, name):
         return name == "ondelete" or super()._valid_field_parameter(field, name)
+
+    def _get_preparation_amount(self):
+        """Calculate the preparation amount for a picking."""
+        preparation_services = self.all_service_ids.filtered(
+            lambda s: s.product_id.warehouse_type == "preparation" and s.quantity
+        )
+        return sum(service.total for service in preparation_services)
+
+    def _get_fixed_amount(
+        self,
+    ):
+        """Calculate the fixed amount for a picking."""
+        fixed_services = self.all_service_ids.filtered(
+            lambda s: s.product_id.warehouse_type == "fix" and s.quantity
+        )
+        return sum(service.total for service in fixed_services)
+
+    def _get_logistics_amount(self):
+        """Sum the total of all warehouse services with warehouse_type = 'logistic'."""
+        logistics_services = self.all_service_ids.filtered(
+            lambda s: s.product_id.warehouse_type == "logistic" and s.quantity
+        )
+        return sum(service.total for service in logistics_services)

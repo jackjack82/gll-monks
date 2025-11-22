@@ -208,25 +208,47 @@ class AccountMove(models.Model):
         pickings = self._get_pickings_from_sale_orders(sale_orders)
 
         # # Prepare data for each picking
-        report_vals = {}
-        for pick in pickings:
-            logistic_amount = pick.all_service_ids.filtered(
-                lambda l: l.product_id.warehouse_type == "logistic"
-            )
-            preparation_amount = pick.all_service_ids.filtered(
-                lambda l: l.product_id.warehouse_type == "preparation"
-            )
-            fix_amount = pick.all_service_ids.filtered(
-                lambda l: l.product_id.warehouse_type == "fix"
-            )
-            report_vals[pick] = {
-                "picking": pick,
-                "logistic_amount": logistic_amount,
-                "preparation_amount": preparation_amount,
-                "fix_amount": fix_amount,
-            }
+        report_vals = []
+        picking_data = []
+        preparation_total = 0.0
+        fixed_total = 0.0
+        logistics_total = 0.0
 
-        return report_vals
+        for picking in pickings:
+            preparation_amount = picking._get_preparation_amount()
+            fixed_amount = picking._get_fixed_amount()
+            logistics_amount = picking._get_logistics_amount()
+
+            preparation_total += preparation_amount
+            fixed_total += fixed_amount
+            logistics_total += logistics_amount
+
+            picking_data.append(
+                {
+                    "picking": picking,
+                    "name": picking.origin,
+                    "date_done": picking.date_done,
+                    "partner_id": picking.partner_id,
+                    "packages_count": picking.packages_count,
+                    "weight": picking.weight,
+                    "preparation_amount": preparation_amount,
+                    "fixed_amount": fixed_amount,
+                    "logistics_amount": logistics_amount,
+                }
+            )
+        report_vals.append(
+            {
+                "invoice": self,
+                "pickings": picking_data,
+            }
+        )
+        return {
+            "docs": self,
+            "data": report_vals,
+            "preparation_total": preparation_total,
+            "fixed_total": fixed_total,
+            "logistics_total": logistics_total,
+        }
 
     def _get_sale_orders_from_invoice(self):
         """Get the relevant sale orders from an invoice."""
