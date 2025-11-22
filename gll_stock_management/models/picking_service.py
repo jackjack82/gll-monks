@@ -7,7 +7,9 @@ from .stock_picking import SERVICE_TYPE
 class PickingService(models.Model):
     _name = "picking.service"
     _description = "Picking Service"
+    _order = "sequence"
 
+    sequence = fields.Integer("Sequence", default=0)
     picking_id = fields.Many2one(
         "stock.picking",
         string="Picking",

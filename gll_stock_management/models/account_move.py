@@ -208,16 +208,25 @@ class AccountMove(models.Model):
         pickings = self._get_pickings_from_sale_orders(sale_orders)
 
         # # Prepare data for each picking
-        # for picking in pickings:
-        #     preparation_amount = self._get_preparation_amount(picking)
-        #     fixed_amount = self._get_fixed_amount(picking)
-        #     logistics_amount = self._get_logistics_amount(picking)
-        #
-        #     preparation_total += preparation_amount
-        #     fixed_total += fixed_amount
-        #     logistics_total += logistics_amount
+        report_vals = {}
+        for pick in pickings:
+            logistic_amount = pick.all_service_ids.filtered(
+                lambda l: l.product_id.warehouse_type == "logistic"
+            )
+            preparation_amount = pick.all_service_ids.filtered(
+                lambda l: l.product_id.warehouse_type == "preparation"
+            )
+            fix_amount = pick.all_service_ids.filtered(
+                lambda l: l.product_id.warehouse_type == "fix"
+            )
+            report_vals[pick] = {
+                "picking": pick,
+                "logistic_amount": logistic_amount,
+                "preparation_amount": preparation_amount,
+                "fix_amount": fix_amount,
+            }
 
-        return pickings
+        return report_vals
 
     def _get_sale_orders_from_invoice(self):
         """Get the relevant sale orders from an invoice."""
