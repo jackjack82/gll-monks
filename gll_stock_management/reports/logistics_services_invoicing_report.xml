@@ -43,7 +43,7 @@
                 <div class="row mt-5">
                     <div class="col-6"></div>
                     <div class="col-6">
-                        <table class="table table-sm">
+                        <table name="initial_totals" class="table table-sm">
                             <tr>
                                 <td class="text-start">Servizi logistici</td>
                                 <td class="text-end">
@@ -81,7 +81,7 @@
                 <!--######################-->
                 <div class="row mt-5">
                 <!-- Pickings table -->
-                    <table class="table table-sm table-bordered">
+                    <table name="picking_details" class="table table-sm table-bordered">
                         <thead>
                             <tr>
                                 <th class="text-center">Spedizione</th>
@@ -96,35 +96,36 @@
                         </thead>
                         <tbody>
                             <t t-set="pickings_data" t-value="move.get_logistic_services_report_data()"/>
-                            <t t-foreach="data" t-as="pick">
+                            <t t-foreach="pickings_data['data']" t-as="pick">
                                 <tr>
-                                    <td class="text-center"><span t-field="pick.origing"/></td>
-                                    <td class="text-center"><span t-field="pick.date_done" t-options="{'widget': 'date'}"/></td>
-                                    <td class="text-center"><span t-field="pick.partner_id.display_name"/></td>
-                                    <td class="text-center"><span t-field="pick.packages_count"/></td>
-                                    <td class="text-center"><span t-field="pick.weight"/></td>
-                                    <td class="text-center"><span t-field="pick.logistic_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                    <td class="text-center"><span t-field="pick.preparation_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                    <td class="text-center"><span t-field="pick.fix_amount" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td></tr>
+                                    <td class="text-center"><span t-esc="pick['name']"/></td>
+                                    <td class="text-center"><span t-esc="pick['date_done']" t-options="{'widget': 'date'}"/></td>
+                                    <td class="text-center"><span t-esc="pick['partner_id'].display_name"/></td>
+                                    <td class="text-center"><span t-esc="pick['packages_count']"/></td>
+                                    <td class="text-center"><span t-esc="pick['weight']"/></td>
+                                    <td class="text-center"><span t-esc="pick['preparation_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
+                                    <td class="text-center"><span t-esc="pick['fixed_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
+                                    <td class="text-center"><span t-esc="pick['logistics_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
+                                </tr>
                             </t>
                         </tbody>
-<!--                        <tfoot style="display: table-footer-group;">-->
-<!--                            <tr>-->
-<!--                                <td colspan="6"/>-->
-<!--                                <td>-->
-<!--                                    <br/>-->
-<!--                                    <strong>Diritto Fisso</strong><br/><br/>-->
-<!--                                    <strong>Preparazione</strong><br/><br/>-->
-<!--                                    <strong>Servizi Logistici</strong><br/><br/>-->
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    <br/>-->
-<!--                                    <span t-esc="fixed_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>-->
-<!--                                    <span t-esc="preparation_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>-->
-<!--                                    <span t-esc="logistics_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                        </tfoot>-->
+                        <tfoot style="display: table-footer-group;">
+                            <tr>
+                                <td colspan="5"/>
+                                <td>
+                                    <br/>
+                                    <strong>Preparazione</strong><br/><br/>
+                                    <strong>Diritto Fisso</strong><br/><br/>
+                                    <strong>Servizi Logistici</strong><br/><br/>
+                                </td>
+                                <td class="text-center">
+                                    <br/>
+                                    <span t-esc="pickings_data['preparation_total']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                    <span t-esc="pickings_data['fixed_total']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                    <span t-esc="pickings_data['logistics_total']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
 
                 </div>
