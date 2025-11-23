@@ -84,7 +84,7 @@
                            context="{'default_picking_id': id}">
                         <list editable="bottom">
                             <field name="sequence" widget="handle"/>
-                            <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
+                            <field name="product_id"/>
                             <field name="pick_service_type"/>
                             <button name="decrement_quantity" type="object" icon="fa-minus" title="Decrease quantity" class="oe_link"/>
                             <button name="increment_quantity" type="object" icon="fa-plus" title="Increase quantity" class="oe_link"/>

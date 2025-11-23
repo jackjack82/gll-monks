@@ -59,6 +59,8 @@ class PickingService(models.Model):
         2. Transport tariff changes
         """
         for service in self:
+            if service.product_id:
+                service.pick_service_type = service.product_id.pick_service_type
             if (
                 service.product_id
                 and service.picking_id
