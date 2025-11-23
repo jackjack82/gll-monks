@@ -40,9 +40,19 @@ class ReportItalyTransportationServicesFromInvoice(models.AbstractModel):
             picking_data = []
 
             for picking in pickings:
+                additional_services = picking.all_service_ids.filtered(
+                    lambda s: s.pick_service_type == "additional"
+                )
+                additional_total = sum(s.total for s in additional_services)
                 preparation_amount = picking._get_preparation_amount()
                 fixed_amount = picking._get_fixed_amount()
                 logistics_amount = picking._get_logistics_amount()
+                total_amount = (
+                    preparation_amount
+                    + fixed_amount
+                    + logistics_amount
+                    + additional_total
+                )
 
                 preparation_total += preparation_amount
                 fixed_total += fixed_amount
@@ -59,6 +69,8 @@ class ReportItalyTransportationServicesFromInvoice(models.AbstractModel):
                         "preparation_amount": preparation_amount,
                         "fixed_amount": fixed_amount,
                         "logistics_amount": logistics_amount,
+                        "additional_services": additional_services,
+                        "total_amount": total_amount,
                     }
                 )
 
