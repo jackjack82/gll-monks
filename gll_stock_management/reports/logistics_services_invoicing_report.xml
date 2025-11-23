@@ -92,6 +92,7 @@
                                 <th class="text-center">Preparazione</th>
                                 <th class="text-center">Diritto Fisso</th>
                                 <th class="text-center">Servizi logistici</th>
+                                <th class="text-center">Totale</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,30 +107,40 @@
                                     <td class="text-center"><span t-esc="pick['preparation_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
                                     <td class="text-center"><span t-esc="pick['fixed_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
                                     <td class="text-center"><span t-esc="pick['logistics_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
+                                    <td class="text-center"><span t-esc="pick['logistics_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
                                 </tr>
                                     <!--############################-->
                                     <!--    ADDTIONAL SERVICES      -->
                                 <t t-set="additional_services" t-value="pick['additional_services']"/>
-                                <table name="picking_additional_services" class="table table-sm" t-if="additional_services">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">Listino Competenze</th>
-                                            <th class="text-center">Service Description</th>
-                                            <th class="text-center">Quantity</th>
-                                            <th class="text-center">Price</th>
-                                            <th class="text-center">Total</th>
-                                            <th class="text-center">Notes</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="additional_services" t-as="add_service">
-                                            <tr>
-                                                <td class="text-center"><span/></td>
-                                                <td class="text-center"><span t-esc="add_service.product_id_name" t-options="{'widget': 'date'}"/></td>
-                                            </tr>
-                                        </t>
-                                    </tbody>
-                    </table>
+                                <tr t-if="additional_services">
+                                    <td colspan="8">
+                                        <table name="picking_additional_services" class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <td colspan="5"/>
+                                                    <th class="text-center">Listino Competenze</th>
+                                                    <th class="text-center">Service Description</th>
+                                                    <th class="text-center">Quantity</th>
+                                                    <th class="text-center">Price</th>
+                                                    <th class="text-center">Total</th>
+                                                    <th class="text-center">Notes</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="additional_services" t-as="add_service">
+                                                    <tr>
+                                                        <td class="text-center"><span t-esc="add_service.pick_service_type"/></td>
+                                                        <td class="text-center"><span t-esc="add_service.product_id.name"/></td>
+                                                        <td class="text-center"><span t-esc="add_service.quantity"/></td>
+                                                        <td class="text-center"><span t-esc="add_service.price" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
+                                                        <td class="text-center"><span t-esc="add_service.total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
+                                                        <td class="text-center"><span/></td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
 
                                     <!--############################-->
                             </t>
