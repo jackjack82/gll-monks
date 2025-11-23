@@ -223,10 +223,7 @@ class AccountMove(models.Model):
             fixed_amount = picking._get_fixed_amount()
             logistics_amount = picking._get_logistics_amount()
             total_amount = (
-                    preparation_amount
-                    + fixed_amount
-                    + logistics_amount
-                    + additional_total
+                preparation_amount + fixed_amount + logistics_amount + additional_total
             )
 
             preparation_total += preparation_amount
@@ -234,25 +231,26 @@ class AccountMove(models.Model):
             logistics_total += logistics_amount
 
             vals = {
-                    "picking": picking,
-                    "name": picking.origin,
-                    "date_done": picking.date_done,
-                    "partner_id": picking.partner_id,
-                    "packages_count": picking.packages_count,
-                    "weight": picking.weight,
-                    "preparation_amount": preparation_amount,
-                    "fixed_amount": fixed_amount,
-                    "logistics_amount": logistics_amount,
-                    "additional_services": additional_services,
-                    "total_amount": total_amount,
-                }
-            if picking.piccking_code == 'outgoing':
+                "picking": picking,
+                "name": picking.origin,
+                "date_done": picking.date_done,
+                "partner_id": picking.partner_id,
+                "packages_count": picking.packages_count,
+                "weight": picking.weight,
+                "preparation_amount": preparation_amount,
+                "fixed_amount": fixed_amount,
+                "logistics_amount": logistics_amount,
+                "additional_services": additional_services,
+                "total_amount": total_amount,
+            }
+            if picking.picking_type_code == "outgoing":
                 outgoing_data.append(vals)
             else:
                 incoming_data.append(vals)
         return {
             "docs": self,
-            "data": picking_data,
+            "outgoing_data": outgoing_data,
+            "incoming_data": incoming_data,
             "preparation_total": preparation_total,
             "fixed_total": fixed_total,
             "logistics_total": logistics_total,
@@ -266,9 +264,7 @@ class AccountMove(models.Model):
         sale_orders = sale_line_ids.mapped("order_id")
 
         # Filter by order_type and state
-        return sale_orders.filtered(
-            lambda o: o.state in ["sale", "done"]
-        )
+        return sale_orders.filtered(lambda o: o.state in ["sale", "done"])
 
     def _get_pickings_from_sale_orders(self, sale_orders):
         """Get the relevant pickings from sale orders."""
@@ -278,7 +274,7 @@ class AccountMove(models.Model):
         # Get pickings that have services linked to these sale order lines
         pickings = self.env["stock.picking"].search(
             [
-                ("picking_type_code", "in", ['incoming', "outgoing"]),
+                ("picking_type_code", "in", ["incoming", "outgoing"]),
                 ("state", "in", ["done"]),
                 ("all_service_ids.sale_line_id", "in", sale_lines.ids),
             ]
