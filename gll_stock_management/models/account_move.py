@@ -253,6 +253,7 @@ class AccountMove(models.Model):
             "preparation_total": preparation_total,
             "fixed_total": fixed_total,
             "logistics_total": logistics_total,
+            "num_documents": len(pickings),
         }
 
     def _get_sale_orders_from_invoice(self):
