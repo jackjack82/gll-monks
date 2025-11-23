@@ -113,11 +113,11 @@
                                     <!--    ADDTIONAL SERVICES      -->
                                 <t t-set="additional_services" t-value="pick['additional_services']"/>
                                 <tr t-if="additional_services">
+                                    <td colspan="1"/>
                                     <td colspan="8">
                                         <table name="picking_additional_services" class="table table-sm">
                                             <thead>
                                                 <tr>
-                                                    <td colspan="5"/>
                                                     <th class="text-center">Listino Competenze</th>
                                                     <th class="text-center">Service Description</th>
                                                     <th class="text-center">Quantity</th>
@@ -129,7 +129,7 @@
                                             <tbody>
                                                 <t t-foreach="additional_services" t-as="add_service">
                                                     <tr>
-                                                        <td class="text-center"><span t-esc="add_service.pick_service_type"/></td>
+                                                        <td class="text-center"><span/>T</td>
                                                         <td class="text-center"><span t-esc="add_service.product_id.name"/></td>
                                                         <td class="text-center"><span t-esc="add_service.quantity"/></td>
                                                         <td class="text-center"><span t-esc="add_service.price" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
@@ -145,9 +145,12 @@
                                     <!--############################-->
                             </t>
                         </tbody>
-                        <tfoot style="display: table-footer-group;">
+                        <br/><br/><br/><br/>
+                        <tfoot name="document_totals" style="display: table-footer-group;">
                             <tr>
-                                <td colspan="5"/>
+                                <td colspan="1"/>
+                                <td>N. Doc.:<span t-esc="pickings_data['num_documents']"/></td>
+                                <td colspan="4"/>
                                 <td>
                                     <br/>
                                     <strong>Preparazione</strong><br/><br/>
