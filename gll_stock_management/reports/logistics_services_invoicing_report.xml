@@ -1,5 +1,115 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <!-- Reusable template for pickings table -->
+    <template id="pickings_table_template">
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h3><t t-esc="title"/></h3>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <!-- Pickings table -->
+            <table t-att-name="table_name" class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Spedizione</th>
+                        <th class="text-center">Data</th>
+                        <th class="text-center">Destinatario</th>
+                        <th class="text-center">C.t.</th>
+                        <th class="text-center">Kg</th>
+                        <th class="text-center">Preparazione</th>
+                        <th class="text-center">Diritto Fisso</th>
+                        <th class="text-center">Servizi logistici</th>
+                        <th class="text-center">Totale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="preparation_total" t-value="0"/>
+                    <t t-set="fixed_total" t-value="0"/>
+                    <t t-set="logistics_total" t-value="0"/>
+                    <t t-foreach="pickings" t-as="pick">
+                        <tr>
+                            <td class="text-center"><span t-esc="pick['name']"/></td>
+                            <td class="text-center"><span t-esc="pick['date_done']" t-options="{'widget': 'date'}"/></td>
+                            <td class="text-center"><span t-esc="pick['partner_id'].display_name"/></td>
+                            <td class="text-center"><span t-esc="pick['packages_count']"/></td>
+                            <td class="text-center"><span t-esc="pick['weight']"/></td>
+                            <td class="text-center"><span t-esc="pick['preparation_amount']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            <td class="text-center"><span t-esc="pick['fixed_amount']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            <td class="text-center"><span t-esc="pick['logistics_amount']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            <td class="text-center"><span t-esc="pick['total_amount']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                        </tr>
+                        <t t-set="preparation_total" t-value="preparation_total + pick['preparation_amount']"/>
+                        <t t-set="fixed_total" t-value="fixed_total + pick['fixed_amount']"/>
+                        <t t-set="logistics_total" t-value="logistics_total + pick['logistics_amount']"/>
+                        <!--############################-->
+                        <!--    ADDTIONAL SERVICES      -->
+                        <!--############################-->
+
+                        <t t-set="additional_services" t-value="pick['additional_services']"/>
+                        <tr t-if="additional_services">
+                            <td></td>
+                            <td colspan="7">
+                                <table name="picking_additional_services" class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Listino Competenze</th>
+                                            <th class="text-center">Service Description</th>
+                                            <th class="text-center">Quantity</th>
+                                            <th class="text-center">Price</th>
+                                            <th class="text-center">Total</th>
+                                            <th class="text-center">Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="additional_services" t-as="add_service">
+                                            <tr>
+                                                <td class="text-center"><span/>T</td>
+                                                <td class="text-center"><span t-esc="add_service.product_id.name"/></td>
+                                                <td class="text-center"><span t-esc="add_service.quantity"/></td>
+                                                <td class="text-center"><span t-esc="add_service.price" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                                                <td class="text-center"><span t-esc="add_service.total" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                                                <td class="text-center"><span/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+        <!--############################-->
+        <!--    ADDTIONAL SERVICES      -->
+        <!--############################-->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <table name="document_totals" class="table table-sm">
+                            <tr>
+                                <td>N. Doc.: <span t-esc="pickings_data['num_documents']"/></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <br/>
+                                    <strong>Preparazione</strong><br/><br/>
+                                    <strong>Diritto Fisso</strong><br/><br/>
+                                    <strong>Servizi Logistici</strong><br/><br/>
+                                </td>
+                                <td class="text-center">
+                                    <br/>
+                                    <span t-field="preparation_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                    <span t-field="fixed_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                    <span t-field="logistics_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+    </template>
+
     <!-- QWeb template for the SERVIZI LOGISTICI invoicing report -->
     <template id="report_logistics_services_invoicing">
         <t t-call="web.external_layout">
@@ -75,98 +185,30 @@
                     </div>
                 </div>
             <p style="page-break-after:always;"></p>
-                <!--######################-->
-                <!--    ALL PICKINGS      -->
-                <!--######################-->
-                <div class="row mt-5">
-                <!-- Pickings table -->
-                    <table name="picking_details" class="table table-sm table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Spedizione</th>
-                                <th class="text-center">Data</th>
-                                <th class="text-center">Destinatario</th>
-                                <th class="text-center">C.t.</th>
-                                <th class="text-center">Kg</th>
-                                <th class="text-center">Preparazione</th>
-                                <th class="text-center">Diritto Fisso</th>
-                                <th class="text-center">Servizi logistici</th>
-                                <th class="text-center">Totale</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-set="pickings_data" t-value="move.get_logistic_services_report_data()"/>
-                            <t t-foreach="pickings_data['data']" t-as="pick">
-                                <tr>
-                                    <td class="text-center"><span t-esc="pick['name']"/></td>
-                                    <td class="text-center"><span t-esc="pick['date_done']" t-options="{'widget': 'date'}"/></td>
-                                    <td class="text-center"><span t-esc="pick['partner_id'].display_name"/></td>
-                                    <td class="text-center"><span t-esc="pick['packages_count']"/></td>
-                                    <td class="text-center"><span t-esc="pick['weight']"/></td>
-                                    <td class="text-center"><span t-esc="pick['preparation_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                    <td class="text-center"><span t-esc="pick['fixed_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                    <td class="text-center"><span t-esc="pick['logistics_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                    <td class="text-center"><span t-esc="pick['logistics_amount']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                </tr>
-                                    <!--############################-->
-                                    <!--    ADDTIONAL SERVICES      -->
-                                <t t-set="additional_services" t-value="pick['additional_services']"/>
-                                <tr t-if="additional_services">
-                                    <td colspan="1"/>
-                                    <td colspan="8">
-                                        <table name="picking_additional_services" class="table table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">Listino Competenze</th>
-                                                    <th class="text-center">Service Description</th>
-                                                    <th class="text-center">Quantity</th>
-                                                    <th class="text-center">Price</th>
-                                                    <th class="text-center">Total</th>
-                                                    <th class="text-center">Notes</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <t t-foreach="additional_services" t-as="add_service">
-                                                    <tr>
-                                                        <td class="text-center"><span/>T</td>
-                                                        <td class="text-center"><span t-esc="add_service.product_id.name"/></td>
-                                                        <td class="text-center"><span t-esc="add_service.quantity"/></td>
-                                                        <td class="text-center"><span t-esc="add_service.price" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                                        <td class="text-center"><span t-esc="add_service.total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/></td>
-                                                        <td class="text-center"><span/></td>
-                                                    </tr>
-                                                </t>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
+                <!-- Create a reusable template for pickings -->
+                <t t-set="pickings_data" t-value="move.get_logistic_services_report_data()"/>
 
-                                    <!--############################-->
-                            </t>
-                        </tbody>
-                        <br/><br/><br/><br/>
-                        <tfoot name="document_totals" style="display: table-footer-group;">
-                            <tr>
-                                <td colspan="1"/>
-                                <td>N. Doc.:<span t-esc="pickings_data['num_documents']"/></td>
-                                <td colspan="4"/>
-                                <td>
-                                    <br/>
-                                    <strong>Preparazione</strong><br/><br/>
-                                    <strong>Diritto Fisso</strong><br/><br/>
-                                    <strong>Servizi Logistici</strong><br/><br/>
-                                </td>
-                                <td class="text-center">
-                                    <br/>
-                                    <span t-esc="pickings_data['preparation_total']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
-                                    <span t-esc="pickings_data['fixed_total']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
-                                    <span t-esc="pickings_data['logistics_total']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                <!--######################-->
+                <!--    OUTGOING PICKINGS -->
+                <!--######################-->
+                <t t-call="gll_stock_management.pickings_table_template">
+                    <t t-set="title" t-value="'Spedizioni in Uscita'"/>
+                    <t t-set="table_name" t-value="'outgoing_picking_details'"/>
+                    <t t-set="pickings" t-value="pickings_data['outgoing_data']"/>
+                    <t t-set="currency" t-value="move.currency_id"/>
+                </t>
 
-                </div>
+                <p style="page-break-after:always;"></p>
+
+                <!--######################-->
+                <!--    INCOMING PICKINGS -->
+                <!--######################-->
+                <t t-call="gll_stock_management.pickings_table_template">
+                    <t t-set="title" t-value="'Spedizioni in Entrata'"/>
+                    <t t-set="table_name" t-value="'incoming_picking_details'"/>
+                    <t t-set="pickings" t-value="pickings_data['incoming_data']"/>
+                    <t t-set="currency" t-value="move.currency_id"/>
+                </t>
 
             </div>
         </t>
