@@ -208,7 +208,8 @@ class AccountMove(models.Model):
         pickings = self._get_pickings_from_sale_orders(sale_orders)
 
         # # Prepare data for each picking
-        picking_data = []
+        outgoing_data = []
+        incoming_data = []
         preparation_total = 0.0
         fixed_total = 0.0
         logistics_total = 0.0
@@ -232,8 +233,7 @@ class AccountMove(models.Model):
             fixed_total += fixed_amount
             logistics_total += logistics_amount
 
-            picking_data.append(
-                {
+            vals = {
                     "picking": picking,
                     "name": picking.origin,
                     "date_done": picking.date_done,
@@ -246,7 +246,10 @@ class AccountMove(models.Model):
                     "additional_services": additional_services,
                     "total_amount": total_amount,
                 }
-            )
+            if picking.piccking_code == 'outgoing':
+                outgoing_data.append(vals)
+            else:
+                incoming_data.append(vals)
         return {
             "docs": self,
             "data": picking_data,
@@ -264,7 +267,7 @@ class AccountMove(models.Model):
 
         # Filter by order_type and state
         return sale_orders.filtered(
-            lambda o: o.order_type == "deliveries" and o.state in ["sale", "done"]
+            lambda o: o.state in ["sale", "done"]
         )
 
     def _get_pickings_from_sale_orders(self, sale_orders):
@@ -275,7 +278,7 @@ class AccountMove(models.Model):
         # Get pickings that have services linked to these sale order lines
         pickings = self.env["stock.picking"].search(
             [
-                ("picking_type_code", "=", "outgoing"),
+                ("picking_type_code", "in", ['incoming', "outgoing"]),
                 ("state", "in", ["done"]),
                 ("all_service_ids.sale_line_id", "in", sale_lines.ids),
             ]
