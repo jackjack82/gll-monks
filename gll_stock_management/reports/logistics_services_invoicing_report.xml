@@ -81,7 +81,7 @@
             </table>
         </div>
         <!--############################-->
-        <!--    ADDTIONAL SERVICES      -->
+        <!--   TOTALS TABLE PER KIND    -->
         <!--############################-->
                 <div class="row mt-5">
                     <div class="col-12">
@@ -100,9 +100,9 @@
                                 </td>
                                 <td class="text-center">
                                     <br/>
-                                    <span t-field="preparation_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
-                                    <span t-field="fixed_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
-                                    <span t-field="logistics_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                    <span t-esc="preparation_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                    <span t-esc="fixed_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
+                                    <span t-esc="logistics_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/><br/><br/>
                                 </td>
                             </tr>
                         </table>
