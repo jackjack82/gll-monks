@@ -119,27 +119,32 @@ class AccountMove(models.Model):
             move.logistics_services = sum(
                 service.price_subtotal
                 for service in move.invoice_line_ids
-                if service.service_type == "warehouse"
+                if service.product_id.warehouse_type == "logistic"
             )
 
             # Diritto fisso: sum of move lines with products having pick_service_type = 'subscription'
             move.fixed_fee = sum(
                 service.price_subtotal
                 for service in move.invoice_line_ids
-                if service.service_type == "subscription"
+                if service.product_id.warehouse_type == "fix"
             )
 
             # Preparazione: sum of move lines with products linked to service_for_box_id and service_for_single_id
-            sp_obj = self.env["stock.picking"]
-            (
-                service_for_single_id,
-                service_for_box_id,
-            ) = sp_obj.get_single_box_product_services()
             move.preparation = sum(
                 service.price_subtotal
                 for service in move.invoice_line_ids
-                if service.product_id.id in [service_for_single_id, service_for_box_id]
+                if service.product_id.warehouse_type == "preparation"
             )
+            # sp_obj = self.env["stock.picking"]
+            # (
+            #     service_for_single_id,
+            #     service_for_box_id,
+            # ) = sp_obj.get_single_box_product_services()
+            # move.preparation = sum(
+            #     service.price_subtotal
+            #     for service in move.invoice_line_ids
+            #     if service.product_id.id in [service_for_single_id, service_for_box_id]
+            # )
 
             # Totale logistico: sum of the above three fields
             move.logistics_total = (
@@ -203,6 +208,7 @@ class AccountMove(models.Model):
     def get_logistic_services_report_data(self):
         """Picking data collection method for 'Servizi logistici'
         report."""
+        self._compute_services_totals()
         # Get relevant sale orders
         sale_orders = self._get_sale_orders_from_invoice()
         pickings = self._get_pickings_from_sale_orders(sale_orders)
