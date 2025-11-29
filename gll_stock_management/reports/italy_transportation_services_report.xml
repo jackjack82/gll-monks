@@ -4,6 +4,10 @@
     <template id="italy_transportation_services_full_report">
         <t t-call="web.external_layout">
             <div class="page">
+                <!-- ################ -->
+                <!--    FIRST PAGE    -->
+                <!-- ################ -->
+
                 <!-- Customer information -->
                 <div class="row">
                     <div class="col-12 text-start fw-bold">
@@ -71,6 +75,89 @@
                     </div>
                 </div>
             </div>
+            <!-- ################ -->
+            <!-- RECEIPTS DETAILS -->
+            <!-- ################ -->
+            <p style="page-break-after:always;"></p>
+            <!-- Content: For each picking found, display a table -->
+            <t t-set="pickings_data" t-value="move.get_italy_transportation_report_data()"/>
+            <t t-set="pickings" t-value="pickings_data['outgoing_data']"/>
+            <t t-if="pickings">
+                    <t t-foreach="pickings" t-as="picking">
+                        <div class="mt-4 mb-2">
+                            <table name="pick_delivery_resume" class="table table-sm table-bordered" style="font-size: 8pt; border: 1px solid #000; border-collapse: collapse;">
+
+                                <!-- Row 1: Picking metadata -->
+                                <tr>
+                                    <td class="text-start" style="width: 8.33%">
+                                        <strong><t t-esc="picking.name"/></strong>
+                                    </td>
+                                    <td class="text-start" style="width: 8.33%">
+                                        <t t-esc="picking.scheduled_date" t-options="{'widget': 'date'}"/>
+                                    </td>
+                                    <td class="text-start" style="width: 16.67%" colspan="2">
+                                        <t t-esc="picking.partner_id.display_name"/>
+                                    </td>
+                                    <td class="text-start" style="width: 8.33%">
+                                        <span>Volume: <t t-esc="picking.items_volume"/></span>
+                                    </td>
+                                    <td class="text-start" style="width: 58.33%" colspan="7">
+                                        <div class="form-check form-check-inline">
+                                            <input type="checkbox" class="form-check-input" disabled="disabled"/>
+                                            <label class="form-check-label">Annullamento</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="checkbox" class="form-check-input" disabled="disabled"/>
+                                            <label class="form-check-label">Fermo deposito</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="checkbox" class="form-check-input" disabled="disabled"/>
+                                            <label class="form-check-label">Isole minori</label>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 2: Service headers -->
+                                <tr>
+                                    <th class="text-center" style="width: 16.67%" colspan="2">warehouse_total</th>
+                                    <th class="text-center" style="width: 16.67%" colspan="2">transport_total</th>
+                                    <th class="text-center" style="width: 16.67%" colspan="2">accessories_total</th>
+                                    <th class="text-center" style="width: 16.67%" colspan="2">additional_total</th>
+                                    <th class="text-center" style="width: 16.67%" colspan="2">fixed_total</th>
+                                    <th class="text-center" style="width: 16.67%" colspan="2">variable_total</th>
+                                </tr>
+
+                                <!-- Row 3: Service values -->
+                                <tr>
+                                    <td class="text-center" style="width: 16.67%" colspan="2">
+                                        <span t-esc="picking.warehouse_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    </td>
+                                    <td class="text-center" style="width: 16.67%" colspan="2">
+                                        <span t-esc="picking.transport_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    </td>
+                                    <td class="text-center" style="width: 16.67%" colspan="2">
+                                        <span t-esc="picking.accessories_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    </td>
+                                    <td class="text-center" style="width: 16.67%" colspan="2">
+                                        <span t-esc="picking.additional_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    </td>
+                                    <td class="text-center" style="width: 16.67%" colspan="2">
+                                        <span t-esc="picking.fixed_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    </td>
+                                    <td class="text-center" style="width: 16.67%" colspan="2">
+                                        <span t-esc="picking.variable_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+                <t t-else="">
+                    <div class="alert alert-info mt-4">
+                        <p>No incoming transfers found for this invoice.</p>
+                    </div>
+                </t>
+
         </t>
     </template>
 

@@ -287,3 +287,40 @@ class AccountMove(models.Model):
         )
 
         return pickings
+
+    def get_italy_transportation_report_data(self):
+        """Picking data collection method for 'Servizi logistici'
+        report."""
+        self._compute_services_totals()
+        # Get relevant sale orders
+        sale_orders = self._get_sale_orders_from_invoice()
+        pickings = self._get_pickings_from_sale_orders(sale_orders)
+
+        # # Prepare data for each picking
+        incoming_data = []
+        total_prod_dict = {}
+
+        for picking in pickings:
+            # TODO: filter only the lines related to this invoice
+            # creating a dictionary with the total of all products
+            for service in picking.all_service_ids:
+                if not total_prod_dict.get(service.product_id):
+                    total_prod_dict[service] = service.total
+                else:
+                    total_prod_dict[service] += service.total
+            vals = {
+                "picking": picking,
+                "name": picking.origin,
+                "date_done": picking.date_done,
+                "partner_id": picking.partner_id,
+                "packages_count": picking.packages_count,
+                "weight": picking.weight
+            }
+            incoming_data.append(vals)
+
+        return {
+            "docs": self,
+            "incoming_data": incoming_data,
+            "num_documents": len(pickings),
+            "total_prod_dict": total_prod_dict,
+        }
