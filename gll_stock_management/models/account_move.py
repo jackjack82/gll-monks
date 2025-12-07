@@ -299,15 +299,25 @@ class AccountMove(models.Model):
         # # Prepare data for each picking
         incoming_data = []
         total_prod_dict = {}
+        total_tariff = 0.0
+        total_services = 0.0
 
         for picking in pickings:
             # TODO: filter only the lines related to this invoice
+            # sum totals per picking
+            total_tariff += picking.transport_tariff
+            picking_service_total = 0
             # creating a dictionary with the total of all products
-            for service in picking.all_service_ids.filtered(lambda s: s.pick_service_type != "warehouse"):
+            for service in picking.all_service_ids.filtered(
+                lambda s: s.pick_service_type != "warehouse"
+            ):
+                total_services += service.total
+                picking_service_total += service.total
                 if not total_prod_dict.get(service.product_id):
                     total_prod_dict[service] = service.total
                 else:
                     total_prod_dict[service] += service.total
+
             vals = {
                 "picking": picking,
                 "name": picking.origin,
@@ -316,16 +326,19 @@ class AccountMove(models.Model):
                 "packages_count": picking.packages_count,
                 "weight": picking.weight,
                 "transport_tariff": picking.transport_tariff,
-                "other_tariff": False, # altra tariffa
-                "annulment": False, # annullamento
+                "picking_service_total": picking_service_total,
+                "other_tariff": False,  # altra tariffa
+                "annulment": False,  # annullamento
                 "deposit": False,  # fermo deposito
-                "island": False, # isole minori
+                "island": False,  # isole minori
             }
             incoming_data.append(vals)
 
         return {
             "docs": self,
             "incoming_data": incoming_data,
+            "total_tariff": total_tariff,
+            "total_services": total_services,
             "num_documents": len(pickings),
             "total_prod_dict": total_prod_dict,
         }

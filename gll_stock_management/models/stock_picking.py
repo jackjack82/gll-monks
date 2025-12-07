@@ -655,3 +655,9 @@ class StockPicking(models.Model):
             lambda s: s.product_id.warehouse_type == "logistic" and s.quantity
         )
         return sum(service.total for service in logistics_services)
+
+    def _get_italy_logistics_report_services(self):
+        """Sum the total of all warehouse services with warehouse_type = 'logistic'."""
+        return self.all_service_ids.filtered(
+            lambda s: s.product_id.pick_service_type != "warehouse" and s.quantity
+        )
