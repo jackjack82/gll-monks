@@ -1,6 +1,6 @@
 import base64
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class SaleOrder(models.Model):
@@ -24,8 +24,8 @@ class SaleOrder(models.Model):
             invoice.period_to = invoice.date
 
         # Generate and attach the three reports for each invoice
-        for invoice in invoices:
-            self._generate_and_attach_reports(invoice)
+        # for invoice in invoices:
+        #     self._generate_and_attach_reports(invoice)
 
         return invoices
 
@@ -66,6 +66,6 @@ class SaleOrder(models.Model):
 
             # Link the attachment to the invoice
             invoice.message_post(
-                body=f"Report {filename} automatically generated and attached",
+                body=(f"Report {filename} automatically generated and attached"),
                 attachment_ids=[attachment.id],
             )
