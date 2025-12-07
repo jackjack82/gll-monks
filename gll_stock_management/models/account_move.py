@@ -303,7 +303,7 @@ class AccountMove(models.Model):
         for picking in pickings:
             # TODO: filter only the lines related to this invoice
             # creating a dictionary with the total of all products
-            for service in picking.all_service_ids:
+            for service in picking.all_service_ids.filtered(lambda s: s.pick_service_type != "warehouse"):
                 if not total_prod_dict.get(service.product_id):
                     total_prod_dict[service] = service.total
                 else:
@@ -314,7 +314,12 @@ class AccountMove(models.Model):
                 "date_done": picking.date_done,
                 "partner_id": picking.partner_id,
                 "packages_count": picking.packages_count,
-                "weight": picking.weight
+                "weight": picking.weight,
+                "transport_tariff": picking.transport_tariff,
+                "other_tariff": False, # altra tariffa
+                "annulment": False, # annullamento
+                "deposit": False,  # fermo deposito
+                "island": False, # isole minori
             }
             incoming_data.append(vals)
 
