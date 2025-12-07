@@ -2,6 +2,7 @@
 <odoo>
     <!-- QWeb template for the transportation services invoicing report -->
     <template id="italy_transportation_services_full_report">
+        <t t-set="pickings_data" t-value="move.get_italy_transportation_report_data()"/>
         <t t-call="web.external_layout">
             <div class="page">
                 <!-- ################ -->
@@ -46,20 +47,13 @@
                             <tr>
                                 <td class="text-start">Tariffa trasporto</td>
                                 <td class="text-end">
-                                    <span t-field="move.transport_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
+                                    <span t-esc="pickings_data['total_tariff']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-start">Spese Accessorie</td>
+                                <td class="text-start">Servizi</td>
                                 <td class="text-end">
-                                    <span t-field="move.accessories_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-start">Servizi aggiuntivi e tariffazioni particolari</td>
-                                <td class="text-end">
-                                    <t t-set="additional_fixed_total" t-value="(move.additional_total or 0.0) + (move.fixed_total or 0.0)"/>
-                                    <span t-esc="additional_fixed_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
+                                    <span t-esc="pickings_data['total_services']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
                                 </td>
                             </tr>
                             <tr>
@@ -80,28 +74,30 @@
             <!-- ################ -->
             <p style="page-break-after:always;"></p>
             <!-- Content: For each picking found, display a table -->
-            <t t-set="pickings_data" t-value="move.get_italy_transportation_report_data()"/>
-            <t t-set="pickings" t-value="pickings_data['outgoing_data']"/>
+            <t t-set="pickings" t-value="pickings_data['incoming_data']"/>
             <t t-if="pickings">
                     <t t-foreach="pickings" t-as="picking">
+                        <t t-set="pick" t-value="picking['picking']"/>
                         <div class="mt-4 mb-2">
                             <table name="pick_delivery_resume" class="table table-sm table-bordered" style="font-size: 8pt; border: 1px solid #000; border-collapse: collapse;">
 
                                 <!-- Row 1: Picking metadata -->
                                 <tr>
-                                    <td class="text-start" style="width: 8.33%">
-                                        <strong><t t-esc="picking.name"/></strong>
+                                    <td class="text-start" style="width: 10%">
+                                        <strong><t t-esc="pick.name"/></strong>
                                     </td>
-                                    <td class="text-start" style="width: 8.33%">
-                                        <t t-esc="picking.scheduled_date" t-options="{'widget': 'date'}"/>
+                                    <td class="text-start" style="width: 35%" colspan="2">
+                                        <strong><t t-esc="pick.partner_id.display_name"/></strong>
+                                        <strong><t t-esc="pick.partner_id.state_id.code"/></strong>
+                                        <strong><t t-esc="pick.partner_id.city.upper()"/></strong>
                                     </td>
-                                    <td class="text-start" style="width: 16.67%" colspan="2">
-                                        <t t-esc="picking.partner_id.display_name"/>
+                                    <td class="text-start" style="width: 5%">
+                                        <span>Ct. <t t-esc="pick.packages_count"/></span>
                                     </td>
-                                    <td class="text-start" style="width: 8.33%">
-                                        <span>Peso-Volume Tassabile: <t t-esc="picking.items_volume"/></span>
+                                    <td class="text-start" style="width: 20%">
+                                        <span>Peso-Volume Tassabile: <t t-esc="pick.items_volume"/></span>
                                     </td>
-                                    <td class="text-start" style="width: 58.33%" colspan="7">
+                                    <td class="text-start" style="width: 30%" colspan="7">
                                         <div class="form-check form-check-inline">
                                             <input type="checkbox" class="form-check-input" disabled="disabled"/>
                                             <label class="form-check-label">Annullamento</label>
@@ -117,25 +113,22 @@
                                     </td>
                                 </tr>
 
-                                <!-- Row 3: Service values -->
+                                <!-- Row 2: Service values -->
                                 <tr>
-                                    <td class="text-center" style="width: 16.67%" colspan="2">
-                                        <span t-esc="picking.warehouse_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    <td class="text-start" style="width: 10%">
+                                        <t t-esc="pick.scheduled_date" t-options="{'widget': 'date'}"/>
                                     </td>
-                                    <td class="text-center" style="width: 16.67%" colspan="2">
-                                        <span t-esc="picking.transport_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    <td class="text-center" style="width: 15%">
+                                        Altra Tariffa <input type="checkbox" class="form-check-input" disabled="disabled"/><br/>
+                                        <strong>Tariffa di <span t-esc="pick.partner_id.state_id.code"/>:    </strong>
+                                        <span t-esc="pick.transport_tariff" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
                                     </td>
-                                    <td class="text-center" style="width: 16.67%" colspan="2">
-                                        <span t-esc="picking.accessories_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    <td class="text-center" style="width: 15%">
+                                        <strong>TOTALE SERVIZI:</strong> <span t-esc="picking['picking_service_total']" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
                                     </td>
-                                    <td class="text-center" style="width: 16.67%" colspan="2">
-                                        <span t-esc="picking.additional_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
-                                    </td>
-                                    <td class="text-center" style="width: 16.67%" colspan="2">
-                                        <span t-esc="picking.fixed_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
-                                    </td>
-                                    <td class="text-center" style="width: 16.67%" colspan="2">
-                                        <span t-esc="picking.variable_total" t-options="{'widget': 'monetary', 'display_currency': move.currency_id}"/>
+                                    <td class="text-center" style="width: 60%">
+                                        <!-- Empty last column -->
+                                        <span/>
                                     </td>
                                 </tr>
                             </table>
