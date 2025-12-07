@@ -99,7 +99,7 @@
                                         <t t-esc="picking.partner_id.display_name"/>
                                     </td>
                                     <td class="text-start" style="width: 8.33%">
-                                        <span>Volume: <t t-esc="picking.items_volume"/></span>
+                                        <span>Peso-Volume Tassabile: <t t-esc="picking.items_volume"/></span>
                                     </td>
                                     <td class="text-start" style="width: 58.33%" colspan="7">
                                         <div class="form-check form-check-inline">
@@ -115,16 +115,6 @@
                                             <label class="form-check-label">Isole minori</label>
                                         </div>
                                     </td>
-                                </tr>
-
-                                <!-- Row 2: Service headers -->
-                                <tr>
-                                    <th class="text-center" style="width: 16.67%" colspan="2">warehouse_total</th>
-                                    <th class="text-center" style="width: 16.67%" colspan="2">transport_total</th>
-                                    <th class="text-center" style="width: 16.67%" colspan="2">accessories_total</th>
-                                    <th class="text-center" style="width: 16.67%" colspan="2">additional_total</th>
-                                    <th class="text-center" style="width: 16.67%" colspan="2">fixed_total</th>
-                                    <th class="text-center" style="width: 16.67%" colspan="2">variable_total</th>
                                 </tr>
 
                                 <!-- Row 3: Service values -->
