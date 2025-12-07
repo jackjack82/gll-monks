@@ -62,7 +62,7 @@
                             <tr>
                                 <td class="text-start fw-bold">Imponibile</td>
                                 <td class="text-end fw-bold">
-                                    <span t-field="move.total_transport" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
+                                    <span t-field="pickings_data['total_tariff'] + pickings_data['total_services']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: move.currency_id}">31.05</span>
                                 </td>
                             </tr>
                         </table>
