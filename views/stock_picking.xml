@@ -25,14 +25,21 @@
             <field name="partner_id" position="replace">
                 <!-- Add partner address fields after partner_id -->
                 <div style="border: 1pt solid grey; border-radius: 10px; padding:2;">
-                    <field name="partner_id" options="{'no_create': True}"/>
+                    <field name="partner_id"/>
                 <field name="partner_street" placeholder="Street..." class="o_address_street"/>
                 <div class="o_row">
                     <field name="partner_zip" placeholder="ZIP" class="oe_inline"/>
                     <field name="partner_city" placeholder="City" class="oe_inline"/>
                     <field name="partner_state_id" placeholder="State" class="oe_inline"/>
                 </div>
+                <field name="carrier_city"/>
                 </div>
+                <!-- Warning for inconvenient destination -->
+                <div invisible="not is_inconvenient_destination"
+                     style="background-color: #daedf7; color: #31708f; padding: 10px; margin-top: 10px; margin-bottom: 10px; border-radius: 4px;">
+                    <strong>Warning:</strong> This destination is marked as an inconvenient place for the selected carrier.
+                </div>
+                <field name="is_inconvenient_destination" invisible="1"/>
                 <field name="delivery_partner_id"/>
             </field>
             <!-- Move the notes to a smaller field below the locations-->
@@ -50,8 +57,7 @@
                 <field name="items_count"/>
                 <field name="packages_count"/>
                 <field name="items_volume"/>
-                <!-- Add fixed_total for outgoing pickings -->
-                <field name="fixed_total" invisible="picking_type_code != 'outgoing'"/>
+                <field name="transport_tariff"/>
             </field>
 
             <xpath expr="//sheet/group" position="after">
@@ -73,27 +79,15 @@
             </xpath>
             <!-- Add service tabs for incoming pickings -->
             <xpath expr="//notebook" position="inside">
-
-                <page string="Fixed Ser." invisible="picking_type_code == 'internal'">
-                    <field name="fixed_service_ids" context="{'default_pick_service_type': 'fixed', 'default_picking_id': id}">
+                <page string="Servizi" invisible="picking_type_code == 'internal'">
+                    <field name="all_service_ids"
+                           context="{'default_picking_id': id}">
                         <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'fixed')]"/>
-                            <field name="quantity"/>
-                            <field name="pick_service_type" column_invisible="1"/>
-                            <field name="price"/>
-                            <field name="total" sum="Total"/>
-                            <field name="so_amount" sum="Ordered"/>
-                            <button name="add_line_to_sale_order"
-                                    type="object" title="Add to Order"
-                                    icon="fa-list-ul" invisible="so_amount"
-                                    help="Click here if you want to add this line to the current Sale Order"/>
-                        </list>
-                    </field>
-                </page>
-                <page string="Variable Ser." invisible="picking_type_code == 'internal'">
-                    <field name="variable_service_ids" context="{'default_pick_service_type': 'variable', 'default_picking_id': id}">
-                        <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'variable')]"/>
+                            <field name="sequence" widget="handle"/>
+                            <field name="product_id"/>
+                            <field name="pick_service_type"/>
+                            <button name="decrement_quantity" type="object" icon="fa-minus" title="Decrease quantity" class="oe_link"/>
+                            <button name="increment_quantity" type="object" icon="fa-plus" title="Increase quantity" class="oe_link"/>
                             <field name="quantity"/>
                             <field name="price"/>
                             <field name="total" sum="Total"/>
@@ -101,51 +95,6 @@
                         </list>
                     </field>
                 </page>
-                <page string="Warehouse Ser."  invisible="picking_type_code == 'internal'">
-                    <field name="warehouse_service_ids" context="{'default_pick_service_type': 'warehouse', 'default_picking_id': id}">
-                        <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'warehouse')]"/>
-                            <field name="quantity"/>
-                            <field name="price"/>
-                            <field name="total" sum="Total"/>
-                            <field name="so_amount" sum="Ordered"/>
-                        </list>
-                    </field>
-                </page>
-                <page string="Transport Ser."  invisible="picking_type_code == 'internal'">
-                    <field name="transport_service_ids" context="{'default_pick_service_type': 'transport', 'default_picking_id': id}">
-                        <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'transport')]"/>
-                            <field name="quantity"/>
-                            <field name="price"/>
-                            <field name="total" sum="Total"/>
-                            <field name="so_amount" sum="Ordered"/>
-                        </list>
-                    </field>
-                </page>
-                <page string="Accessories Ser."  invisible="picking_type_code == 'internal'">
-                    <field name="accessories_service_ids" context="{'default_pick_service_type': 'accessories', 'default_picking_id': id}">
-                        <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'accessories')]"/>
-                            <field name="quantity"/>
-                            <field name="price"/>
-                            <field name="total" sum="Total"/>
-                            <field name="so_amount" sum="Ordered"/>
-                        </list>
-                    </field>
-                </page>
-                <page string="Additional Ser."  invisible="picking_type_code == 'internal'">
-                    <field name="additional_service_ids" context="{'default_pick_service_type': 'additional', 'default_picking_id': id}">
-                        <list editable="bottom">
-                            <field name="product_id" domain="[('pick_service_type', '=', 'additional')]"/>
-                            <field name="quantity"/>
-                            <field name="price"/>
-                            <field name="total" sum="Total"/>
-                            <field name="so_amount" sum="Ordered"/>
-                        </list>
-                    </field>
-                </page>
-
             </xpath>
         </field>
     </record>

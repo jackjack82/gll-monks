@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- QWeb template for the transportation services from invoice report -->
+    <template id="report_transportation_from_invoice_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <!-- Customer information -->
+                <div class="row">
+                    <div class="col-12 text-start fw-bold">
+                        <t t-esc="doc.partner_id.display_name"/> — <t t-if="doc.partner_id.street">
+                        <t t-esc="doc.partner_id.street"/>, </t><t t-if="doc.partner_id.zip"><t t-esc="doc.partner_id.zip"/>
+                        </t><t t-if="doc.partner_id.city"><t t-esc="doc.partner_id.city"/> </t><t t-if="doc.partner_id.state_id">
+                        (<t t-esc="doc.partner_id.state_id.code"/>), </t><t t-if="doc.partner_id.country_id"><t t-esc="doc.partner_id.country_id.name"/></t>
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <h2>Report Servizi di Trasporto (IT)</h2>
+                    </div>
+                </div>
+                <br/>
+
+                <!-- Invoice information -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h5>Fattura: <span t-field="doc.name"/> - Data: <span t-field="doc.invoice_date" t-options="{'widget': 'date'}"/></h5>
+                    </div>
+                </div>
+                <br/>
+
+                <!-- Pickings table -->
+                <table class="table table-sm table-bordered" style="thead { display: table-header-group; }">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Spedizione</th>
+                            <th class="text-center">Data</th>
+                            <th class="text-center">Destinatario</th>
+                            <th class="text-center">C.t.</th>
+                            <th class="text-center">Kg</th>
+                            <th class="text-center">Preparazione</th>
+                            <th class="text-center">Diritto Fisso</th>
+                            <th class="text-center">Servizi logistici</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="data" t-as="invoice_data">
+                            <t t-if="invoice_data['invoice'].id == doc.id">
+                                <t t-foreach="invoice_data['pickings']" t-as="picking_data" t-key="picking_data['picking'].id">
+                                    <tr style="page-break-inside: avoid;">
+                                        <td class="text-center"><span t-esc="picking_data['name']"/></td>
+                                        <td class="text-center"><span t-field="picking_data['picking'].date_done" t-options="{'widget': 'date'}"/></td>
+                                        <td class="text-center"><span t-esc="picking_data['partner_id'].display_name"/></td>
+                                        <td class="text-center"><span t-esc="picking_data['packages_count']"/></td>
+                                        <td class="text-center"><span t-esc="picking_data['weight']"/></td>
+                                        <td class="text-center"><span t-esc="picking_data['preparation_amount']" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td>
+                                        <td class="text-center"><span t-esc="picking_data['fixed_amount']" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td>
+                                        <td class="text-center"><span t-esc="picking_data['logistics_amount']" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </t>
+                    </tbody>
+                    <tfoot style="display: table-footer-group;">
+                        <tr>
+                            <td colspan="6"/>
+                            <td>
+                                <br/>
+                                <strong>Diritto Fisso</strong><br/><br/>
+                                <strong>Preparazione</strong><br/><br/>
+                                <strong>Servizi Logistici</strong><br/><br/>
+                            </td>
+                            <td>
+                                <br/>
+                                <span t-esc="fixed_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>
+                                <span t-esc="preparation_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>
+                                <span t-esc="logistics_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><br/><br/>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <!-- Report action template -->
+    <template id="report_transportation_from_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="gll_stock_management.report_transportation_from_invoice_document"/>
+            </t>
+        </t>
+    </template>
+
+    <!-- Paper format for landscape orientation -->
+    <record id="paperformat_transportation_from_invoice" model="report.paperformat">
+        <field name="name">A4 Landscape for Transportation Report</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Register the report in the system -->
+    <record id="report_transportation_from_invoice_action" model="ir.actions.report">
+        <field name="name">Report Servizi di Trasporto (IT)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">gll_stock_management.report_transportation_from_invoice</field>
+        <field name="report_file">gll_stock_management.report_transportation_from_invoice</field>
+        <field name="print_report_name">"Report_Servizi_di_Trasporto_IT_%(name)s"</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="gll_stock_management.paperformat_transportation_from_invoice"/>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user')), (4, ref('account.group_account_invoice'))]"/>
+    </record>
+</odoo>

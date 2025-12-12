@@ -1,16 +1,19 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from .stock_picking import SERVICE_TYPE
+
 
 class PickingService(models.Model):
     _name = "picking.service"
     _description = "Picking Service"
+    _order = "sequence"
 
+    sequence = fields.Integer("Sequence", default=0)
     picking_id = fields.Many2one(
         "stock.picking",
         string="Picking",
         required=True,
-        ondelete="cascade",
     )
     product_id = fields.Many2one(
         "product.product",
@@ -25,14 +28,7 @@ class PickingService(models.Model):
         string="Price",
     )
     pick_service_type = fields.Selection(
-        [
-            ("warehouse", "Warehouse"),
-            ("transport", "Transport"),
-            ("accessories", "Accessories"),
-            ("additional", "Additional"),
-            ("fixed", "Fixed"),
-            ("variable", "Variable"),
-        ],
+        SERVICE_TYPE,
         string="Service Type",
         copy=False,
         required=True,
@@ -55,6 +51,24 @@ class PickingService(models.Model):
     def _compute_total(self):
         for service in self:
             service.total = service.quantity * service.price
+
+    @api.onchange("product_id", "picking_id.transport_tariff")
+    def _onchange_product_transport_tariff(self):
+        """Compute price based on transport_tariff and product settings when:
+        1. Product changes
+        2. Transport tariff changes
+        """
+        for service in self:
+            if service.product_id:
+                service.pick_service_type = service.product_id.pick_service_type
+            if (
+                service.product_id
+                and service.picking_id
+                and service.picking_id.transport_tariff
+            ):
+                service.price = service.product_id._get_product_price(
+                    service.picking_id.transport_tariff
+                )
 
     def unlink(self):
         """Delete also the sale order line related to this service.
@@ -87,7 +101,11 @@ class PickingService(models.Model):
         )
         self.sale_line_id = so_line_id
 
-    # def create(self, vals_list):
-    #     """getting the intrastat codes from product"""
-    #     res = super(PickingService, self).create(vals_list)
-    #     return res
+    def increment_quantity(self):
+        """Increment the quantity by 1."""
+        self.quantity += 1
+
+    def decrement_quantity(self):
+        """Decrement the quantity by 1, but not below 0."""
+        if self.quantity > 0:
+            self.quantity -= 1
