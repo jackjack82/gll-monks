@@ -12,7 +12,7 @@
     "website": "https://github.com/OCA/partner-contact",
     "depends": [
         "stock_delivery",
-        "accountant",
+        "account",
         "stock",
         "stock_delivery",
         "sale",
